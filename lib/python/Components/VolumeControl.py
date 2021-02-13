@@ -9,7 +9,7 @@ from Components.config import config, ConfigSubsection, ConfigInteger
 from Components.SystemInfo import SystemInfo
 
 profile("VolumeControl")
-#TODO .. move this to a own .py file
+# TODO .. move this to a own .py file
 class VolumeControl:
 	instance = None
 	"""Volume control, handles volUp, volDown, volMute actions and display
@@ -24,7 +24,7 @@ class VolumeControl:
 		VolumeControl.instance = self
 
 		config.audio = ConfigSubsection()
-		config.audio.volume = ConfigInteger(default = 50, limits = (0, 100))
+		config.audio.volume = ConfigInteger(default=50, limits=(0, 100))
 
 		self.volumeDialog = session.instantiateDialog(Volume)
 		if SystemInfo["OSDAnimation"]:
@@ -63,9 +63,9 @@ class VolumeControl:
 		vol = self.volctrl.getVolume()
 		self.volumeDialog.show()
 		if is_muted:
-			self.volMute() # unmute
+			self.volMute()  # unmute
 		elif not vol:
-			self.volMute(False, True) # mute but dont show mute symbol
+			self.volMute(False, True)  # mute but dont show mute symbol
 		if self.volctrl.isMuted():
 			self.volumeDialog.setValue(0)
 		else:

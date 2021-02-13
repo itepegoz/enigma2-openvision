@@ -32,15 +32,15 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.session = session
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.skinName = ["VideoEnhancementSetup"]
 		self.setup_title = _("Video enhancement setup")
 		self["introduction"] = StaticText()
 
-		self.list = [ ]
-		self.xtdlist = [ ]
+		self.list = []
+		self.xtdlist = []
 		self.seperation = skin.parameters.get("ConfigListSeperator", 300)
-		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
 		self.createSetup()
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "MenuActions"],
@@ -211,7 +211,7 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 			self.keySave()
 
 	def keyYellow(self):
-		self.session.openWithCallback(self.keyYellowConfirm, MessageBox, _("Reset video enhancement settings to your last configuration?"), MessageBox.TYPE_YESNO, timeout = 20, default = False)
+		self.session.openWithCallback(self.keyYellowConfirm, MessageBox, _("Reset video enhancement settings to your last configuration?"), MessageBox.TYPE_YESNO, timeout=20, default=False)
 
 	def keyBlueConfirm(self, confirmed):
 		if not confirmed:
@@ -283,7 +283,7 @@ class VideoEnhancementPreview(Screen, ConfigListScreen):
 	def __init__(self, session, configEntry=None, oldSplitMode=None, maxValue=None):
 		Screen.__init__(self, session)
 
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.setup_title = _("Video enhancement preview")
 		self.oldSplitMode = oldSplitMode
 		self.maxValue = maxValue
@@ -291,9 +291,9 @@ class VideoEnhancementPreview(Screen, ConfigListScreen):
 		self.isStepSlider = None
 		self.seperation = skin.parameters.get("ConfigListSeperator", 300)
 
-		self.list = [ ]
+		self.list = []
 		self.configEntry = configEntry
-		ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
 
 		self["actions"] = ActionMap(["SetupActions"],
 			{
@@ -312,7 +312,7 @@ class VideoEnhancementPreview(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 
 	def createSetup(self):
-		self.list = [ ]
+		self.list = []
 		if self.maxValue == 255:
 			self.configStepsEntry = getConfigListEntry(_("Change step size"), config.pep.configsteps)
 
@@ -391,10 +391,10 @@ def videoEnhancementSetupMain(session, **kwargs):
 def startSetup(menuid):
 	if menuid == "video" and config.usage.setup_level.index == 2:
 		return [(_("Video enhancement settings"), videoEnhancementSetupMain, "videoenhancement_setup", 41)]
-	return [ ]
+	return []
 
 def Plugins(**kwargs):
 	list = []
 	if config.usage.setup_level.index >= 2 and os.path.exists("/proc/stb/vmpeg/0/pep_apply"):
-		list.append(PluginDescriptor(name=_("Video enhancement setup"), description=_("Advanced video enhancement setup"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc=startSetup))
+		list.append(PluginDescriptor(name=_("Video enhancement setup"), description=_("Advanced video enhancement setup"), where=PluginDescriptor.WHERE_MENU, needsRestart=False, fnc=startSetup))
 	return list

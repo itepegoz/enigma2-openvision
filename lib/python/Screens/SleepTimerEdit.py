@@ -22,7 +22,7 @@ class SleepTimerEdit(ConfigListScreen, Screen):
 		self["description"] = Label("")
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = session)
+		ConfigListScreen.__init__(self, self.list, session=session)
 		self.createSetup()
 
 		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
@@ -133,7 +133,7 @@ class SleepTimerEdit(ConfigListScreen, Screen):
 			self.close(True)
 		self.close()
 
-	def cancel(self, answer = None):
+	def cancel(self, answer=None):
 		if answer is None:
 			if self["config"].isChanged():
 				self.session.openWithCallback(self.cancel, MessageBox, _("Really close without saving settings?"))
@@ -157,7 +157,7 @@ class SleepTimerEdit(ConfigListScreen, Screen):
 		ref = self.session.nav.getCurrentlyPlayingServiceReference()
 		if ref:
 			path = ref.getPath()
-			if path: # Movie
+			if path:  # Movie
 				service = self.session.nav.getCurrentService()
 				seek = service and service.seek()
 				if seek:
@@ -167,7 +167,7 @@ class SleepTimerEdit(ConfigListScreen, Screen):
 						remaining = length[1] - position[1]
 						if remaining > 0:
 							remaining = remaining / 90000
-			else: # DVB
+			else:  # DVB
 				epg = eEPGCache.getInstance()
 				event = epg.lookupEventTime(ref, -1, 0)
 				if event:
@@ -206,6 +206,6 @@ def WakeupDayTimeOfWeek():
 			if wakeup_time > time():
 				return 0, wakeup_time
 		for i in range(1, 8):
-			if config.usage.wakeup_day[(current_day+i)%7].value:
-				return i, int(mktime((now.tm_year, now.tm_mon, now.tm_mday, config.usage.wakeup_time[(current_day+i)%7].value[0], config.usage.wakeup_time[(current_day+i)%7].value[1], 0, now.tm_wday, now.tm_yday, now.tm_isdst)))
+			if config.usage.wakeup_day[(current_day + i) % 7].value:
+				return i, int(mktime((now.tm_year, now.tm_mon, now.tm_mday, config.usage.wakeup_time[(current_day + i) % 7].value[0], config.usage.wakeup_time[(current_day + i) % 7].value[1], 0, now.tm_wday, now.tm_yday, now.tm_isdst)))
 	return -1, None

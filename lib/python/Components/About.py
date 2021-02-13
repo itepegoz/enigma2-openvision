@@ -13,7 +13,7 @@ socfamily = getSoCFamily()
 
 def _ifinfo(sock, addr, ifname):
 	iface = struct.pack('256s', ifname[:15])
-	info  = fcntl.ioctl(sock.fileno(), addr, iface)
+	info = fcntl.ioctl(sock.fileno(), addr, iface)
 	if addr == 0x8927:
 		return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1].upper()
 	else:
@@ -22,12 +22,12 @@ def _ifinfo(sock, addr, ifname):
 def getIfConfig(ifname):
 	ifreq = {'ifname': ifname}
 	infos = {}
-	sock  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	# offsets defined in /usr/include/linux/sockios.h on linux 2.6
-	infos['addr']    = 0x8915 # SIOCGIFADDR
-	infos['brdaddr'] = 0x8919 # SIOCGIFBRDADDR
-	infos['hwaddr']  = 0x8927 # SIOCSIFHWADDR
-	infos['netmask'] = 0x891b # SIOCGIFNETMASK
+	infos['addr'] = 0x8915  # SIOCGIFADDR
+	infos['brdaddr'] = 0x8919  # SIOCGIFBRDADDR
+	infos['hwaddr'] = 0x8927  # SIOCSIFHWADDR
+	infos['netmask'] = 0x891b  # SIOCGIFNETMASK
 	try:
 		for k, v in infos.items():
 			ifreq[k] = _ifinfo(sock, v, ifname)
@@ -77,7 +77,7 @@ def getUpdateDateString():
 		elif fileExists("/etc/openvision/compiledate"):
 			build = open("/etc/openvision/compiledate", "r").read().strip()
 		if build.isdigit():
-			return  "%s-%s-%s" % (build[:4], build[4:6], build[6:])
+			return "%s-%s-%s" % (build[:4], build[4:6], build[6:])
 	except:
 		pass
 	return _("unknown")
@@ -86,7 +86,7 @@ def getEnigmaVersionString():
 	import enigma
 	enigma_version = enigma.getEnigmaVersionString()
 	if '-(no branch)' in enigma_version:
-		enigma_version = enigma_version [:-12]
+		enigma_version = enigma_version[:-12]
 	return enigma_version
 
 def getGStreamerVersionString(cpu):
@@ -132,7 +132,7 @@ def getCPUBenchmark():
 			benchmarkstatus = os.popen("cat /tmp/dhry.txt | grep 'Open Vision CPU status' | cut -f2 -d':'").read().strip()
 
 		if cpucount > 1:
-			cpumaxbench = int(cpubench)*int(cpucount)
+			cpumaxbench = int(cpubench) * int(cpucount)
 			return "%s DMIPS per core\n%s DMIPS for all (%s) cores (%s)" % (cpubench, cpumaxbench, cpucount, benchmarkstatus)
 		else:
 			return "%s DMIPS (%s)" % (cpubench, benchmarkstatus)
@@ -261,17 +261,17 @@ def getDriverInstalledDate():
 		try:
 			if getBoxType() in ("dm800", "dm8000"):
 				driver = [x.split("-")[-2:-1][0][-9:] for x in open(glob("/var/lib/opkg/info/*-dvb-modules-*.control")[0], "r") if x.startswith("Version:")][0]
-				return  "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
+				return "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
 			else:
 				driver = [x.split("-")[-2:-1][0][-8:] for x in open(glob("/var/lib/opkg/info/*-dvb-modules-*.control")[0], "r") if x.startswith("Version:")][0]
-				return  "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
+				return "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
 		except:
 			try:
 				driver = [x.split("Version:") for x in open(glob("/var/lib/opkg/info/*-dvb-proxy-*.control")[0], "r") if x.startswith("Version:")][0]
-				return  "%s" % driver[1].replace("\n", "")
+				return "%s" % driver[1].replace("\n", "")
 			except:
 				driver = [x.split("Version:") for x in open(glob("/var/lib/opkg/info/*-platform-util-*.control")[0], "r") if x.startswith("Version:")][0]
-				return  "%s" % driver[1].replace("\n", "")
+				return "%s" % driver[1].replace("\n", "")
 	except:
 		return _("unknown")
 
@@ -291,7 +291,7 @@ def GetIPsFromNetworkInterfaces():
 	is_64bits = sys.maxsize > 2**32
 	struct_size = 40 if is_64bits else 32
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	max_possible = 8 # initial value
+	max_possible = 8  # initial value
 	while True:
 		_bytes = max_possible * struct_size
 		names = array.array('B')
@@ -309,9 +309,9 @@ def GetIPsFromNetworkInterfaces():
 	namestr = names.tostring()
 	ifaces = []
 	for i in range(0, outbytes, struct_size):
-		iface_name = bytes.decode(namestr[i:i+16]).split('\0', 1)[0].encode('ascii')
+		iface_name = bytes.decode(namestr[i:i + 16]).split('\0', 1)[0].encode('ascii')
 		if iface_name != 'lo':
-			iface_addr = socket.inet_ntoa(namestr[i+20:i+24])
+			iface_addr = socket.inet_ntoa(namestr[i + 20:i + 24])
 			ifaces.append((iface_name, iface_addr))
 	return ifaces
 
@@ -329,7 +329,7 @@ def getBoxUptime():
 		m = (secs % 3600) / 60
 		time += ngettext("%d hour", "%d hours", h) % h + " "
 		time += ngettext("%d minute", "%d minutes", m) % m
-		return  "%s" % time
+		return "%s" % time
 	except:
 		return '-'
 

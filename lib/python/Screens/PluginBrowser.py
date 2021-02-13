@@ -34,7 +34,7 @@ config.misc.pluginbrowser.plugin_order = ConfigText(default="")
 
 class PluginBrowserSummary(Screen):
 	def __init__(self, session, parent):
-		Screen.__init__(self, session, parent = parent)
+		Screen.__init__(self, session, parent=parent)
 		self["entry"] = StaticText("")
 		self["desc"] = StaticText("")
 		self.onShow.append(self.addWatcher)
@@ -142,7 +142,7 @@ class PluginBrowser(Screen, ProtectedScreen):
 			for (pluginname, error) in plugins.warnings:
 				text += _("%s (%s)\n") % (pluginname, error)
 			plugins.resetWarnings()
-			self.session.open(MessageBox, text = text, type = MessageBox.TYPE_WARNING)
+			self.session.open(MessageBox, text=text, type=MessageBox.TYPE_WARNING)
 
 	def save(self):
 		self.run()
@@ -220,8 +220,8 @@ class PluginBrowser(Screen, ProtectedScreen):
 		if config.usage.menu_show_numbers.value in ("menu&plugins", "plugins") or showHelp:
 			for x in enumerate(self.list):
 				tmp = list(x[1][1])
-				tmp[7] = "%s %s" % (x[0]+1, tmp[7])
-				x[1][1]=tuple(tmp)
+				tmp[7] = "%s %s" % (x[0] + 1, tmp[7])
+				x[1][1] = tuple(tmp)
 		self["list"].l.setList(self.list)
 
 	def showHelp(self):
@@ -245,7 +245,7 @@ class PluginBrowser(Screen, ProtectedScreen):
 			try:
 				from Plugins.SystemPlugins.SoftwareManager.plugin import PluginManager
 			except ImportError as e:
-				self.session.open(MessageBox, _("The software management extension is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO, timeout = 10 )
+				self.session.open(MessageBox, _("The software management extension is not installed!\nPlease install it."), type=MessageBox.TYPE_INFO, timeout=10)
 			else:
 				self.session.openWithCallback(self.PluginDownloadBrowserClosed, PluginManager)
 
@@ -255,7 +255,7 @@ class PluginDownloadBrowser(Screen):
 	PLUGIN_PREFIX = 'enigma2-plugin-'
 	lastDownloadDate = None
 
-	def __init__(self, session, type = 0, needupdate = True):
+	def __init__(self, session, type=0, needupdate=True):
 		Screen.__init__(self, session)
 
 		self.type = type
@@ -288,11 +288,11 @@ class PluginDownloadBrowser(Screen):
 		if os.path.isfile('/usr/bin/opkg'):
 			self.opkg = '/usr/bin/opkg'
 			self.opkg_install = self.opkg + ' install'
-			self.opkg_remove =  self.opkg + ' remove --autoremove'
+			self.opkg_remove = self.opkg + ' remove --autoremove'
 		else:
 			self.opkg = 'opkg'
 			self.opkg_install = 'opkg install -force-defaults'
-			self.opkg_remove =  self.opkg + ' remove'
+			self.opkg_remove = self.opkg + ' remove'
 
 	def go(self):
 		sel = self["list"].l.getCurrentSelection()
@@ -301,7 +301,7 @@ class PluginDownloadBrowser(Screen):
 			return
 
 		sel = sel[0]
-		if isinstance(sel, str): # category
+		if isinstance(sel, str):  # category
 			if sel in self.expanded:
 				self.expanded.remove(sel)
 			else:
@@ -390,11 +390,11 @@ class PluginDownloadBrowser(Screen):
 
 	def doRemove(self, callback, pkgname):
 		pkgname = self.PLUGIN_PREFIX + pkgname
-		self.session.openWithCallback(callback, Console, cmdlist = [self.opkg_remove + Opkg.opkgExtraDestinations() + " " + pkgname, "sync"], skin="Console_Pig")
+		self.session.openWithCallback(callback, Console, cmdlist=[self.opkg_remove + Opkg.opkgExtraDestinations() + " " + pkgname, "sync"], skin="Console_Pig")
 
 	def doInstall(self, callback, pkgname):
 		pkgname = self.PLUGIN_PREFIX + pkgname
-		self.session.openWithCallback(callback, Console, cmdlist = [self.opkg_install + " " + pkgname, "sync"], skin="Console_Pig")
+		self.session.openWithCallback(callback, Console, cmdlist=[self.opkg_install + " " + pkgname, "sync"], skin="Console_Pig")
 
 	def runSettingsRemove(self, val):
 		if val:
@@ -403,7 +403,7 @@ class PluginDownloadBrowser(Screen):
 	def runSettingsInstall(self):
 		self.doInstall(self.installFinished, self.install_settings_name)
 
-	def startOpkgListInstalled(self, pkgname = PLUGIN_PREFIX + '*'):
+	def startOpkgListInstalled(self, pkgname=PLUGIN_PREFIX + '*'):
 		self.container.execute(self.opkg + Opkg.opkgExtraDestinations() + " list_installed '%s'" % pkgname)
 
 	def startOpkgListAvailable(self):
@@ -481,15 +481,15 @@ class PluginDownloadBrowser(Screen):
 				self["text"].setText(_("No new plugins found"))
 
 	def dataAvail(self, str):
-		#prepend any remaining data from the previous call
+		# prepend any remaining data from the previous call
 		if six.PY3:
 			str = str.decode()
 		str = self.remainingdata + str
 		#split in lines
 		lines = str.split('\n')
-		#'str' should end with '\n', so when splitting, the last line should be empty. If this is not the case, we received an incomplete line
+		# 'str' should end with '\n', so when splitting, the last line should be empty. If this is not the case, we received an incomplete line
 		if len(lines[-1]):
-			#remember this data for next time
+			# remember this data for next time
 			self.remainingdata = lines[-1]
 			lines = lines[0:-1]
 		else:
@@ -541,7 +541,7 @@ class PluginDownloadBrowser(Screen):
 			if split[0] not in self.plugins:
 				self.plugins[split[0]] = []
 
-			self.plugins[split[0]].append((PluginDescriptor(name = x[3], description = x[2], icon = verticallineIcon), split[1], x[1]))
+			self.plugins[split[0]].append((PluginDescriptor(name=x[3], description=x[2], icon=verticallineIcon), split[1], x[1]))
 
 		for x in self.plugins.keys():
 			if x in self.expanded:

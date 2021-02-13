@@ -48,8 +48,8 @@ class FrontendInfo(Converter):
 		assert self.type not in (self.LOCK, self.SLOT_NUMBER), "the text output of FrontendInfo cannot be used for lock info"
 		percent = None
 		swapsnr = config.usage.swap_snr_on_osd.value
-		colors = parameters.get("FrontendInfoColors", (0x0000FF00, 0x00FFFF00, 0x007F7F7F)) # tuner active, busy, available colors
-		if self.type == self.BER: # as count
+		colors = parameters.get("FrontendInfoColors", (0x0000FF00, 0x00FFFF00, 0x007F7F7F))  # tuner active, busy, available colors
+		if self.type == self.BER:  # as count
 			count = self.source.ber
 			if count is not None:
 				return str(count)
@@ -62,7 +62,7 @@ class FrontendInfo(Converter):
 		elif self.type == self.SNR or self.type == self.SNRdB:
 			if self.source.snr_db is not None:
 				return _("%3.01f dB") % (self.source.snr_db / 100.0)
-			elif self.source.snr is not None: #fallback to normal SNR...
+			elif self.source.snr is not None:  # fallback to normal SNR...
 				percent = self.source.snr
 		elif self.type == self.TUNER_TYPE:
 			return self.source.frontend_type or _("Unknown")
@@ -80,7 +80,7 @@ class FrontendInfo(Converter):
 						continue
 					if string and len(nimmanager.nim_slots) <= self.space_for_tuners_with_spaces:
 						string += " "
-					string += color + chr(ord("A")+n.slot)
+					string += color + chr(ord("A") + n.slot)
 			return string
 		if self.type == self.USE_TUNERS_STRING:
 			string = ""
@@ -117,7 +117,7 @@ class FrontendInfo(Converter):
 		elif self.type == self.AGC:
 			return self.source.agc is not None
 		elif self.type in (self.STRING, self.USE_TUNERS_STRING):
-			return bool(self.getText())	
+			return bool(self.getText())
 
 	text = property(getText)
 

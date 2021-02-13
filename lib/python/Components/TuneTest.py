@@ -47,9 +47,9 @@ class Tuner:
 			self.frontend.tune(feparm)
 
 	def tuneTerr(self, frequency,
-		inversion=2, bandwidth = 7000000, fechigh = 6, feclow = 6,
-		modulation = 2, transmission = 2, guard = 4,
-		hierarchy = 4, system = 0, plp_id = 0):
+		inversion=2, bandwidth=7000000, fechigh=6, feclow=6,
+		modulation=2, transmission=2, guard=4,
+		hierarchy=4, system=0, plp_id=0):
 		if self.frontend:
 			print("[TuneTest] tuning to transponder with data", [frequency, inversion, bandwidth, fechigh, feclow, modulation, transmission, guard, hierarchy, system, plp_id])
 			parm = eDVBFrontendParametersTerrestrial()
@@ -114,7 +114,7 @@ class Tuner:
 			self.frontend.tune(self.lastparm)
 
 	def getTransponderData(self):
-		ret = { }
+		ret = {}
 		if self.frontend:
 			self.frontend.getTransponderData(ret, True)
 		return ret
@@ -124,7 +124,7 @@ class Tuner:
 # 2) call run(<checkPIDs = True>)
 # 3) finishedChecking() is called, when the run is finished
 class TuneTest:
-	def __init__(self, feid, stopOnSuccess = -1, stopOnError = -1):
+	def __init__(self, feid, stopOnSuccess=-1, stopOnError=-1):
 		self.stopOnSuccess = stopOnSuccess
 		self.stopOnError = stopOnError
 		self.feid = feid
@@ -133,9 +133,9 @@ class TuneTest:
 		print("[TuneTest] for feid %d" % self.feid)
 		if not self.openFrontend():
 			self.oldref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			self.session.nav.stopService() # try to disable foreground service
+			self.session.nav.stopService()  # try to disable foreground service
 			if not self.openFrontend():
-				if self.session.pipshown: # try to disable pip
+				if self.session.pipshown:  # try to disable pip
 					if hasattr(self.session, 'infobar'):
 						if self.session.infobar.servicelist.dopipzap:
 							self.session.infobar.servicelist.togglePipzap()
@@ -143,7 +143,7 @@ class TuneTest:
 						del self.session.pip
 					self.session.pipshown = False
 					if not self.openFrontend():
-						self.frontend = None # in normal case this should not happen
+						self.frontend = None  # in normal case this should not happen
 		self.tuner = Tuner(self.frontend)
 		self.timer = eTimer()
 		self.timer.callback.append(self.updateStatus)
@@ -199,7 +199,7 @@ class TuneTest:
 							if self.stopOnSuccess != -1 and self.stopOnSuccess <= len(self.successfullyTune):
 								stop = True
 				elif not self.checkPIDs or (self.checkPids and not pidsFailed):
-					self.successfullyTune.append([self.currTuned, self.oldTuned, dict]) # 3rd parameter is the frontend status
+					self.successfullyTune.append([self.currTuned, self.oldTuned, dict])  # 3rd parameter is the frontend status
 					if self.stopOnSuccess != -1 and self.stopOnSuccess <= len(self.successfullyTune):
 								stop = True
 				self.tuningtransponder = self.nextTransponder()
@@ -282,7 +282,7 @@ class TuneTest:
 	INTERNAL_PID_STATUS_SUCCESSFUL = 2
 	INTERNAL_PID_STATUS_FAILED = 3
 
-	def run(self, checkPIDs = False):
+	def run(self, checkPIDs=False):
 		self.checkPIDs = checkPIDs
 		self.pidStatus = self.INTERNAL_PID_STATUS_NOOP
 		self.failedTune = []

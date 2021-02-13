@@ -83,7 +83,7 @@ class InputDeviceSelection(Screen, HelpableScreen):
 	def cleanup(self):
 		self.currentIndex = 0
 
-	def buildInterfaceList(self, device, description, type, isinputdevice = True):
+	def buildInterfaceList(self, device, description, type, isinputdevice=True):
 		divpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_SKIN, "div-h.png"))
 		activepng = None
 		devicepng = None
@@ -156,7 +156,7 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.setTitle(_("Input device setup"))
 		self.inputDevice = device
 		iInputDevices.currentDevice = self.inputDevice
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.setup_title = _("Input device setup")
 		self.isStepSlider = None
 		self.enableEntry = None
@@ -165,8 +165,8 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.nameEntry = None
 		self.enableConfigEntry = None
 
-		self.list = [ ]
-		ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+		self.list = []
+		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
 
 		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
 			{
@@ -189,13 +189,13 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 		listWidth = self["config"].l.getItemSize().width()
 		# use 20% of list width for sliders
-		self["config"].l.setSeperation(int(listWidth*.8))
+		self["config"].l.setSeperation(int(listWidth * .8))
 
 	def cleanup(self):
 		iInputDevices.currentDevice = ""
 
 	def createSetup(self):
-		self.list = [ ]
+		self.list = []
 		label = _("Change repeat and delay settings?")
 		cmd = "self.enableEntry = getConfigListEntry(label, config.inputDevices." + self.inputDevice + ".enabled)"
 		exec(cmd)
@@ -233,7 +233,7 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 
 	def selectionChanged(self):
 		if self["config"].getCurrent() == self.enableEntry:
-			self["introduction"].setText(_("Current device: ") + str(iInputDevices.getDeviceAttribute(self.inputDevice, 'name')) )
+			self["introduction"].setText(_("Current device: ") + str(iInputDevices.getDeviceAttribute(self.inputDevice, 'name')))
 		else:
 			self["introduction"].setText(_("Current value: ") + self.getCurrentValue() + _(" ms"))
 
@@ -331,7 +331,7 @@ class RemoteControlType(Screen, ConfigListScreen):
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.skinName = ["RemoteControlType", "Setup" ]
+		self.skinName = ["RemoteControlType", "Setup"]
 		self.setTitle(_("Remote control type setup"))
 
 		self["actions"] = ActionMap(["SetupActions"],
@@ -344,10 +344,10 @@ class RemoteControlType(Screen, ConfigListScreen):
 		self["key_red"] = StaticText(_("Cancel"))
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = self.session)
+		ConfigListScreen.__init__(self, self.list, session=self.session)
 
 		rctype = config.plugins.remotecontroltype.rctype.value
-		self.rctype = ConfigSelection(choices = self.rcList, default = str(rctype))
+		self.rctype = ConfigSelection(choices=self.rcList, default=str(rctype))
 		self.list.append(getConfigListEntry(_("Remote control type"), self.rctype))
 		self["config"].list = self.list
 

@@ -18,7 +18,7 @@ STATE_FORWARD = 4
 STATE_NONE = 5
 
 class PlayList(MenuList):
-	def __init__(self, enableWrapAround = False):
+	def __init__(self, enableWrapAround=False):
 		MenuList.__init__(self, [], enableWrapAround, eListboxPythonMultiContent)
 		font = skin.fonts.get("PlayList", ("Regular", 18, 23))
 		self.l.setFont(0, gFont(font[0], font[1]))
@@ -36,7 +36,7 @@ class PlayList(MenuList):
 		]
 
 	def PlaylistEntryComponent(self, serviceref, state):
-		res = [ serviceref ]
+		res = [serviceref]
 		text = serviceref.getName()
 		if text is "":
 			text = path.split(serviceref.getPath().split('/')[-1])[1]
@@ -117,7 +117,7 @@ class PlayList(MenuList):
 		return l and l[0]
 
 	def getServiceRefList(self):
-		return [ x[0] for x in self.list ]
+		return [x[0] for x in self.list]
 
 	def __len__(self):
 		return len(self.list)

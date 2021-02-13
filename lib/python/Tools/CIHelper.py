@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from xml.etree.cElementTree import parse
-from enigma import eDVBCIInterfaces, eDVBCI_UI, eEnv, eServiceCenter, eServiceReference, getBestPlayableServiceReference, iRecordableService 
+from enigma import eDVBCIInterfaces, eDVBCI_UI, eEnv, eServiceCenter, eServiceReference, getBestPlayableServiceReference, iRecordableService
 from Components.SystemInfo import SystemInfo
 from Components.config import config
 import NavigationInstance
@@ -23,7 +23,7 @@ class CIHelper:
 			self.CI_ASSIGNMENT_LIST = []
 			def getValue(definitions, default):
 				Len = len(definitions)
-				return Len > 0 and definitions[Len-1].text or default
+				return Len > 0 and definitions[Len - 1].text or default
 
 			for ci in range(NUM_CI):
 				filename = eEnv.resolve("${sysconfdir}/enigma2/ci") + str(ci) + ".xml"
@@ -119,7 +119,7 @@ class CIHelper:
 						provider_services_refs.append(service.toString())
 		return provider_services_refs
 
-	def ServiceIsAssigned(self, ref, timer=None): 
+	def ServiceIsAssigned(self, ref, timer=None):
 		if self.CI_ASSIGNMENT_SERVICES_LIST is not None:
 			if self.CI_RECORDS_LIST is None and NavigationInstance.instance and hasattr(NavigationInstance.instance, "RecordTimer") and hasattr(NavigationInstance.instance, "record_event"):
 				NavigationInstance.instance.record_event.append(self.ciRecordEvent)

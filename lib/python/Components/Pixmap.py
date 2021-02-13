@@ -18,7 +18,7 @@ class Pixmap(GUIComponent):
 		return (s.width(), s.height())
 
 class PixmapConditional(ConditionalWidget, Pixmap):
-	def __init__(self, withTimer = True):
+	def __init__(self, withTimer=True):
 		ConditionalWidget.__init__(self)
 		Pixmap.__init__(self)
 
@@ -37,7 +37,7 @@ class MovingPixmap(Pixmap):
 		self.moveTimer = eTimer()
 		self.moveTimer.callback.append(self.doMove)
 
-	def clearPath(self, repeated = False):
+	def clearPath(self, repeated=False):
 		if self.moving:
 			self.moving = False
 			self.moveTimer.stop()
@@ -46,10 +46,10 @@ class MovingPixmap(Pixmap):
 		self.currDest = 0
 		self.repeated = repeated
 
-	def addMovePoint(self, x, y, time = 20):
+	def addMovePoint(self, x, y, time=20):
 		self.path.append((x, y, time))
 
-	def moveTo(self, x, y, time = 20):
+	def moveTo(self, x, y, time=20):
 		self.clearPath()
 		self.addMovePoint(x, y, time)
 
@@ -72,14 +72,14 @@ class MovingPixmap(Pixmap):
 		self.time -= 1
 		try:
 			self.move(int(self.x), int(self.y))
-		except: # moving not possible... widget not there any more... stop moving
+		except:  # moving not possible... widget not there any more... stop moving
 			self.stopMoving()
 
 		if self.time == 0:
 			self.currDest += 1
 			self.moveTimer.stop()
 			self.moving = False
-			if self.currDest >= len(self.path): # end of path
+			if self.currDest >= len(self.path):  # end of path
 				if self.repeated:
 					self.currDest = 0
 					self.moving = False
@@ -97,7 +97,7 @@ class MultiPixmap(Pixmap):
 		if self.skinAttributes is not None:
 			skin_path_prefix = getattr(screen, "skin_path", path)
 			pixmap = None
-			attribs = [ ]
+			attribs = []
 			for (attrib, value) in self.skinAttributes:
 				if attrib == "pixmaps":
 					pixmaps = value.split(',')
@@ -127,4 +127,4 @@ class MultiPixmap(Pixmap):
 			if len(self.pixmaps) > x:
 				self.instance.setPixmap(self.pixmaps[x])
 			else:
-				print("[Pixmap] setPixmapNum(%d) failed! defined pixmaps:" %(x), self.pixmaps)
+				print("[Pixmap] setPixmapNum(%d) failed! defined pixmaps:" % (x), self.pixmaps)

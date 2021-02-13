@@ -35,13 +35,13 @@ class Navigation:
 		self.pnav = pNavigation()
 		self.pnav.m_event.get().append(self.dispatchEvent)
 		self.pnav.m_record_event.get().append(self.dispatchRecordEvent)
-		self.event = [ ]
-		self.record_event = [ ]
+		self.event = []
+		self.record_event = []
 		self.currentlyPlayingServiceReference = None
 		self.currentlyPlayingServiceOrGroup = None
 		self.currentlyPlayingService = None
 		self.RecordTimer = RecordTimer.RecordTimer()
-		self.PowerTimer = PowerTimer.PowerTimer()		
+		self.PowerTimer = PowerTimer.PowerTimer()
 		self.__wasTimerWakeup = False
 		self.__nextRecordTimerAfterEventActionAuto = nextRecordTimerAfterEventActionAuto
 		self.__nextPowerManagerAfterEventActionAuto = nextPowerManagerAfterEventActionAuto
@@ -76,7 +76,7 @@ class Navigation:
 
 	def _processTimerWakeup(self):
 		now = time()
-		timeHandlerCallbacks =  eDVBLocalTimeHandler.getInstance().m_timeUpdated.get()
+		timeHandlerCallbacks = eDVBLocalTimeHandler.getInstance().m_timeUpdated.get()
 		if self.__nextRecordTimerAfterEventActionAuto and now < eDVBLocalTimeHandler.timeOK:
 			print('[Navigation] RECTIMER: wakeup to standby but system time not set.')
 			if self._processTimerWakeup not in timeHandlerCallbacks:
@@ -99,7 +99,7 @@ class Navigation:
 			# as a PowerTimer WakeToStandby was actiond to it.
 			self.standbytimer = eTimer()
 			self.standbytimer.callback.append(self.gotostandby)
-			self.standbytimer.start(15000, True)			
+			self.standbytimer.start(15000, True)
 
 	def wasTimerWakeup(self):
 		return self.__wasTimerWakeup
@@ -169,7 +169,7 @@ class Navigation:
 							self.currentlyPlayingServiceReference = None
 							self.currentlyPlayingServiceOrGroup = None
 					return 0
-				elif checkParentalControl and not parentalControl.isServicePlayable(playref, boundFunction(self.playService, checkParentalControl = False)):
+				elif checkParentalControl and not parentalControl.isServicePlayable(playref, boundFunction(self.playService, checkParentalControl=False)):
 					if self.currentlyPlayingServiceOrGroup and InfoBarInstance and InfoBarInstance.servicelist.servicelist.setCurrent(self.currentlyPlayingServiceOrGroup, adjust):
 						self.currentlyPlayingServiceOrGroup = InfoBarInstance.servicelist.servicelist.getCurrent()
 					return 1

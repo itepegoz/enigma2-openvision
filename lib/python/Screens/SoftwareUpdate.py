@@ -39,7 +39,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		Screen.__init__(self, session)
 		ProtectedScreen.__init__(self)
 
-		self.sliderPackages = { "enigma2": 1, "openvision": 2 }
+		self.sliderPackages = {"enigma2": 1, "openvision": 2}
 
 		self.setTitle(_("Software update"))
 		self.slider = Slider(0, 4)
@@ -78,7 +78,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 
 	def isProtected(self):
 		return config.ParentalControl.setuppinactive.value and\
-			(not config.ParentalControl.config_sections.main_menu.value and not config.ParentalControl.config_sections.configuration.value  or hasattr(self.session, 'infobar') and self.session.infobar is None) and\
+			(not config.ParentalControl.config_sections.main_menu.value and not config.ParentalControl.config_sections.configuration.value or hasattr(self.session, 'infobar') and self.session.infobar is None) and\
 			config.ParentalControl.config_sections.software_update.value
 
 	def checkTraficLight(self):
@@ -128,11 +128,11 @@ class UpdatePlugin(Screen, ProtectedScreen):
 					elif 'en_EN' in message:
 						message = message['en_EN']
 					else:
-						message =  _("The current image might not be stable.\nFor more information see %s.") % ("openvision.tech")
+						message = _("The current image might not be stable.\nFor more information see %s.") % ("openvision.tech")
 
 			except Exception as e:
 				print("[SoftwareUpdate] status error: ", str(e))
-				message =  _("The current image might not be stable.\nFor more information see %s.") % ("openvision.tech")
+				message = _("The current image might not be stable.\nFor more information see %s.") % ("openvision.tech")
 
 		# or display a generic warning if fetching failed
 		else:
@@ -141,10 +141,10 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		# show the user the message first
 		if message is not None:
 			if abort:
-				self.session.openWithCallback(self.close, MessageBox, message, type=MessageBox.TYPE_ERROR, picon = picon)
+				self.session.openWithCallback(self.close, MessageBox, message, type=MessageBox.TYPE_ERROR, picon=picon)
 			else:
 				message += "\n\n" + _("Do you want to update your %s %s?") % (brand, model)
-				self.session.openWithCallback(self.startActualUpdate, MessageBox, message, picon = picon)
+				self.session.openWithCallback(self.startActualUpdate, MessageBox, message, picon=picon)
 
 		# no message, continue with the update
 		else:
@@ -153,7 +153,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 	def getLatestImageTimestamp(self):
 		def gettime(url):
 			try:
-				return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(calendar.timegm(urlopen("%s/Packages.gz" % url).info().getdate('Last-Modified'))-time.altzone))
+				return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(calendar.timegm(urlopen("%s/Packages.gz" % url).info().getdate('Last-Modified')) - time.altzone))
 			except:
 				return ""
 		return sorted([gettime(open("/etc/opkg/%s" % file, "r").readlines()[0].split()[2]) for file in os.listdir("/etc/opkg") if not file.startswith("3rd-party") and file not in ("arch.conf", "opkg.conf", "picons-feed.conf")], reverse=True)[0]
@@ -266,7 +266,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 					error = _("No updates available. Please try again later.")
 				if self.updating:
 					error = _("Update failed. Your receiver does not have a working internet connection.")
-				self.status.setText(_("Error") +  " - " + error)
+				self.status.setText(_("Error") + " - " + error)
 		elif event == OpkgComponent.EVENT_LISTITEM:
 			if 'enigma2-plugin-settings-' in param[0] and self.channellist_only > 0:
 				self.channellist_name = param[0]
@@ -291,7 +291,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		elif answer[1] == "channels":
 			self.channellist_only = 1
 			self.slider.setValue(1)
-			self.opkg.startCmd(OpkgComponent.CMD_LIST, args = {'installed_only': True})
+			self.opkg.startCmd(OpkgComponent.CMD_LIST, args={'installed_only': True})
 		elif answer[1] == "commits":
 			self.session.openWithCallback(boundFunction(self.opkgCallback, OpkgComponent.EVENT_DONE, None), CommitInfo)
 		elif answer[1] == "showlist":
@@ -301,7 +301,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 			text = open("/home/root/opkgupgrade.log", "r").read()
 			self.session.openWithCallback(boundFunction(self.opkgCallback, OpkgComponent.EVENT_DONE, None), TextBox, text, _("Latest update log"), True)
 		else:
-			self.opkg.startCmd(OpkgComponent.CMD_UPGRADE, args = {'test_only': False})
+			self.opkg.startCmd(OpkgComponent.CMD_UPGRADE, args={'test_only': False})
 
 	def modificationCallback(self, res):
 		self.opkg.write(res and "N" or "Y")

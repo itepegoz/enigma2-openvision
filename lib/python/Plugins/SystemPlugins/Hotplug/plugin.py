@@ -82,7 +82,7 @@ class Hotplug(Protocol):
 		v = {}
 		for x in data:
 			i = x.find('=')
-			var, val = x[:i], x[i+1:]
+			var, val = x[:i], x[i + 1:]
 			v[var] = val
 		processHotplugData(self, v)
 
@@ -99,4 +99,4 @@ def autostart(reason, **kwargs):
 		reactor.listenUNIX("/tmp/hotplug.socket", factory)
 
 def Plugins(**kwargs):
-	return PluginDescriptor(name = _("Hotplug"), description = _("listens to hotplug events"), where = PluginDescriptor.WHERE_AUTOSTART, needsRestart = True, fnc = autostart)
+	return PluginDescriptor(name=_("Hotplug"), description=_("listens to hotplug events"), where=PluginDescriptor.WHERE_AUTOSTART, needsRestart=True, fnc=autostart)

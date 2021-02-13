@@ -19,9 +19,9 @@ def PluginEntryComponent(plugin, width=440):
 	ix, iy, iw, ih = skin.parameters.get("PluginBrowserIcon", (10, 5, 100, 40))
 	return [
 		plugin,
-		MultiContentEntryText(pos=(nx, ny), size=(width-nx, nh), font=0, text=plugin.name),
-		MultiContentEntryText(pos=(nx, dy), size=(width-dx, dh), font=1, text=plugin.description),
-		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png = png, flags = BT_SCALE | BT_KEEP_ASPECT_RATIO | BT_HALIGN_CENTER | BT_VALIGN_CENTER)
+		MultiContentEntryText(pos=(nx, ny), size=(width - nx, nh), font=0, text=plugin.name),
+		MultiContentEntryText(pos=(nx, dy), size=(width - dx, dh), font=1, text=plugin.description),
+		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png=png, flags=BT_SCALE | BT_KEEP_ASPECT_RATIO | BT_HALIGN_CENTER | BT_VALIGN_CENTER)
 	]
 
 def PluginCategoryComponent(name, png, width=440):
@@ -29,8 +29,8 @@ def PluginCategoryComponent(name, png, width=440):
 	ix, iy, iw, ih = skin.parameters.get("PluginBrowserDownloadIcon", (10, 0, 60, 50))
 	return [
 		name,
-		MultiContentEntryText(pos=(x, y), size=(width-x, h), font=0, text=name),
-		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png = png)
+		MultiContentEntryText(pos=(x, y), size=(width - x, h), font=0, text=name),
+		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png=png)
 	]
 
 def PluginDownloadComponent(plugin, name, version=None, width=440):
@@ -50,9 +50,9 @@ def PluginDownloadComponent(plugin, name, version=None, width=440):
 	ix, iy, iw, ih = skin.parameters.get("PluginBrowserDownloadIcon", (10, 0, 60, 50))
 	return [
 		plugin,
-		MultiContentEntryText(pos=(x, y), size=(width-x, h), font=0, text=name),
-		MultiContentEntryText(pos=(dx, dy), size=(width-dx, dh), font=1, text=plugin.description),
-		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png = png)
+		MultiContentEntryText(pos=(x, y), size=(width - x, h), font=0, text=name),
+		MultiContentEntryText(pos=(dx, dy), size=(width - dx, dh), font=1, text=plugin.description),
+		MultiContentEntryPixmapAlphaTest(pos=(ix, iy), size=(iw, ih), png=png)
 	]
 
 

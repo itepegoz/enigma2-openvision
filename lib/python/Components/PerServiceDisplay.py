@@ -9,13 +9,13 @@ from enigma import eLabel, eSlider, eTimer
 
 
 class PerServiceBase(object):
-	EventMap = { }
+	EventMap = {}
 
 	@staticmethod
 	def event(ev):
 		func_list = PerServiceBase.EventMap.setdefault(ev, [])
 		for func in func_list:
-			if func[0]: # with_event
+			if func[0]:  # with_event
 				func[1](ev)
 			else:
 				func[1]()

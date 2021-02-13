@@ -28,16 +28,16 @@ POLL_DISCONNECTED = (select.POLLHUP | select.POLLERR | select.POLLNVAL)
 
 class E2SharedPoll:
 	def __init__(self):
-		self.dict = { }
+		self.dict = {}
 		self.eApp = getApplication()
 
-	def register(self, fd, eventmask = select.POLLIN | select.POLLERR | select.POLLOUT):
+	def register(self, fd, eventmask=select.POLLIN | select.POLLERR | select.POLLOUT):
 		self.dict[fd] = eventmask
 
 	def unregister(self, fd):
 		del self.dict[fd]
 
-	def poll(self, timeout = None):
+	def poll(self, timeout=None):
 		try:
 			r = self.eApp.poll(timeout, self.dict)
 		except KeyboardInterrupt:
@@ -97,7 +97,7 @@ class PollReactor(posixbase.PosixReactorBase):
 		fd = reader.fileno()
 		if fd not in reads:
 			selectables[fd] = reader
-			reads[fd] =  1
+			reads[fd] = 1
 			self._updateRegistration(fd)
 
 	def addWriter(self, writer, writes=writes, selectables=selectables):
@@ -106,7 +106,7 @@ class PollReactor(posixbase.PosixReactorBase):
 		fd = writer.fileno()
 		if fd not in writes:
 			selectables[fd] = writer
-			writes[fd] =  1
+			writes[fd] = 1
 			self._updateRegistration(fd)
 
 	def removeReader(self, reader, reads=reads):
@@ -146,14 +146,14 @@ class PollReactor(posixbase.PosixReactorBase):
 		"""Poll the poller for new events."""
 
 		if timeout is not None:
-			timeout = int(timeout * 1000) # convert seconds to milliseconds
+			timeout = int(timeout * 1000)  # convert seconds to milliseconds
 
 		try:
 			l = poller.poll(timeout)
 			if l is None:
 				if self.running:
 					self.stop()
-				l = [ ]
+				l = []
 		except select.error as e:
 			if e[0] == errno.EINTR:
 				return

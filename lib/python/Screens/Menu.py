@@ -60,19 +60,19 @@ def MenuEntryPixmap(entryID, png_cache, lastMenuID):
 def MenuEntryName(name):
 	def splitUpperCase(name, maxlen):
 		for c in range(len(name), 0, -1):
-			if name[c-1].isupper() and c-1 and c-1 <= maxlen:
-				return name[:c-1] + "-:-" + name[c-1:]
+			if name[c - 1].isupper() and c - 1 and c - 1 <= maxlen:
+				return name[:c - 1] + "-:-" + name[c - 1:]
 		return name
 	def splitLowerCase(name, maxlen):
 		for c in range(len(name), 0, -1):
-			if name[c-1].islower() and c-1 and c-1 <= maxlen:
-				return name[:c-1] + "-:-" + name[c-1:]
+			if name[c - 1].islower() and c - 1 and c - 1 <= maxlen:
+				return name[:c - 1] + "-:-" + name[c - 1:]
 		return name
 	def splitName(name, maxlen):
 		for s in (" ", "-", "/"):
-			pos = name.rfind(s, 0, maxlen+1)
+			pos = name.rfind(s, 0, maxlen + 1)
 			if pos > 1:
-				return [name[:pos+1] if pos+1 <= maxlen and s != " " else name[:pos], name[pos+1:]]
+				return [name[:pos + 1] if pos + 1 <= maxlen and s != " " else name[:pos], name[pos + 1:]]
 		return splitUpperCase(name, maxlen).split("-:-", 1)
 
 	maxrow = 3
@@ -80,14 +80,14 @@ def MenuEntryName(name):
 	namesplit = []
 	if len(name) > maxlen and maxrow > 1:
 		namesplit = splitName(name, maxlen)
-		if len(namesplit) == 1 or (len(namesplit) == 2 and len(namesplit[1]) > maxlen * (maxrow-1)):
+		if len(namesplit) == 1 or (len(namesplit) == 2 and len(namesplit[1]) > maxlen * (maxrow - 1)):
 			tmp = splitLowerCase(name, maxlen).split("-:-", 1)
 			if len(tmp[0]) > len(namesplit[0]) or len(namesplit) < 2:
 				namesplit = tmp
 		for x in range(1, maxrow):
 			if len(namesplit) > x and len(namesplit) < maxrow and len(namesplit[x]) > maxlen:
 				tmp = splitName(namesplit[x], maxlen)
-				if len(tmp) == 1 or (len(tmp) == 2 and len(tmp[1]) > maxlen * (maxrow-x)):
+				if len(tmp) == 1 or (len(tmp) == 2 and len(tmp[1]) > maxlen * (maxrow - x)):
 					tmp = splitLowerCase(namesplit[x], maxlen).split("-:-", 1)
 				if len(tmp) == 2:
 					namesplit.pop(x)
@@ -174,10 +174,10 @@ class Menu(Screen, ProtectedScreen):
 			exec("from %s import %s" % (arg[0], arg[1].split(",")[0]))
 			self.openDialog(*eval(arg[1]))
 
-	def nothing(self): #dummy
+	def nothing(self):  # dummy
 		pass
 
-	def openDialog(self, *dialog): # in every layer needed
+	def openDialog(self, *dialog):  # in every layer needed
 		self.session.openWithCallback(self.menuClosed, *dialog)
 
 	def openSetup(self, dialog):
@@ -199,7 +199,7 @@ class Menu(Screen, ProtectedScreen):
 			a = boundFunction(self.session.openWithCallback, self.menuClosedWithConfigFlush, Menu, node)
 		else:
 			a = boundFunction(self.session.openWithCallback, self.menuClosed, Menu, node)
-		#TODO add check if !empty(node.childNodes)
+		# TODO add check if !empty(node.childNodes)
 		destList.append((MenuTitle, a, entryID, weight))
 
 	def menuClosedWithConfigFlush(self, *res):
@@ -277,7 +277,7 @@ class Menu(Screen, ProtectedScreen):
 		self.createMenuList()
 
 		# for the skin: first try a menu_<menuID>, then Menu
-		self.skinName = [ ]
+		self.skinName = []
 		if self.menuID is not None:
 			if config.usage.menutype.value == 'horzanim' and findSkinScreen("Animmain"):
 				self.skinName.append('Animmain')
@@ -389,7 +389,7 @@ class Menu(Screen, ProtectedScreen):
 		self["key_blue"].text = _("Edit menu") if config.usage.menu_sort_mode.value == "user" else ""
 		self.list = []
 		self.menuID = None
-		for x in self.parentmenu: #walk through the actual nodelist
+		for x in self.parentmenu:  # walk through the actual nodelist
 			if not x.tag:
 				continue
 			if x.tag == 'item':
@@ -456,7 +456,7 @@ class Menu(Screen, ProtectedScreen):
 			self.list.sort(key=lambda x: int(x[3]))
 
 		if config.usage.menu_show_numbers.value in ("menu&plugins", "menu") or showNumericHelp:
-			self.list = [(str(x[0] + 1) + " " +x[1][0], x[1][1], x[1][2]) for x in enumerate(self.list)]
+			self.list = [(str(x[0] + 1) + " " + x[1][0], x[1][1], x[1][2]) for x in enumerate(self.list)]
 
 		self["menu"].setList(self.list)
 
@@ -516,7 +516,7 @@ class Menu(Screen, ProtectedScreen):
 				self.list.append(entry)
 		if not self.list:
 			self.list.append(('', None, 'dummy', '10', 10))
-		self.list.sort(key=lambda listweight : int(listweight[4]))
+		self.list.sort(key=lambda listweight: int(listweight[4]))
 
 class MenuSort(Menu):
 	def __init__(self, session, parent):
@@ -547,8 +547,8 @@ class MenuSort(Menu):
 	def isProtected(self):
 		return config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.menu_sort.value
 
-	def resetSortOrder(self, key = None):
-		config.usage.menu_sort_weight.value = { "mainmenu" : {"submenu" : {} }}
+	def resetSortOrder(self, key=None):
+		config.usage.menu_sort_weight.value = {"mainmenu": {"submenu": {}}}
 		config.usage.menu_sort_weight.save()
 		self.createMenuList()
 
@@ -556,7 +556,7 @@ class MenuSort(Menu):
 		self.list = list(self.full_list)
 		if not self.list:
 			self.list.append(('', None, 'dummy', '10', 10))
-		self.list.sort(key=lambda listweight : int(listweight[4]))
+		self.list.sort(key=lambda listweight: int(listweight[4]))
 
 	def selectionChanged(self):
 		selection = self["menu"].getCurrent() and len(self["menu"].getCurrent()) > 2 and self["menu"].getCurrent()[2] or ""
@@ -925,7 +925,7 @@ class IconMain(Screen):
 		else:
 			self.openTest()
 
-	def key_up(self, focusLastPic = False):
+	def key_up(self, focusLastPic=False):
 		self.ipage = self.ipage - 1
 		if self.ipage < 1 and 7 > self.picnum > 0:
 			self.ipage = 1
@@ -945,7 +945,7 @@ class IconMain(Screen):
 			self.index = 0
 		self.openTest()
 
-	def key_down(self, focusLastPic = False):
+	def key_down(self, focusLastPic=False):
 		self.ipage = self.ipage + 1
 		if self.ipage == 2 and 7 > self.picnum > 0:
 			self.ipage = 1
@@ -968,9 +968,9 @@ class IconMain(Screen):
 	def keyNumberGlobal(self, number):
 		if number == 7:
 			self.key_up()
-		elif  number == 8:
+		elif number == 8:
 			self.closeNonRecursive()
-		elif  number == 9:
+		elif number == 9:
 			self.key_down()
 		else:
 			number -= 1
@@ -1008,7 +1008,7 @@ class IconMain(Screen):
 			selection[1]()
 
 class MainMenu(Menu):
-	#add file load functions for the xml-file
+	# add file load functions for the xml-file
 
 	def __init__(self, *x):
 		self.skinName = "Menu"

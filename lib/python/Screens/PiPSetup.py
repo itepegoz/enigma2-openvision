@@ -81,7 +81,7 @@ class PiPSetup(Screen):
 		self.pip.move(self.pos[0], self.pos[1])
 
 	def resizePiP(self, resize):
-		resize += 100 # resize is in percent, so resize=+20 means: 120%
+		resize += 100  # resize is in percent, so resize=+20 means: 120%
 
 		oldsize = self.size
 		if self.mode != "split":
@@ -131,8 +131,8 @@ class PiPSetup(Screen):
 		if number > 0 and self.mode == "standard":
 			colsize = MAX_X / 3
 			rowsize = MAX_Y / 3
-			col = (number-1) % 3
-			row = (number-1) / 3
+			col = (number - 1) % 3
+			row = (number - 1) / 3
 
 			self.size = (180, 135)
 

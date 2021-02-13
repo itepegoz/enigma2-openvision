@@ -75,28 +75,28 @@ from Tools.Directories import InitFallbackFiles, resolveFilename, SCOPE_PLUGINS,
 InitFallbackFiles()
 
 profile("config.misc")
-config.misc.radiopic = ConfigText(default = resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
-config.misc.blackradiopic = ConfigText(default = resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
-config.misc.startCounter = ConfigInteger(default=0) # number of e2 starts...
-config.misc.standbyCounter = NoSave(ConfigInteger(default=0)) # number of standby
-config.misc.DeepStandby = NoSave(ConfigYesNo(default=False)) # detect deepstandby
-config.misc.RestartUI = ConfigYesNo(default=False) # detect user interface restart
+config.misc.radiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
+config.misc.blackradiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
+config.misc.startCounter = ConfigInteger(default=0)  # number of e2 starts...
+config.misc.standbyCounter = NoSave(ConfigInteger(default=0))  # number of standby
+config.misc.DeepStandby = NoSave(ConfigYesNo(default=False))  # detect deepstandby
+config.misc.RestartUI = ConfigYesNo(default=False)  # detect user interface restart
 config.misc.prev_wakeup_time = ConfigInteger(default=0)
-#config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
+# config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
 config.misc.prev_wakeup_time_type = ConfigInteger(default=0)
 # 0 = RecordTimer, 1 = ZapTimer, 2 = Plugins, 3 = WakeupTimer
-config.misc.epgcache_filename = ConfigText(default = "/hdd/epg.dat", fixed_size = False)
+config.misc.epgcache_filename = ConfigText(default="/hdd/epg.dat", fixed_size=False)
 
 def setEPGCachePath(configElement):
 	if os.path.isdir(configElement.value) or os.path.islink(configElement.value):
 		configElement.value = os.path.join(configElement.value, "epg.dat")
 	enigma.eEPGCache.getInstance().setCacheFile(configElement.value)
 
-#demo code for use of standby enter leave callbacks
-#def leaveStandby():
+# demo code for use of standby enter leave callbacks
+# def leaveStandby():
 #	print("!!!!!!!!!!!!!!!!!leave standby")
 
-#def standbyCountChanged(configElement):
+# def standbyCountChanged(configElement):
 #	print("!!!!!!!!!!!!!!!!!enter standby num", configElement.value)
 #	from Screens.Standby import inStandby
 #	inStandby.onClose.append(leaveStandby)
@@ -122,7 +122,7 @@ except ImportError as e:
 
 try:
 	from twisted.python import log
-	config.misc.enabletwistedlog = ConfigYesNo(default = False)
+	config.misc.enabletwistedlog = ConfigYesNo(default=False)
 	if config.misc.enabletwistedlog.value == True:
 		log.startLogging(open('/tmp/twisted.log', 'w'))
 	else:
@@ -146,7 +146,7 @@ from Plugins.Plugin import PluginDescriptor
 profile("misc")
 had = dict()
 
-def dump(dir, p = ""):
+def dump(dir, p=""):
 	if isinstance(dir, dict):
 		for (entry, val) in dir.items():
 			dump(val, p + "(dict)/" + entry)
@@ -198,7 +198,7 @@ Screen.globalScreen = Globals()
 # * destroy screen
 
 class Session:
-	def __init__(self, desktop = None, summary_desktop = None, navigation = None):
+	def __init__(self, desktop=None, summary_desktop=None, navigation=None):
 		self.desktop = desktop
 		self.summary_desktop = summary_desktop
 		self.nav = navigation
@@ -207,8 +207,8 @@ class Session:
 
 		self.current_dialog = None
 
-		self.dialog_stack = [ ]
-		self.summary_stack = [ ]
+		self.dialog_stack = []
+		self.summary_stack = []
 		self.summary = None
 
 		self.in_exec = False
@@ -239,7 +239,7 @@ class Session:
 		if callback is not None:
 			callback(*retval)
 
-	def execBegin(self, first=True, do_show = True):
+	def execBegin(self, first=True, do_show=True):
 		if self.in_exec:
 			raise AssertionError("already in exec")
 		self.in_exec = True
@@ -319,7 +319,7 @@ class Session:
 		self.pushCurrent()
 		self.current_dialog = dialog
 		self.current_dialog.isTmp = False
-		self.current_dialog.callback = None # would cause re-entrancy problems.
+		self.current_dialog.callback = None  # would cause re-entrancy problems.
 		self.execBegin()
 
 	def openWithCallback(self, callback, screen, *arguments, **kwargs):
@@ -387,7 +387,7 @@ class PowerKey:
 		globalActionMap.actions["power_down"] = lambda *args: None
 		globalActionMap.actions["power_up"] = self.powerup
 		globalActionMap.actions["power_long"] = self.powerlong
-		globalActionMap.actions["deepstandby"] = self.shutdown # front panel long power button press
+		globalActionMap.actions["deepstandby"] = self.shutdown  # front panel long power button press
 		globalActionMap.actions["discrete_off"] = self.standby
 
 	def shutdown(self):
@@ -480,11 +480,11 @@ def runScreenTest():
 
 	profile("Init:Session")
 	nav = Navigation()
-	session = Session(desktop = enigma.getDesktop(0), summary_desktop = enigma.getDesktop(1), navigation = nav)
+	session = Session(desktop=enigma.getDesktop(0), summary_desktop=enigma.getDesktop(1), navigation=nav)
 
 	CiHandler.setSession(session)
 
-	screensToRun = [ p.__call__ for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD) ]
+	screensToRun = [p.__call__ for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD)]
 
 	profile("wizards")
 	screensToRun += wizardManager.getWizards()
@@ -538,7 +538,7 @@ def runScreenTest():
 	from time import strftime, localtime
 	from Tools.StbHardware import setFPWakeuptime, setRTCtime
 	from Screens.SleepTimerEdit import isNextWakeupTime
-	#get currentTime
+	# get currentTime
 	nowTime = time()
 	wakeupList = sorted([
 		x for x in ((session.nav.RecordTimer.getNextRecordingTime(), 0),
@@ -550,11 +550,11 @@ def runScreenTest():
 	if wakeupList:
 		from time import strftime
 		startTime = wakeupList[0]
-		if (startTime[0] - nowTime) < 270: # no time to switch box back on
+		if (startTime[0] - nowTime) < 270:  # no time to switch box back on
 			wptime = nowTime + 30  # so switch back on in 30 seconds
 		else:
 			if brand == "gigablue":
-				wptime = startTime[0] - 120 # GigaBlue already starts 2 min. before wakeup time
+				wptime = startTime[0] - 120  # GigaBlue already starts 2 min. before wakeup time
 			else:
 				wptime = startTime[0] - 240
 		if brand == "gigablue":
@@ -567,7 +567,7 @@ def runScreenTest():
 		config.misc.prev_wakeup_time_type.save()
 	else:
 		config.misc.prev_wakeup_time.value = 0
-#		if not model.startswith('azboxm'): # skip for AZBox (mini)me - setting wakeup time to past reboots box 
+#		if not model.startswith('azboxm'): # skip for AZBox (mini)me - setting wakeup time to past reboots box
 #			setFPWakeuptime(int(nowTime) - 3600) # minus one hour -> overwrite old wakeup time
 	config.misc.prev_wakeup_time.save()
 
@@ -670,8 +670,8 @@ if os.path.exists('/etc/enigma2/ipv6'):
 
 #from enigma import dump_malloc_stats
 #t = eTimer()
-#t.callback.append(dump_malloc_stats)
-#t.start(1000)
+# t.callback.append(dump_malloc_stats)
+# t.start(1000)
 
 # first, setup a screen
 try:
@@ -682,7 +682,7 @@ try:
 	Components.ParentalControl.parentalControl.save()
 except:
 	print('EXCEPTION IN PYTHON STARTUP CODE:')
-	print('-'*60)
+	print('-' * 60)
 	print_exc(file=stdout)
 	enigma.quitMainloop(5)
-	print('-'*60)
+	print('-' * 60)

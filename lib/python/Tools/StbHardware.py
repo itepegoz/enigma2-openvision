@@ -92,16 +92,16 @@ def setFPWakeuptime(wutime):
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ioctl(fp.fileno(), 6, pack('L', wutime)) # set wake up
+			ioctl(fp.fileno(), 6, pack('L', wutime))  # set wake up
 		except IOError:
 			print("[StbHardware] setFPWakeupTime failed!")
 
 def setRTCoffset(forsleep=None):
 	import time
 	if time.localtime().tm_isdst == 0:
-		forsleep = 7200+time.timezone
+		forsleep = 7200 + time.timezone
 	else:
-		forsleep = 3600-time.timezone
+		forsleep = 3600 - time.timezone
 
 	t_local = time.localtime(int(time.time()))
 
@@ -120,7 +120,7 @@ def setRTCtime(wutime):
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ioctl(fp.fileno(), 0x101, pack('L', wutime)) # set wake up
+			ioctl(fp.fileno(), 0x101, pack('L', wutime))  # set wake up
 		except IOError:
 			print("[StbHardware] setRTCtime failed!")
 
@@ -131,14 +131,14 @@ def getFPWakeuptime():
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ret = unpack('L', ioctl(fp.fileno(), 5, '    '))[0] # get wakeuptime
+			ret = unpack('L', ioctl(fp.fileno(), 5, '    '))[0]  # get wakeuptime
 		except IOError:
 			print("[StbHardware] getFPWakeupTime failed!")
 	return ret
 
 wasTimerWakeup = None
 
-def getFPWasTimerWakeup(check = False):
+def getFPWasTimerWakeup(check=False):
 	global wasTimerWakeup
 	isError = False
 	if wasTimerWakeup is not None:

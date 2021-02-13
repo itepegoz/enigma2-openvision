@@ -4,7 +4,7 @@ from __future__ import print_function
 # fake-enigma
 class slot:
 	def __init__(self):
-		self.list = [ ]
+		self.list = []
 
 	def get(self):
 		return self.list
@@ -19,7 +19,7 @@ import time
 
 from events import eventfnc
 
-##################### ENIGMA BASE
+# ENIGMA BASE
 
 class eTimer:
 	def __init__(self):
@@ -27,7 +27,7 @@ class eTimer:
 		self.next_activation = None
 		print("[enigma] NEW TIMER")
 
-	def start(self, msec, singleshot = False):
+	def start(self, msec, singleshot=False):
 		print("[enigma] start timer", msec)
 		self.next_activation = time.time() + msec / 1000.0
 		self.msec = msec
@@ -72,7 +72,7 @@ def stop():
 	global stopped
 	stopped = True
 
-def run(duration = 1000):
+def run(duration=1000):
 	stoptimer = eTimer()
 	stoptimer.start(duration * 1000.0)
 	stoptimer.callback.append(stop)
@@ -80,7 +80,7 @@ def run(duration = 1000):
 		runIteration()
 
 
-##################### ENIGMA GUI
+# ENIGMA GUI
 
 eSize = None
 ePoint = None
@@ -140,15 +140,15 @@ getPrevAsciiCode = None
 
 class eServiceReference:
 
-	isDirectory=1
-	mustDescent=2
-	canDescent=4
-	flagDirectory=isDirectory|mustDescent|canDescent
-	shouldSort=8
-	hasSortKey=16
-	sort1=32
-	isMarker=64
-	isGroup=128
+	isDirectory = 1
+	mustDescent = 2
+	canDescent = 4
+	flagDirectory = isDirectory | mustDescent | canDescent
+	shouldSort = 8
+	hasSortKey = 16
+	sort1 = 32
+	isMarker = 64
+	isGroup = 128
 
 	def __init__(self, ref):
 		self.ref = ref
@@ -285,13 +285,13 @@ class eServiceCenter:
 
 eServiceCenter()
 
-##################### ENIGMA CHROOT
+# ENIGMA CHROOT
 
 print("[enigma] import directories")
 import Tools.Directories
 print("[enigma] done")
 
-chroot="."
+chroot = "."
 
 for (x, (y, z)) in Tools.Directories.defaultPaths.items():
 	Tools.Directories.defaultPaths[x] = (chroot + y, z)
@@ -299,7 +299,7 @@ for (x, (y, z)) in Tools.Directories.defaultPaths.items():
 Tools.Directories.defaultPaths[Tools.Directories.SCOPE_SKIN] = ("../data/", Tools.Directories.PATH_DONTCREATE)
 Tools.Directories.defaultPaths[Tools.Directories.SCOPE_CONFIG] = ("/etc/enigma2/", Tools.Directories.PATH_DONTCREATE)
 
-##################### ENIGMA CONFIG
+# ENIGMA CONFIG
 
 print("[enigma] import config")
 import Components.config
@@ -311,14 +311,14 @@ my_config = [
 
 Components.config.config.unpickle(my_config)
 
-##################### ENIGMA ACTIONS
+# ENIGMA ACTIONS
 
 class eActionMap:
 	def __init__(self):
 		pass
 
 
-##################### ENIGMA STARTUP:
+# ENIGMA STARTUP:
 
 def init_nav():
 	print("[enigma] init nav")

@@ -15,7 +15,7 @@ brand = getBoxBrand()
 model = getBoxType()
 platform = getMachineBuild()
 
-POLLTIME = 5 # seconds
+POLLTIME = 5  # seconds
 
 def SymbolsCheck(session, **kwargs):
 		global symbolspoller, POLLTIME
@@ -31,8 +31,7 @@ class SymbolsCheckPoller:
 		self.led = "0"
 		self.timer = eTimer()
 		self.onClose = []
-		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
-			{
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				iPlayableService.evUpdatedInfo: self.__evUpdatedInfo,
 			})
 

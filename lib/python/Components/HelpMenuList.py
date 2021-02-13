@@ -6,19 +6,19 @@ from Components.GUIComponent import GUIComponent
 from enigma import eListboxPythonMultiContent, eListbox, gFont
 from Tools.KeyBindings import queryKeyBinding, getKeyDescription
 import skin
-#getKeyPositions
+# getKeyPositions
 
 # [ ( actionmap, context, [(action, help), (action, help), ...] ), (actionmap, ... ), ... ]
 
 class HelpMenuList(GUIComponent):
 	def __init__(self, helplist, callback):
 		GUIComponent.__init__(self)
-		self.onSelChanged = [ ]
+		self.onSelChanged = []
 		self.l = eListboxPythonMultiContent()
 		self.callback = callback
 		self.extendedHelp = False
 
-		l = [ ]
+		l = []
 		for (actionmap, context, actions) in helplist:
 			for (action, help) in actions:
 				if hasattr(help, '__call__'):
@@ -41,10 +41,10 @@ class HelpMenuList(GUIComponent):
 					if name is None:
 						continue
 
-					if flags & 8: # for long keypresses, prepend l_ into the key name.
+					if flags & 8:  # for long keypresses, prepend l_ into the key name.
 						name = (name[0], "long")
 
-					entry = [ (actionmap, context, action, name ) ]
+					entry = [(actionmap, context, action, name)]
 
 					if isinstance(help, list):
 						self.extendedHelp = True
@@ -57,7 +57,7 @@ class HelpMenuList(GUIComponent):
 						))
 					else:
 						x, y, w, h = skin.parameters.get("HelpMenuListHlp", (0, 0, 600, 28))
-						entry.append( (eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, 0, help) )
+						entry.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, 0, help))
 
 					l.append(entry)
 

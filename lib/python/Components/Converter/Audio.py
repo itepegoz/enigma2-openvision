@@ -19,7 +19,7 @@ class Audio(Converter, object):
 	TRANSPONDER = 11
 	SOURCE = 12
 
-	#constructor
+	# constructor
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		self.type = {
@@ -108,37 +108,37 @@ class Audio(Converter, object):
 			return isInGParameter
 
 	def getCryptSystemName(self, caID):
-		caID=int(caID, 16)
-		if ((caID>=0x0100) and (caID<=0x01FF)):
-			syID="Seca Mediaguard"
-		elif((caID>=0x0500) and (caID<=0x05FF)):
-			syID="Viaccess"
-		elif((caID>=0x0600) and (caID<=0x06FF)):
-			syID="Irdeto"
-		elif((caID>=0x0900) and (caID<=0x09FF)):
-			syID="NDS Videoguard"
-		elif((caID>=0x0B00) and (caID<=0x0BFF)):
-			syID="Conax"
-		elif((caID>=0x0D00) and (caID<=0x0DFF)):
-			syID="Cryptoworks"
-		elif((caID>=0x0E00) and (caID<=0x0EFF)):
-			syID="PowerVu"
-		elif((caID>=0x1700) and (caID<=0x17FF)):
-			syID="Betacrypt"
-		elif((caID>=0x1800) and (caID<=0x18FF)):
-			syID="Nagravision"
-		elif((caID>=0x2200) and (caID<=0x22FF)):
-			syID="Codicrypt"
-		elif((caID>=0x2600) and (caID<=0x26FF)):
-			syID="EBU Biss"
-		elif((caID>=0x4A00) and (caID<=0x4AFF)):
-			syID="DreamCrypt"
-		elif((caID>=0x5500) and (caID<=0x55FF)):
-			syID="Griffin"
-		elif((caID>=0xA100) and (caID<=0xA1FF)):
-			syID="RusCrypt"
+		caID = int(caID, 16)
+		if ((caID >= 0x0100) and (caID <= 0x01FF)):
+			syID = "Seca Mediaguard"
+		elif((caID >= 0x0500) and (caID <= 0x05FF)):
+			syID = "Viaccess"
+		elif((caID >= 0x0600) and (caID <= 0x06FF)):
+			syID = "Irdeto"
+		elif((caID >= 0x0900) and (caID <= 0x09FF)):
+			syID = "NDS Videoguard"
+		elif((caID >= 0x0B00) and (caID <= 0x0BFF)):
+			syID = "Conax"
+		elif((caID >= 0x0D00) and (caID <= 0x0DFF)):
+			syID = "Cryptoworks"
+		elif((caID >= 0x0E00) and (caID <= 0x0EFF)):
+			syID = "PowerVu"
+		elif((caID >= 0x1700) and (caID <= 0x17FF)):
+			syID = "Betacrypt"
+		elif((caID >= 0x1800) and (caID <= 0x18FF)):
+			syID = "Nagravision"
+		elif((caID >= 0x2200) and (caID <= 0x22FF)):
+			syID = "Codicrypt"
+		elif((caID >= 0x2600) and (caID <= 0x26FF)):
+			syID = "EBU Biss"
+		elif((caID >= 0x4A00) and (caID <= 0x4AFF)):
+			syID = "DreamCrypt"
+		elif((caID >= 0x5500) and (caID <= 0x55FF)):
+			syID = "Griffin"
+		elif((caID >= 0xA100) and (caID <= 0xA1FF)):
+			syID = "RusCrypt"
 		else:
-			syID="Other"
+			syID = "Other"
 		return syID
 
 	def createAudioCodec(self):
@@ -176,7 +176,7 @@ class Audio(Converter, object):
 			caID = ""
 			syID = ""
 			try:
-				file = open ( "/tmp/ecm.info", "r" )
+				file = open("/tmp/ecm.info", "r")
 			except:
 				return ""
 			while True:
@@ -192,8 +192,8 @@ class Audio(Converter, object):
 					cellmembers = line.split()
 					for x in range(len(cellmembers)):
 						if ("ECM" in cellmembers[x]):
-							if x<=(len(cellmembers)):
-								caID = cellmembers[x+3]
+							if x <= (len(cellmembers)):
+								caID = cellmembers[x + 3]
 								caID = caID.strip(",;.:-*_<>()[]{}")
 								sysID = self.getCryptSystemName(caID)
 								return sysID
@@ -203,7 +203,7 @@ class Audio(Converter, object):
 
 	def getStreamInfo(self, ltype):
 		try:
-			file = open ( "/tmp/ecm.info", "r" )
+			file = open("/tmp/ecm.info", "r")
 		except:
 			return ""
 		ee = 0
@@ -230,7 +230,7 @@ class Audio(Converter, object):
 			return " "
 		else:
 			if (ltype == self.PROV_CA_ID):
-				return ( " " + self.norm_hex(caid) + " " + self.norm_hex(provid))
+				return (" " + self.norm_hex(caid) + " " + self.norm_hex(provid))
 			elif (ltype == self.PROV_ID):
 				return self.norm_hex(provid)
 			elif (ltype == self.CAID_ID):
@@ -239,7 +239,7 @@ class Audio(Converter, object):
 
 	def getSourceInfo(self, ltype):
 		try:
-			file = open ( "/tmp/ecm.info", "r" )
+			file = open("/tmp/ecm.info", "r")
 		except:
 			return ""
 		boxidString = ""
@@ -291,21 +291,21 @@ class Audio(Converter, object):
 				msecIndex = x[0].find("msec")
 				if (msecIndex is not -1):
 					ecmtime = x[0].strip()
-					ecmtime = " TIME: "+ ecmtime
+					ecmtime = " TIME: " + ecmtime
 		file.close()
 
 		if(ee == 1):
-			emuExpertString = ((((((" ") + using)  + " " + address)  + " " + network) + reader + " " + hops + "  ") + ecmtime + " s ")
+			emuExpertString = ((((((" ") + using) + " " + address) + " " + network) + reader + " " + hops + "  ") + ecmtime + " s ")
 		else:
-			emuExpertString = (((((((" ") + using) + " " + address)  + " " + network) + reader + " " + ecmtime + " ") + (self.getExpertInfo(boxidString)) + " ") + self.isGParameter(boxidString, caIdString))
+			emuExpertString = (((((((" ") + using) + " " + address) + " " + network) + reader + " " + ecmtime + " ") + (self.getExpertInfo(boxidString)) + " ") + self.isGParameter(boxidString, caIdString))
 		return emuExpertString
 
 	def getTransponderType(self, info):
 		transponder = info.getInfoObject(iServiceInformation.sTransponderData)
-		tunerType=""
+		tunerType = ""
 		if isinstance(transponder, dict):
 			tunerType = transponder['tuner_type']
-			if tunerType == "DVB-S" and transponder['system']==1:
+			if tunerType == "DVB-S" and transponder['system'] == 1:
 				tunerType = "DVB-S2"
 		return tunerType
 
@@ -319,19 +319,19 @@ class Audio(Converter, object):
 			return ""
 
 		nazwaemu = "CI"
-		if (self.type == self.PROV_CA_ID or self.type == self.PROV_ID or self.type == self.CAID_ID) and (info.getInfo(iServiceInformation.sIsCrypted)==1):
+		if (self.type == self.PROV_CA_ID or self.type == self.PROV_ID or self.type == self.CAID_ID) and (info.getInfo(iServiceInformation.sIsCrypted) == 1):
 			return self.getStreamInfo(self.type)
 
-		elif (self.type == self.NETCARD_INFO) and (info.getInfo(iServiceInformation.sIsCrypted)==1):
+		elif (self.type == self.NETCARD_INFO) and (info.getInfo(iServiceInformation.sIsCrypted) == 1):
 			return self.getSourceInfo(self.type)
 
-		elif (self.type == self.PROV_CA_SOURCE) and (info.getInfo(iServiceInformation.sIsCrypted)==1):
+		elif (self.type == self.PROV_CA_SOURCE) and (info.getInfo(iServiceInformation.sIsCrypted) == 1):
 			first = self.getStreamInfo(self.PROV_CA_ID)
 			second = self.getSourceInfo(self.NETCARD_INFO)
-			if ( len(second.strip())>0 ):
-				first = first+"  From:"+second
+			if (len(second.strip()) > 0):
+				first = first + "  From:" + second
 			return first
-		elif (self.type == self.SOURCE) and (info.getInfo(iServiceInformation.sIsCrypted)==1):
+		elif (self.type == self.SOURCE) and (info.getInfo(iServiceInformation.sIsCrypted) == 1):
 			return self.getSourceInfo(self.NETCARD_INFO)
 
 		elif (self.type == self.CRYPT_INFO):

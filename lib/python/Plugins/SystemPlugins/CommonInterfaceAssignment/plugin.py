@@ -35,7 +35,7 @@ class CIselectMainMenu(Screen):
 			<widget name="CiList" position="5,50" size="490,200" scrollbarMode="showOnDemand" />
 		</screen>"""
 
-	def __init__(self, session, args = 0):
+	def __init__(self, session, args=0):
 		Screen.__init__(self, session)
 		self["key_red"] = StaticText(_("Close"))
 		self["key_green"] = StaticText(_("Edit"))
@@ -52,22 +52,22 @@ class CIselectMainMenu(Screen):
 		print("[CommonInterfaceAssignment] CI_Wizzard FOUND %d CI Slots " % NUM_CI)
 
 		self.dlg = None
-		self.state = { }
-		self.list = [ ]
-		if  NUM_CI and NUM_CI > 0:
+		self.state = {}
+		self.list = []
+		if NUM_CI and NUM_CI > 0:
 			for slot in range(NUM_CI):
 				state = eDVBCI_UI.getInstance().getState(slot)
 				if state != -1:
-					appname = _("Slot %d") %(slot+1) + " - " + _("unknown error")
+					appname = _("Slot %d") % (slot + 1) + " - " + _("unknown error")
 					if state == 0:
-						appname = _("Slot %d") %(slot+1) + " - " + _("no module found")
+						appname = _("Slot %d") % (slot + 1) + " - " + _("no module found")
 					elif state == 1:
-						appname = _("Slot %d") %(slot+1) + " - " + _("init modules")
+						appname = _("Slot %d") % (slot + 1) + " - " + _("init modules")
 					elif state == 2:
-						appname = _("Slot %d") %(slot+1) + " - " + eDVBCI_UI.getInstance().getAppName(slot)
-					self.list.append( (appname, ConfigNothing(), 0, slot) )
+						appname = _("Slot %d") % (slot + 1) + " - " + eDVBCI_UI.getInstance().getAppName(slot)
+					self.list.append((appname, ConfigNothing(), 0, slot))
 		else:
-			self.list.append( (_("no CI slots found"), ConfigNothing(), 1, -1) )
+			self.list.append((_("no CI slots found"), ConfigNothing(), 1, -1))
 
 		menuList = ConfigList(self.list)
 		menuList.list = self.list
@@ -87,7 +87,7 @@ class CIselectMainMenu(Screen):
 				print("[CommonInterfaceAssignment] CI_Wizzard there is no CI Slot in your receiver")
 			else:
 				print("[CommonInterfaceAssignment] CI_Wizzard selected CI Slot : %d" % slot)
-				if config.usage.setup_level.index > 1: # advanced
+				if config.usage.setup_level.index > 1:  # advanced
 					self.session.open(CIconfigMenu, slot)
 				else:
 					self.session.open(easyCIconfigMenu, slot)
@@ -144,7 +144,7 @@ class CIconfigMenu(Screen):
 			i += 1
 			self.caidlist.append((str(hex(int(caid))), str(caid), i))
 
-		print("[CommonInterfaceAssignment] CI_Wizzard_Config_CI%d read following CAIds from CI: %s" %(self.ci_slot, self.caidlist))
+		print("[CommonInterfaceAssignment] CI_Wizzard_Config_CI%d read following CAIds from CI: %s" % (self.ci_slot, self.caidlist))
 
 		self.selectedcaid = []
 		self.servicelist = []
@@ -157,7 +157,7 @@ class CIconfigMenu(Screen):
 
 		self.loadXML()
 		# if config mode !=advanced autoselect any caid
-		if config.usage.setup_level.index <= 1: # advanced
+		if config.usage.setup_level.index <= 1:  # advanced
 			self.selectedcaid = self.caidlist
 			self.finishedCAidSelection(self.selectedcaid)
 		self.onShown.append(self.setWindowTitle)
@@ -169,10 +169,10 @@ class CIconfigMenu(Screen):
 		self.delete()
 
 	def greenPressed(self):
-		self.session.openWithCallback( self.finishedChannelSelection, myChannelSelection, None)
+		self.session.openWithCallback(self.finishedChannelSelection, myChannelSelection, None)
 
 	def yellowPressed(self):
-		self.session.openWithCallback( self.finishedProviderSelection, myProviderSelection, None)
+		self.session.openWithCallback(self.finishedProviderSelection, myProviderSelection, None)
 
 	def bluePressed(self):
 		self.session.openWithCallback(self.finishedCAidSelection, CAidSelect, self.caidlist, self.selectedcaid)
@@ -263,7 +263,7 @@ class CIconfigMenu(Screen):
 	def finishedCAidSelection(self, *args):
 		if len(args):
 			self.selectedcaid = args[0]
-			self.caids=""
+			self.caids = ""
 			if len(self.selectedcaid):
 				for item in self.selectedcaid:
 					if len(self.caids):
@@ -298,7 +298,7 @@ class CIconfigMenu(Screen):
 					if item[2] == 1:
 						fp.write("\t\t<provider name=\"%s\" dvbnamespace=\"%s\" />\n" % (stringToXML(name), item[3]))
 					else:
-						fp.write("\t\t<service name=\"%s\" ref=\"%s\" />\n"  % (stringToXML(name), item[3]))
+						fp.write("\t\t<service name=\"%s\" ref=\"%s\" />\n" % (stringToXML(name), item[3]))
 			fp.write("\t</slot>\n")
 			fp.write("</ci>\n")
 			fp.close()
@@ -313,7 +313,7 @@ class CIconfigMenu(Screen):
 
 		def getValue(definitions, default):
 			Len = len(definitions)
-			return Len > 0 and definitions[Len-1].text or default
+			return Len > 0 and definitions[Len - 1].text or default
 		self.read_services = []
 		self.read_providers = []
 		self.usingcaid = []
@@ -329,12 +329,12 @@ class CIconfigMenu(Screen):
 					self.usingcaid.append(int(read_caid, 16))
 					i += 1
 
-				for service in  slot.findall("service"):
+				for service in slot.findall("service"):
 					read_service_name = service.get("name").encode("UTF-8")
 					read_service_ref = service.get("ref").encode("UTF-8")
-					self.read_services.append (read_service_ref)
+					self.read_services.append(read_service_ref)
 
-				for provider in  slot.findall("provider"):
+				for provider in slot.findall("provider"):
 					read_provider_name = provider.get("name").encode("UTF-8")
 					read_provider_dvbname = provider.get("dvbnamespace").encode("UTF-8")
 					self.read_providers.append((read_provider_name, read_provider_dvbname))
@@ -479,7 +479,7 @@ class myProviderSelection(ChannelSelectionBase):
 		self.showSatellites()
 		self.setTitle(_("Select provider to add..."))
 
-	def channelSelected(self): # just return selected service
+	def channelSelected(self):  # just return selected service
 		ref = self.getCurrentSelection()
 		if ref is None: return
 		if not (ref.flags & 64):
@@ -507,26 +507,26 @@ class myProviderSelection(ChannelSelectionBase):
 									self.close(providerlist, self.dvbnamespace, True)
 								else:
 									self.close(None)
-				self.session.openWithCallback(addAction, ChoiceBox, title = _("Select action"), list=menu)
+				self.session.openWithCallback(addAction, ChoiceBox, title=_("Select action"), list=menu)
 
 	def showSatellites(self, changeMode=False):
 		if changeMode:
 			return
 		if not self.pathChangeDisabled:
-			refstr = '%s FROM SATELLITES ORDER BY satellitePosition'%(self.service_types)
+			refstr = '%s FROM SATELLITES ORDER BY satellitePosition' % (self.service_types)
 			if not self.preEnterPath(refstr):
 				ref = eServiceReference(refstr)
-				justSet=False
+				justSet = False
 				prev = None
 
 				if self.isBasePathEqual(ref):
 					if self.isPrevPathEqual(ref):
-						justSet=True
+						justSet = True
 					prev = self.pathUp(justSet)
 				else:
 					currentRoot = self.getRoot()
 					if currentRoot is None or currentRoot != ref:
-						justSet=True
+						justSet = True
 						self.clearPath()
 						self.enterPath(ref, True)
 				if justSet:
@@ -535,7 +535,7 @@ class myProviderSelection(ChannelSelectionBase):
 					if not servicelist is None:
 						while True:
 							service = servicelist.getNext()
-							if not service.valid(): #check if end of list
+							if not service.valid():  # check if end of list
 								break
 							unsigned_orbpos = service.getUnsignedData(4) >> 16
 							orbpos = service.getData(4) >> 16
@@ -547,12 +547,12 @@ class myProviderSelection(ChannelSelectionBase):
 									# why we need this cast?
 									service_name = str(nimmanager.getSatDescription(orbpos))
 								except:
-									if unsigned_orbpos == 0xFFFF: #Cable
+									if unsigned_orbpos == 0xFFFF:  # Cable
 										service_name = _("Cable")
-									elif unsigned_orbpos == 0xEEEE: #Terrestrial
+									elif unsigned_orbpos == 0xEEEE:  # Terrestrial
 										service_name = _("Terrestrial")
 									else:
-										if orbpos > 1800: # west
+										if orbpos > 1800:  # west
 											orbpos = 3600 - orbpos
 											h = _("W")
 										else:
@@ -652,7 +652,7 @@ class myChannelSelection(ChannelSelectionBase):
 		if changeMode:
 			self.close(None)
 
-	def channelSelected(self): # just return selected service
+	def channelSelected(self):  # just return selected service
 		ref = self.getCurrentSelection()
 		if (ref.flags & 7) == 7:
 			self.enterPath(ref)
@@ -716,6 +716,6 @@ def Plugins(**kwargs):
 	description = _("a gui to assign services/providers to common interface modules")
 	if config.usage.setup_level.index > 1:
 		description = _("a gui to assign services/providers/caids to common interface modules")
-	return [PluginDescriptor(where = PluginDescriptor.WHERE_SESSIONSTART, needsRestart = False, fnc = sessionstart),
-			PluginDescriptor(where = PluginDescriptor.WHERE_AUTOSTART, needsRestart = False, fnc = autostart),
-			PluginDescriptor(name = _("Common Interface assignment"), description = description, where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc = menu)]
+	return [PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, needsRestart=False, fnc=sessionstart),
+			PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, needsRestart=False, fnc=autostart),
+			PluginDescriptor(name=_("Common Interface assignment"), description=description, where=PluginDescriptor.WHERE_MENU, needsRestart=False, fnc=menu)]

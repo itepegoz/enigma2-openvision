@@ -4,11 +4,11 @@ from __future__ import print_function
 import threading
 lock = threading.Lock()
 
-notifications = [ ]
-notificationAdded = [ ]
+notifications = []
+notificationAdded = []
 
 # notifications which are currently on screen (and might be closed by similiar notifications)
-current_notifications = [ ]
+current_notifications = []
 
 def __AddNotification(fnc, screen, id, *args, **kwargs):
 	if ".MessageBox'>" in str(screen):
@@ -66,17 +66,17 @@ def RemovePopup(id):
 
 from Screens.MessageBox import MessageBox
 
-def AddPopup(text, type, timeout, id = None):
+def AddPopup(text, type, timeout, id=None):
 	if id is not None:
 		RemovePopup(id)
 	print("[Notifications] AddPopup, id =", id)
-	AddNotificationWithID(id, MessageBox, text = text, type = type, timeout = timeout, close_on_any_key = True)
+	AddNotificationWithID(id, MessageBox, text=text, type=type, timeout=timeout, close_on_any_key=True)
 
-def AddPopupWithCallback(fnc, text, type, timeout, id = None):
+def AddPopupWithCallback(fnc, text, type, timeout, id=None):
 	if id is not None:
 		RemovePopup(id)
 	print("[Notifications] AddPopup, id =", id)
-	AddNotificationWithIDCallback(fnc, id, MessageBox, text = text, type = type, timeout = timeout, close_on_any_key = False)
+	AddNotificationWithIDCallback(fnc, id, MessageBox, text=text, type=type, timeout=timeout, close_on_any_key=False)
 
 def removeCIdialog():
 	import NavigationInstance
