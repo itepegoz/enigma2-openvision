@@ -10,7 +10,8 @@ def elementsWithTag(el, tag):
 	# fiiixme! (works but isn't nice)
 	if isinstance(tag, str):
 		s = tag
-		tag = lambda x: x == s
+		def tag(x):
+			return x == s
 
 	for x in el:
 		if x.nodeType != xml.dom.minidom.Element.nodeType:

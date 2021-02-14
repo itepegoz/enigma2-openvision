@@ -393,7 +393,8 @@ class CheckDiskspaceTask(Task):
 		maxsize = 0
 		for title in job.project.titles:
 			titlesize = title.estimatedDiskspace
-			if titlesize > maxsize: maxsize = titlesize
+			if titlesize > maxsize:
+				maxsize = titlesize
 			totalsize += titlesize
 		diskSpaceNeeded = totalsize + maxsize
 		job.estimateddvdsize = totalsize / 1024 / 1024
@@ -518,7 +519,9 @@ class MenuImageTask(Task):
 	def run(self, callback):
 		self.callback = callback
 		# try:
-		import ImageDraw, Image, os
+		import ImageDraw
+		import Image
+		import os
 		s = self.job.project.menutemplate.settings
 		s_top = s.margin_top.getValue()
 		s_bottom = s.margin_bottom.getValue()
@@ -749,7 +752,8 @@ def CreateAuthoringXML_singleset(job):
 			post_tag = "jump title %d;" % (title_no + 1)
 		elif mode.startswith("menu"):
 			post_tag = "call vmgm menu 1;"
-		else: post_tag = ""
+		else:
+			post_tag = ""
 
 		authorxml.append('    <pgc>\n')
 		authorxml.append('     <vob file="' + title_filename + '" chapters="' + chapters + '" />\n')
@@ -838,7 +842,8 @@ def CreateAuthoringXML_multiset(job):
 			post_tag = "jump titleset %d title 1;" % (title_no + 1)
 		elif mode.startswith("menu"):
 			post_tag = "call vmgm menu 1;"
-		else: post_tag = ""
+		else:
+			post_tag = ""
 
 		authorxml.append('    <pgc>\n')
 		authorxml.append('     <vob file="' + title_filename + '" chapters="' + chapters + '" />\n')

@@ -12,7 +12,9 @@ def setRealtime():
 
 def setIdealtime():
 	global real_time
-	real_time = lambda: 0
+
+	def real_time():
+		return 0
 
 def setTime(now):
 	global time_offset

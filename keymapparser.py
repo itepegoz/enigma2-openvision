@@ -53,7 +53,8 @@ def parseKeys(context, filename, actionmap, device, keys):
 			assert id, "[keymapparser] %s: must specify id in context %s, mapto '%s'" % (filename, context, mapto)
 			keyid = getKeyId(id)
 
-			flag_ascii_to_id = lambda x: {'m': 1, 'b': 2, 'r': 4, 'l': 8}[x]
+			def flag_ascii_to_id(x):
+				return {'m': 1, 'b': 2, 'r': 4, 'l': 8}[x]
 
 			flags = sum(map(flag_ascii_to_id, flags))
 
