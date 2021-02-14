@@ -6,8 +6,10 @@ from os import statvfs
 
 from enigma import eLabel
 
+
 # TODO: Harddisk.py has similiar functions, but only similiar.
 # fix this to use same code
+#
 class DiskInfo(VariableText, GUIComponent):
 	FREE = 0
 	USED = 1

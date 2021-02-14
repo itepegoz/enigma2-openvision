@@ -6,6 +6,7 @@ import traceback
 
 indent = 0
 
+
 # To output call stack and call duration for a function, decorate like this:
 # from Tools.Trace import trace
 # @trace

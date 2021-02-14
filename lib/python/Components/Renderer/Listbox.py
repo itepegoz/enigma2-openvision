@@ -3,18 +3,19 @@
 from Components.Renderer.Renderer import Renderer
 from enigma import eListbox
 
+
 # the listbox renderer is the listbox, but no listbox content.
 # the content will be provided by the source (or converter).
-
+#
 # the source should emit the 'changed' signal whenever
 # it has a new listbox content.
-
+#
 # the source needs to have the 'content' property for the
 # used listbox content
-
+#
 # it should expose exactly the non-content related functions
 # of the eListbox class. more or less.
-
+#
 class Listbox(Renderer, object):
 	def __init__(self):
 		Renderer.__init__(self)

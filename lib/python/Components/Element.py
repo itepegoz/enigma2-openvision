@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 from Tools.CList import CList
 
+
 # down                       up
 # Render Converter Converter Source
-
+#
 # a bidirectional connection
-
+#
 def cached(f):
 	name = f.__name__
+
 	def wrapper(self):
 		cache = self.cache
 		if cache is None:
@@ -18,12 +20,14 @@ def cached(f):
 		return cache[name][1]
 	return wrapper
 
+
 class ElementError(Exception):
 	def __init__(self, message):
 		self.msg = message
 
 	def __str__(self):
 		return self.msg
+
 
 class Element(object):
 	CHANGED_DEFAULT = 0   # initial "pull" state

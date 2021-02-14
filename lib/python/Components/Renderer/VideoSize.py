@@ -4,7 +4,7 @@ from Components.VariableText import VariableText
 from enigma import eLabel, iServiceInformation
 from Components.Renderer.Renderer import Renderer
 
-#
+
 # borrowed from vali, addapter for openpli
 #
 class VideoSize(Renderer, VariableText):

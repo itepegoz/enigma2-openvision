@@ -6,10 +6,12 @@ from Components.GUIComponent import GUIComponent
 from enigma import eListboxPythonMultiContent, eListbox, gFont
 from Tools.KeyBindings import queryKeyBinding, getKeyDescription
 import skin
+
+
 # getKeyPositions
-
+#
 # [ ( actionmap, context, [(action, help), (action, help), ...] ), (actionmap, ... ), ... ]
-
+#
 class HelpMenuList(GUIComponent):
 	def __init__(self, helplist, callback):
 		GUIComponent.__init__(self)

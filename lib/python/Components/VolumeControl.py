@@ -9,11 +9,15 @@ from Components.config import config, ConfigSubsection, ConfigInteger
 from Components.SystemInfo import SystemInfo
 
 profile("VolumeControl")
+
+
 # TODO .. move this to a own .py file
+#
 class VolumeControl:
 	instance = None
 	"""Volume control, handles volUp, volDown, volMute actions and display
 	a corresponding dialog"""
+
 	def __init__(self, session):
 		globalActionMap.actions["volumeUp"] = self.volUp
 		globalActionMap.actions["volumeDown"] = self.volDown

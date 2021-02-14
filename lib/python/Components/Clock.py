@@ -6,8 +6,10 @@ from Components.VariableText import VariableText
 from enigma import eTimer, eLabel
 
 import time
-# now some "real" components:
 
+
+# now some "real" components:
+#
 class Clock(VariableText, GUIComponent):
 	def __init__(self):
 		VariableText.__init__(self)
