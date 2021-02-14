@@ -50,7 +50,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 
 		self.createSetup()
 
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
@@ -97,7 +97,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 
 	def saveconfig(self):
 		nim_config_list = []
-		if self.initial_state != config.clientmode.enabled.value and self.initial_state == False:  # switching to client mode
+		if self.initial_state != config.clientmode.enabled.value and self.initial_state is False:  # switching to client mode
 			# save normal mode config so it can be reinsated when returning to normal mode
 			nim_config_list = []
 			for x in config.Nims:

@@ -86,7 +86,7 @@ class Network:
 			data['bcast'] = self.convertIP(nit[ni.AF_INET][0]['broadcast'])
 			data['mac'] = nit[ni.AF_LINK][0]['addr']  # mac
 			data['gateway'] = self.convertIP(ni.gateways()['default'][ni.AF_INET][0])  # default gw
-		except:
+		except Exception:
 			data['dhcp'] = True
 			data['ip'] = [0, 0, 0, 0]
 			data['netmask'] = [0, 0, 0, 0]
@@ -146,7 +146,7 @@ class Network:
 					fp.write("nameserver %d.%d.%d.%d\n" % tuple(nameserver))
 				fp.close()
 			# self.restartNetwork()
-		except:
+		except Exception:
 			print("[Network] resolv.conf or nameserversdns.conf - writing failed")
 
 	def loadNetworkConfig(self, iface, callback=None):
@@ -156,7 +156,7 @@ class Network:
 			fp = open('/etc/network/interfaces', 'r')
 			interfaces = fp.readlines()
 			fp.close()
-		except:
+		except Exception:
 			print("[Network] interfaces - opening failed")
 
 		ifaces = {}
@@ -174,17 +174,17 @@ class Network:
 				if split[0] == "address":
 					ifaces[currif]["address"] = map(int, split[1].split('.'))
 					if "ip" in self.ifaces[currif]:
-						if self.ifaces[currif]["ip"] != ifaces[currif]["address"] and ifaces[currif]["dhcp"] == False:
+						if self.ifaces[currif]["ip"] != ifaces[currif]["address"] and ifaces[currif]["dhcp"] is False:
 							self.ifaces[currif]["ip"] = map(int, split[1].split('.'))
 				if split[0] == "netmask":
 					ifaces[currif]["netmask"] = map(int, split[1].split('.'))
 					if "netmask" in self.ifaces[currif]:
-						if self.ifaces[currif]["netmask"] != ifaces[currif]["netmask"] and ifaces[currif]["dhcp"] == False:
+						if self.ifaces[currif]["netmask"] != ifaces[currif]["netmask"] and ifaces[currif]["dhcp"] is False:
 							self.ifaces[currif]["netmask"] = map(int, split[1].split('.'))
 				if split[0] == "gateway":
 					ifaces[currif]["gateway"] = map(int, split[1].split('.'))
 					if "gateway" in self.ifaces[currif]:
-						if self.ifaces[currif]["gateway"] != ifaces[currif]["gateway"] and ifaces[currif]["dhcp"] == False:
+						if self.ifaces[currif]["gateway"] != ifaces[currif]["gateway"] and ifaces[currif]["dhcp"] is False:
 							self.ifaces[currif]["gateway"] = map(int, split[1].split('.'))
 				if split[0] == "pre-up":
 					if "preup" in self.ifaces[currif]:
@@ -208,7 +208,7 @@ class Network:
 			safe_ifaces = self.ifaces.copy()
 			for intf in safe_ifaces:
 				if 'preup' in safe_ifaces[intf] and safe_ifaces[intf]['preup'] is not False:
-					safe_ifaces[intf]['preup'] = re.sub(' -k "\S*" ', ' -k ********* ', safe_ifaces[intf]['preup'])
+					safe_ifaces[intf]['preup'] = re.sub(' -k "\\S*" ', ' -k ********* ', safe_ifaces[intf]['preup'])
 			print("[Network] self.ifaces after loading:", safe_ifaces)
 			self.config_ready = True
 			self.msgPlugins()
@@ -216,7 +216,7 @@ class Network:
 				callback(True)
 
 	def loadNameserverConfig(self):
-		ipRegexp = "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
+		ipRegexp = "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"
 		nameserverPattern = re.compile("nameserver +" + ipRegexp)
 		ipPattern = re.compile(ipRegexp)
 
@@ -229,7 +229,7 @@ class Network:
 			resolv = fp.readlines()
 			fp.close()
 			self.nameservers = []
-		except:
+		except Exception:
 			print("[Network] resolv.conf or nameserversdns.conf - opening failed")
 
 		for line in resolv:
@@ -452,7 +452,7 @@ class Network:
 		if callback is not None:
 			try:
 				callback(True)
-			except:
+			except Exception:
 				pass
 
 	def getLinkState(self, iface, callback):
@@ -562,7 +562,7 @@ class Network:
 			if callback is not None:
 				try:
 					callback(True)
-				except:
+				except Exception:
 					pass
 
 	def sysfsPath(self, iface):
@@ -612,7 +612,7 @@ class Network:
 			moduledir = devicedir + '/driver'
 			if os.path.isdir(moduledir):
 				return moduledir
-		except:
+		except Exception:
 			pass
 		return None
 
@@ -657,7 +657,7 @@ class Network:
 			for p in plugins.getPlugins(PluginDescriptor.WHERE_NETWORKCONFIG_READ):
 				try:
 					p.__call__(reason=self.config_ready)
-				except:
+				except Exception:
 					print("[Network] Plugin caused exception at WHERE_NETWORKCONFIG_READ")
 					import traceback
 					traceback.print_exc()

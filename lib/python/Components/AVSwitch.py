@@ -115,13 +115,13 @@ def InitAVSwitch():
 		if "full" in open("/proc/stb/video/policy2_choices").read():
 			# TRANSLATORS: (aspect ratio policy: display as fullscreen, even if the content aspect ratio does not match the screen ratio)
 			policy2_choices.update({"full": _("Full screen")})
-	except:
+	except Exception:
 		pass
 	try:
 		if "auto" in open("/proc/stb/video/policy2_choices").read():
 			# TRANSLATORS: (aspect ratio policy: automatically select the best aspect ratio mode)
 			policy2_choices.update({"auto": _("Auto")})
-	except:
+	except Exception:
 		pass
 	config.av.policy_169 = ConfigSelection(choices=policy2_choices, default="scale")
 	policy_choices = {
@@ -135,19 +135,19 @@ def InitAVSwitch():
 		if "nonlinear" in open("/proc/stb/video/policy_choices").read():
 			# TRANSLATORS: (aspect ratio policy: display as fullscreen, with stretching the left/right)
 			policy_choices.update({"nonlinear": _("Nonlinear")})
-	except:
+	except Exception:
 		pass
 	try:
 		if "full" in open("/proc/stb/video/policy_choices").read():
 			# TRANSLATORS: (aspect ratio policy: display as fullscreen, even if the content aspect ratio does not match the screen ratio)
 			policy_choices.update({"full": _("Full screen")})
-	except:
+	except Exception:
 		pass
 	try:
 		if "auto" in open("/proc/stb/video/policy_choices").read():
 			# TRANSLATORS: (aspect ratio policy: automatically select the best aspect ratio mode)
 			policy_choices.update({"auto": _("Auto")})
-	except:
+	except Exception:
 		pass
 	config.av.policy_43 = ConfigSelection(choices=policy_choices, default="scale")
 	config.av.tvsystem = ConfigSelection(choices={"pal": _("PAL"), "ntsc": _("NTSC"), "multinorm": _("multinorm")}, default="pal")

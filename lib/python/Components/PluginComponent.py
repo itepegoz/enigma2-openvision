@@ -70,7 +70,7 @@ class PluginComponent:
 								print("[PluginComponent] Plugin probably removed, but not cleanly in", path)
 								try:
 									os.rmdir(path)
-								except:
+								except (IOError, OSError) as err:
 									pass
 							continue
 

@@ -35,11 +35,11 @@ while len(f) > 2:
 
 	sat = str(ref[1] / 16 / 16 / 16 / 16)
 
-#	SID:NS:TSID:ONID:STYPE:UNUSED(channelnumber in enigma1)
-#	X   X  X    X    D     D
+	# SID:NS:TSID:ONID:STYPE:UNUSED(channelnumber in enigma1)
+	# X   X  X    X    D     D
 
-#	REFTYPE:FLAGS:STYPE:SID:TSID:ONID:NS:PARENT_SID:PARENT_TSID:UNUSED
-#   D       D     X     X   X    X    X  X          X           X
+	# REFTYPE:FLAGS:STYPE:SID:TSID:ONID:NS:PARENT_SID:PARENT_TSID:UNUSED
+	# D       D     X     X   X    X    X  X          X           X
 
 	refstr = "1:0:%X:%X:%X:%X:%X:0:0:0" % (ref[4], ref[0], ref[2], ref[3], ref[1])
 	refstr = refstr.replace(':', '_')
@@ -67,18 +67,18 @@ while len(f) > 2:
 
 	try:
 		os.makedirs(sat + '/' + servicetype)
-	except:
+	except (IOError, OSError) as err:
 		pass
 
 	print(sat[0:2] + '.' + sat[-1:] + 'E' + '_' + "%X" % ref[0] + '.png')
 	try:
 		os.rename(sat[0:-1] + 'E' + '_' + "%X" % ref[0] + '.png', sat + '/' + servicetype + '/' + filename)
-	except:
+	except (IOError, OSError) as err:
 		pass
 
 	try:
 		os.symlink(filename, sat + '/' + servicetype + '/' + linkname)
-	except:
+	except (IOError, OSError) as err:
 		pass
 
 	f = f[3:]

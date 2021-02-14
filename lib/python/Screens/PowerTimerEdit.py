@@ -161,7 +161,7 @@ class PowerTimerEditList(Screen):
 
 		showCleanup = True
 		for x in self.list:
-			if (not x[0].disabled) and (x[1] == True):
+			if (not x[0].disabled) and (x[1] is True):
 				break
 		else:
 			showCleanup = False

@@ -170,7 +170,7 @@ def getImagelist():
 					if date.startswith("1970"):
 						date = datetime.fromtimestamp(os.stat(os.path.join(imagedir, "usr/share/bootlogo.mvi")).st_mtime).strftime('%Y-%m-%d')
 					date = max(date, datetime.fromtimestamp(os.stat(os.path.join(imagedir, "usr/bin/enigma2")).st_mtime).strftime('%Y-%m-%d'))
-				except:
+				except Exception:
 					date = _("Unknown")
 				imagelist[slot] = {'imagename': "%s (%s)" % (open(os.path.join(imagedir, "etc/issue")).readlines()[-2].capitalize().strip()[:-6], date)}
 			elif os.path.isfile(os.path.join(imagedir, 'usr/bin/enigma2.bak')):

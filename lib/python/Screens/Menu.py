@@ -33,7 +33,7 @@ lastMenuID = None
 
 def default_skin():
 	for line in open("/etc/enigma2/settings"):
-		if not "config.skin.primary_skin" in line:
+		if "config.skin.primary_skin" not in line:
 			return default_skin
 
 
@@ -175,9 +175,9 @@ class Menu(Screen, ProtectedScreen):
 	def runScreen(self, arg):
 		# arg[0] is the module (as string)
 		# arg[1] is Screen inside this module
-		#	plus possible arguments, as
-		#	string (as we want to reference
-		#	stuff which is just imported)
+		# 	plus possible arguments, as
+		# 	string (as we want to reference
+		# 	stuff which is just imported)
 		if arg[0] != "":
 			exec("from %s import %s" % (arg[0], arg[1].split(",")[0]))
 			self.openDialog(*eval(arg[1]))
@@ -423,23 +423,23 @@ class Menu(Screen, ProtectedScreen):
 							count += 1
 		if self.menuID:
 			# plugins
-			for l in plugins.getPluginsForMenu(self.menuID):
+			for id in plugins.getPluginsForMenu(self.menuID):
 				# check if a plugin overrides an existing menu
-				plugin_menuid = l[2]
+				plugin_menuid = id[2]
 				for x in self.list:
 					if x[2] == plugin_menuid:
 						self.list.remove(x)
 						break
-				self.list.append((l[0], boundFunction(l[1], self.session, close=self.close), l[2], l[3] or 50))
+				self.list.append((id[0], boundFunction(id[1], self.session, close=self.close), id[2], id[3] or 50))
 
 		if "user" in config.usage.menu_sort_mode.value and self.menuID == "mainmenu":
 			plugin_list = []
 			id_list = []
-			for l in plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU, PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO]):
-				l.id = (l.name.lower()).replace(' ', '_')
-				if l.id not in id_list:
-					id_list.append(l.id)
-					plugin_list.append((l.name, boundFunction(l.__call__, self.session), l.id, 200))
+			for where in plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU, PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO]):
+				where.id = (where.name.lower()).replace(' ', '_')
+				if where.id not in id_list:
+					id_list.append(where.id)
+					plugin_list.append((where.name, boundFunction(where.__call__, self.session), where.id, 200))
 
 		if self.menuID is not None and "user" in config.usage.menu_sort_mode.value:
 			self.sub_menu_sort = NoSave(ConfigDictionarySet())
@@ -910,14 +910,14 @@ class IconMain(Screen):
 			try:
 				dpointer = '/usr/share/enigma2/' + dskin[0] + '/pointer.png'
 				self['pointer'].instance.setPixmapFromFile(dpointer)
-			except:
+			except Exception:
 				dpointer = '/usr/share/enigma2/skin_default/pointer.png'
 				self['pointer'].instance.setPixmapFromFile(dpointer)
 		else:
 			try:
 				dpointer = '/usr/share/enigma2/' + dskin[0] + '/blank.png'
 				self['pointer'].instance.setPixmapFromFile(dpointer)
-			except:
+			except Exception:
 				dpointer = '/usr/share/enigma2/skin_default/blank.png'
 				self['pointer'].instance.setPixmapFromFile(dpointer)
 

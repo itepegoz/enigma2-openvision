@@ -31,7 +31,7 @@ def getKeyId(id):
 	else:
 		try:
 			keyid = KEYIDS[id]
-		except:
+		except KeyError:
 			raise KeymapError("[keymapparser] key id '" + str(id) + "' is illegal")
 	return keyid
 
@@ -66,7 +66,7 @@ def parseKeys(context, filename, actionmap, device, keys):
 
 			# if a key was unmapped, it can only be assigned a new function in the same keymap file (avoid file parsing sequence dependency)
 			if unmapDict.get((context, id, mapto)) in [filename, None]:
-#				print("[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid))
+				# print("[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid))
 				actionmap.bindKey(filename, device, keyid, flags, context, mapto)
 				addKeyBinding(filename, keyid, context, mapto, flags)
 
@@ -98,13 +98,13 @@ def readKeymap(filename):
 
 	try:
 		source = open(filename)
-	except:
+	except (IOError, OSError):
 		print("[keymapparser] keymap file " + filename + " not found")
 		return
 
 	try:
 		dom = xml.etree.cElementTree.parse(source)
-	except:
+	except xml.etree.cElementTree.ParseError:
 		raise KeymapError("[keymapparser] keymap %s not well-formed." % filename)
 
 	source.close()

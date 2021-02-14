@@ -109,7 +109,7 @@ n_recordings = 0  # Must be when we start running...
 
 
 def SetIconDisplay(nrec):
-	if SID_code_states[0] == None:  # Not the code for us
+	if SID_code_states[0] is None:  # Not the code for us
 		return
 	(wdev, max_states) = SID_code_states
 	if nrec == 0:                   # An absolute setting - clear it...
@@ -610,7 +610,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 							try:
 								from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer
 								MediaPlayerinstance = MediaPlayer.media_instance
-							except:
+							except ImportError:
 								MediaPlayerinstance = None
 							if MoviePlayerinstance:
 								MoviePlayerinstance.lastservice = self.service_ref.ref
@@ -735,7 +735,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 			else:
 				message += _("Reminder, you have chosen to save timeshift file.")
 			# if self.justplay or self.always_zap:
-			#	choice.insert(2, (_("Don't zap"), "continue"))
+			# 	choice.insert(2, (_("Don't zap"), "continue"))
 			choice.insert(2, (_("Don't zap"), "continue"))
 
 			def zapAction(choice):
@@ -914,17 +914,17 @@ def createTimer(xml):
 	isAutoTimer = int(xml.get("isAutoTimer") or "0")
 
 	name = xml.get("name").encode("utf-8")
-	#filename = xml.get("filename").encode("utf-8")
+	# filename = xml.get("filename").encode("utf-8")
 	entry = RecordTimerEntry(serviceref, begin, end, name, description, eit, disabled, justplay, afterevent, dirname=location, tags=tags, descramble=descramble, record_ecm=record_ecm, isAutoTimer=isAutoTimer, always_zap=always_zap, zap_wakeup=zap_wakeup, rename_repeat=rename_repeat, conflict_detection=conflict_detection, pipzap=pipzap)
 	entry.repeated = int(repeated)
 	flags = xml.get("flags")
 	if flags:
 		entry.flags = set(flags.encode("utf-8").split(' '))
 
-	for l in xml.findall("log"):
-		time = int(l.get("time"))
-		code = int(l.get("code"))
-		msg = l.text.strip().encode("utf-8")
+	for log in xml.findall("log"):
+		time = int(log.get("time"))
+		code = int(log.get("code"))
+		msg = log.text.strip().encode("utf-8")
 		entry.log_entries.append((time, code, msg))
 
 	return entry
@@ -1035,43 +1035,43 @@ class RecordTimer(timer.Timer):
 			AddPopup(_("Timer overlap in timers.xml detected!\nPlease recheck it!") + timer_text, type=MessageBox.TYPE_ERROR, timeout=0, id="TimerLoadFailed")
 
 	def saveTimer(self):
-		#root_element = xml.etree.cElementTree.Element('timers')
-		#root_element.text = "\n"
+		# root_element = xml.etree.cElementTree.Element('timers')
+		# root_element.text = "\n"
 
 		# for timer in self.timer_list + self.processed_timers:
 			# some timers (instant records) don't want to be saved.
 			# skip them
 			# if timer.dontSave:
-				# continue
-			#t = xml.etree.cElementTree.SubElement(root_element, 'timers')
-			#t.set("begin", str(int(timer.begin)))
-			#t.set("end", str(int(timer.end)))
-			#t.set("serviceref", str(timer.service_ref))
-			#t.set("repeated", str(timer.repeated))
-			#t.set("name", timer.name)
-			#t.set("description", timer.description)
+			# 	continue
+			# t = xml.etree.cElementTree.SubElement(root_element, 'timers')
+			# t.set("begin", str(int(timer.begin)))
+			# t.set("end", str(int(timer.end)))
+			# t.set("serviceref", str(timer.service_ref))
+			# t.set("repeated", str(timer.repeated))
+			# t.set("name", timer.name)
+			# t.set("description", timer.description)
 			# t.set("afterevent", str({
-			#	AFTEREVENT.NONE: "nothing",
-			#	AFTEREVENT.STANDBY: "standby",
-			#	AFTEREVENT.DEEPSTANDBY: "deepstandby",
-			#	AFTEREVENT.AUTO: "auto"}))
+			# 	AFTEREVENT.NONE: "nothing",
+			# 	AFTEREVENT.STANDBY: "standby",
+			# 	AFTEREVENT.DEEPSTANDBY: "deepstandby",
+			# 	AFTEREVENT.AUTO: "auto"}))
 			# if timer.eit is not None:
-			#	t.set("eit", str(timer.eit))
+			# 	t.set("eit", str(timer.eit))
 			# if timer.dirname is not None:
-			#	t.set("location", str(timer.dirname))
-			#t.set("disabled", str(int(timer.disabled)))
-			#t.set("justplay", str(int(timer.justplay)))
-			#t.text = "\n"
-			#t.tail = "\n"
+			# 	t.set("location", str(timer.dirname))
+			# t.set("disabled", str(int(timer.disabled)))
+			# t.set("justplay", str(int(timer.justplay)))
+			# t.text = "\n"
+			# t.tail = "\n"
 
 			# for time, code, msg in timer.log_entries:
-				#l = xml.etree.cElementTree.SubElement(t, 'log')
-				#l.set("time", str(time))
-				#l.set("code", str(code))
-				#l.text = str(msg)
-				#l.tail = "\n"
+			# 	l = xml.etree.cElementTree.SubElement(t, 'log')
+			# 	l.set("time", str(time))
+			# 	l.set("code", str(code))
+			# 	l.text = str(msg)
+			# 	l.tail = "\n"
 
-		#doc = xml.etree.cElementTree.ElementTree(root_element)
+		# doc = xml.etree.cElementTree.ElementTree(root_element)
 		# doc.write(self.Filename)
 
 		list = []

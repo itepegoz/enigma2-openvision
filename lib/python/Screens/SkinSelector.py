@@ -124,12 +124,12 @@ class SkinSelector(Screen, HelpableScreen):
 								}
 								mm = mmap.mmap(fd.fileno(), 0, prot=mmap.PROT_READ)
 								if six.PY2:
-									skinheight = re.search("\<?resolution.*?\syres\s*=\s*\"(\d+)\"", mm).group(1)
+									skinheight = re.search("\\<?resolution.*?\\syres\\s*=\\s*\"(\\d+)\"", mm).group(1)
 								else:
-									skinheight = re.search(b"\<?resolution.*?\syres\s*=\s*\"(\d+)\"", mm).group(1)
+									skinheight = re.search(b"\\<?resolution.*?\\syres\\s*=\\s*\"(\\d+)\"", mm).group(1)
 								resolution = skinheight and resolutions.get(skinheight, None)
 								mm.close()
-						except:
+						except Exception:
 							pass
 						print("[SkinSelector] Resolution of skin '%s': '%s'." % (skinPath, "Unknown" if resolution is None else resolution))
 						# Code can be added here to reject unsupported resolutions.

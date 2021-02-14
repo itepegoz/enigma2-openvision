@@ -24,31 +24,31 @@ class HardwareInfo:
 		# Version
 		try:
 			self.device_version = open("/proc/stb/info/version").read().strip()
-		except:
+		except (IOError, OSError) as err:
 			pass
 
 		# Revision
 		try:
 			self.device_revision = open("/proc/stb/info/board_revision").read().strip()
-		except:
+		except (IOError, OSError) as err:
 			pass
 
 		# Name ... bit odd, but history prevails
 		try:
 			self.device_name = open("/etc/openvision/model").read().strip()
-		except:
+		except (IOError, OSError) as err:
 			pass
 
 		# Brandname ... bit odd, but history prevails
 		try:
 			self.device_brandname = open("/etc/openvision/brand").read().strip()
-		except:
+		except (IOError, OSError) as err:
 			pass
 
 		# Model
 		try:
 			self.device_model = open("/etc/openvision/model").read().strip()
-		except:
+		except (IOError, OSError) as err:
 			pass
 
 		self.device_model = self.device_model or self.device_name

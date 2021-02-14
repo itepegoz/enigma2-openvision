@@ -26,7 +26,7 @@ def getTrashFolder(path=None):
 				# if default_path happens to not be the default /hdd/media/movie, then we can have a trash folder there instead
 				trashcan = os.path.join(trashcan, config.usage.default_path.value)
 			return os.path.realpath(os.path.join(trashcan, ".Trash"))
-	except:
+	except Exception:
 		return None
 
 
@@ -38,7 +38,7 @@ def createTrashFolder(path=None):
 		if not os.path.isdir(trash):
 			try:
 				os.mkdir(trash)
-			except:
+			except (IOError, OSError) as err:
 				return None
 		return trash
 	else:
@@ -53,7 +53,7 @@ def get_size(start_path='.'):
 				try:
 					fp = os.path.join(dirpath, f)
 					total_size += os.path.getsize(fp)
-				except:
+				except (IOError, OSError) as err:
 					pass
 	return total_size
 
@@ -168,7 +168,7 @@ def purge(cleanset, ctimeLimit, reserveBytes):
 			for name in dirs:
 				try:
 					os.rmdir(os.path.join(root, name))
-				except:
+				except (IOError, OSError) as err:
 					pass
 		candidates.sort()
 		# Now we have a list of ctime, candidates, size. Sorted by ctime (=deletion time)
@@ -197,7 +197,7 @@ def cleanAll(trash):
 		for name in dirs:
 			try:
 				os.rmdir(os.path.join(root, name))
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 
@@ -265,7 +265,7 @@ class CleanTrashTask(Components.Task.PythonTask):
 					for name in dirs:
 						try:
 							os.rmdir(os.path.join(root, name))
-						except:
+						except (IOError, OSError) as err:
 							pass
 					candidates.sort()
 					# Now we have a list of ctime, candidates, size. Sorted by ctime (=deletion time)
@@ -275,7 +275,7 @@ class CleanTrashTask(Components.Task.PythonTask):
 						try:
 							# somtimes the file does not exist, can happen if trashcan is on a network, the main box could also be emptying trash at same time.
 							enigma.eBackgroundFileEraser.getInstance().erase(fn)
-						except:
+						except Exception:
 							pass
 						bytesToRemove -= st_size
 						size -= st_size
@@ -309,7 +309,7 @@ class TrashInfo(VariableText, GUIComponent):
 				else:
 					total_size = _("%d GB") % (total_size >> 30)
 				self.setText(_("Trashcan:") + " " + total_size)
-			except:
+			except Exception:
 				# occurs when f_blocks is 0 or a similar error
 				self.setText("-?-")
 

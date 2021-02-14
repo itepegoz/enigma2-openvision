@@ -247,7 +247,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		try:
 			from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 			hotplugNotifier.append(self.hotplugCB)
-		except:
+		except ImportError:
 			pass
 
 		self.autoplay = dvd_device or dvd_filelist
@@ -355,7 +355,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		try:
 			self.session.summary and self.session.summary.updateChapter(chapterLCD)
 			self.session.summary and self.session.summary.updateFullChapters(chaptersLCD)
-		except:
+		except Exception:
 			pass
 
 	def doNothing(self):
@@ -507,7 +507,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 				print("[DVD] seek to chapter %d" % number)
 				seekable.seekChapter(number)
 
-#	MENU ACTIONS
+	# MENU ACTIONS
 	def keyRight(self):
 		self.sendKey(iServiceKeys.keyRight)
 
@@ -565,7 +565,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 						name = names[2]
 					newref.setName(str(name))
 
-#				Construct a path for the IFO header assuming it exists
+				# Construct a path for the IFO header assuming it exists
 				ifofilename = val
 				if not ifofilename.upper().endswith("/VIDEO_TS"):
 					ifofilename += "/VIDEO_TS"
@@ -603,7 +603,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 
 		ifofile = None
 		try:
-#			Try to read the IFO header to determine PAL/NTSC format and the resolution
+			# Try to read the IFO header to determine PAL/NTSC format and the resolution
 			ifofile = open(isofilename, "r")
 			ifofile.seek(offset)
 			video_attr_high = ord(ifofile.read(1))
@@ -613,9 +613,9 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 			print("[DVD] %s: video_attr_high = %x" % (name, video_attr_high), "video_attr_low = %x" % (video_attr_low))
 			isNTSC = (video_attr_high & 0x10 == 0)
 			isLowResolution = (video_attr_low & 0x18 == 0x18)
-		except:
-#			If the service is an .iso or .img or .nrg file we assume it is PAL
-#			Sorry we cannot open image files here.
+		except Exception:
+			# If the service is an .iso or .img or .nrg file we assume it is PAL
+			# Sorry we cannot open image files here.
 			print("[DVD] Cannot read file or is ISO/IMG/NRG")
 		finally:
 			if ifofile is not None:
@@ -641,7 +641,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		try:
 			from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 			hotplugNotifier.remove(self.hotplugCB)
-		except:
+		except ImportError:
 			pass
 
 	def playLastCB(self, answer):  # overwrite infobar cuesheet function

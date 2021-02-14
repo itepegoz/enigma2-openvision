@@ -12,4 +12,4 @@ def Hex2strColor(rgb):
 	out = ""
 	for i in range(28, -1, -4):
 		out += "%s" % chr(0x30 + (rgb >> i & 0x0F))
-	return "\c%s" % out
+	return "\\c%s" % out

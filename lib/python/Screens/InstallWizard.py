@@ -80,7 +80,7 @@ class InstallWizard(Screen, ConfigListScreen):
 	def createMenu(self):
 		try:
 			test = self.index
-		except:
+		except Exception:
 			return
 		self.list = []
 		if self.index == self.STATE_UPDATE:

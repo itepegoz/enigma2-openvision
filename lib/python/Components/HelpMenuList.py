@@ -20,7 +20,7 @@ class HelpMenuList(GUIComponent):
 		self.callback = callback
 		self.extendedHelp = False
 
-		l = []
+		lst = []
 		for (actionmap, context, actions) in helplist:
 			for (action, help) in actions:
 				if hasattr(help, '__call__'):
@@ -61,9 +61,9 @@ class HelpMenuList(GUIComponent):
 						x, y, w, h = skin.parameters.get("HelpMenuListHlp", (0, 0, 600, 28))
 						entry.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, 0, help))
 
-					l.append(entry)
+					lst.append(entry)
 
-		self.l.setList(l)
+		self.l.setList(lst)
 		if self.extendedHelp is True:
 			font = skin.fonts.get("HelpMenuListExt0", ("Regular", 24, 50))
 			self.l.setFont(0, gFont(font[0], font[1]))
@@ -77,12 +77,12 @@ class HelpMenuList(GUIComponent):
 
 	def ok(self):
 		# a list entry has a "private" tuple as first entry...
-		l = self.getCurrent()
-		if l is None:
+		lst = self.getCurrent()
+		if lst is None:
 			return
 		# ...containing (Actionmap, Context, Action, keydata).
 		# we returns this tuple to the callback.
-		self.callback(l[0], l[1], l[2])
+		self.callback(lst[0], lst[1], lst[2])
 
 	def getCurrent(self):
 		sel = self.l.getCurrentSelection()

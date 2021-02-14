@@ -203,19 +203,16 @@ class PowerTimerEntry(timer.TimerEntry, object):
 # to make it clearer what each test is.
 
 				from Components.Converter.ClientsStreaming import ClientsStreaming
-				if ((not Screens.Standby.inStandby and NavigationInstance.instance.getCurrentlyPlayingServiceReference() and
+				if (
+					(not Screens.Standby.inStandby and NavigationInstance.instance.getCurrentlyPlayingServiceReference() and
 					('0:0:0:0:0:0:0:0:0' in NavigationInstance.instance.getCurrentlyPlayingServiceReference().toString() or
-					 '4097:' in NavigationInstance.instance.getCurrentlyPlayingServiceReference().toString()
-				     ) or
-				     (int(ClientsStreaming("NUMBER").getText()) > 0)
-				    ) or
-				    (NavigationInstance.instance.RecordTimer.isRecording() or
-				     abs(NavigationInstance.instance.RecordTimer.getNextRecordingTime() - time()) <= 900 or
-				     abs(NavigationInstance.instance.RecordTimer.getNextZapTime() - time()) <= 900) or
-				     (self.autosleepinstandbyonly == 'yes' and not Screens.Standby.inStandby) or
-				     (self.autosleepinstandbyonly == 'yes' and Screens.Standby.inStandby and internalHDDNotSleeping()
-				    )
-				   ):
+					'4097:' in NavigationInstance.instance.getCurrentlyPlayingServiceReference().toString()) or
+					(int(ClientsStreaming("NUMBER").getText()) > 0)) or (NavigationInstance.instance.RecordTimer.isRecording() or
+					abs(NavigationInstance.instance.RecordTimer.getNextRecordingTime() - time()) <= 900 or
+					abs(NavigationInstance.instance.RecordTimer.getNextZapTime() - time()) <= 900) or
+					(self.autosleepinstandbyonly == 'yes' and not Screens.Standby.inStandby) or
+					(self.autosleepinstandbyonly == 'yes' and Screens.Standby.inStandby and internalHDDNotSleeping())
+				):
 					self.do_backoff()
 					# retry
 					return False
@@ -409,10 +406,10 @@ def createTimer(xml):
 	else:
 		entry.repeated = int(repeated)
 
-	for l in xml.findall("log"):
-		ltime = int(l.get("time"))
-		lcode = int(l.get("code"))
-		msg = l.text.strip().encode("utf-8")
+	for log in xml.findall("log"):
+		ltime = int(log.get("time"))
+		lcode = int(log.get("code"))
+		msg = log.text.strip().encode("utf-8")
 		entry.log_entries.append((ltime, lcode, msg))
 
 	return entry
@@ -443,7 +440,7 @@ class PowerTimer(timer.Timer):
 
 		try:
 			self.timer_list.remove(w)
-		except:
+		except Exception:
 			print('[PowerTimer] Remove list failed')
 
 		# did this timer reached the last state?
@@ -498,7 +495,7 @@ class PowerTimer(timer.Timer):
 		checkit = True
 		for timer in root.findall("timer"):
 			newTimer = createTimer(timer)
-			if (self.record(newTimer, True, dosave=False) is not None) and (checkit == True):
+			if (self.record(newTimer, True, dosave=False) is not None) and (checkit is True):
 				from Tools.Notifications import AddPopup
 				AddPopup(_("Timer overlap in pm_timers.xml detected!\nPlease recheck it!"), type=MessageBox.TYPE_ERROR, timeout=0, id="TimerLoadFailed")
 				checkit = False  # at moment it is enough when the message is displayed one time
@@ -534,9 +531,9 @@ class PowerTimer(timer.Timer):
 			list.append(' autosleeprepeat="' + str(timer.autosleeprepeat) + '"')
 			list.append('>\n')
 
-#	Handle repeat entries, which never end and so never get pruned by cleanupDaily
-#       Repeating timers get autosleeprepeat="repeated" or repeated="127" (daily) or
-#       "31" (weekdays) [dow bitmap] etc.
+# 	Handle repeat entries, which never end and so never get pruned by cleanupDaily
+# 	Repeating timers get autosleeprepeat="repeated" or repeated="127" (daily) or
+# 	"31" (weekdays) [dow bitmap] etc.
 
 			ignore_before = 0
 			if config.recording.keep_timers.value > 0:

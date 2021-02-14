@@ -148,11 +148,11 @@ class FileList(MenuList):
 		return self.l.getCurrentSelection()[0]
 
 	def getCurrentEvent(self):
-		l = self.l.getCurrentSelection()
-		if not l or l[0][1] == True:
+		lst = self.l.getCurrentSelection()
+		if not lst or lst[0][1] is True:
 			return None
 		else:
-			return self.serviceHandler.info(l[0][0]).getEvent(l[0][0])
+			return self.serviceHandler.info(lst[0][0]).getEvent(lst[0][0])
 
 	def getFileList(self):
 		return self.list
@@ -210,7 +210,7 @@ class FileList(MenuList):
 			if fileExists(directory):
 				try:
 					files = os.listdir(directory)
-				except:
+				except (IOError, OSError) as err:
 					files = []
 				files.sort()
 				tmpfiles = files[:]
@@ -360,10 +360,10 @@ class MultiFileSelectList(FileList):
 				SelectState = False
 				try:
 					self.selectedFiles.remove(realPathname)
-				except:
+				except KeyError:
 					try:
 						self.selectedFiles.remove(os.path.normpath(realPathname))
-					except:
+					except Exception:
 						print("[FileList] Couldn't remove:", realPathname)
 			else:
 				SelectState = True
@@ -421,7 +421,7 @@ class MultiFileSelectList(FileList):
 			if fileExists(directory):
 				try:
 					files = os.listdir(directory)
-				except:
+				except (IOError, OSError) as err:
 					files = []
 				files.sort()
 				tmpfiles = files[:]

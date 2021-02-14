@@ -10,10 +10,10 @@ from enigma import loadPNG, loadJPG, loadSVG
 def LoadPixmap(path, desktop=None, cached=None):
 	if path[-4:] == ".png":
 		# cache unless caller explicity requests to not cache
-		ptr = loadPNG(path, 0, 0 if cached == False else 1)
+		ptr = loadPNG(path, 0, 0 if cached is False else 1)
 	elif path[-4:] == ".jpg":
 		# don't cache unless caller explicity requests caching
-		ptr = loadJPG(path, 1 if cached == True else 0)
+		ptr = loadJPG(path, 1 if cached is True else 0)
 	elif path[-4:] == ".svg":
 		ptr = loadSVG(path)
 	elif path[-1:] == ".":

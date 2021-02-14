@@ -77,7 +77,7 @@ class SelectImage(Screen):
 						if "Downloaded Images" not in self.imagesList:
 							self.imagesList["Downloaded Images"] = {}
 						self.imagesList["Downloaded Images"][file] = {'link': file, 'name': file.split(os.sep)[-1]}
-				except:
+				except Exception:
 					pass
 
 		if not self.imagesList:
@@ -86,7 +86,7 @@ class SelectImage(Screen):
 					self.jsonlist = dict(json.load(urllib2.urlopen('https://openvision.tech/download/json/%s' % model)))
 					if config.usage.alternative_imagefeed.value:
 						self.jsonlist.update(dict(json.load(urllib2.urlopen('%s%s' % (config.usage.alternative_imagefeed.value, model)))))
-				except:
+				except Exception:
 					pass
 			self.imagesList = dict(self.jsonlist)
 
@@ -100,7 +100,7 @@ class SelectImage(Screen):
 								getImages(media, [os.path.join(media, x) for x in os.listdir(media) if os.path.splitext(x)[1] == ".zip" and model in x])
 								for dir in [dir for dir in [os.path.join(media, dir) for dir in os.listdir(media)] if os.path.isdir(dir) and os.path.splitext(dir)[1] == ".unzipped"]:
 									shutil.rmtree(dir)
-					except:
+					except (IOError, OSError) as err:
 						pass
 
 		list = []
@@ -148,7 +148,7 @@ class SelectImage(Screen):
 				self.setIndex = self["list"].getSelectedIndex()
 				self.imagesList = []
 				self.getImagesList()
-			except:
+			except Exception:
 				self.session.open(MessageBox, _("Cannot delete downloaded image"), MessageBox.TYPE_ERROR, timeout=3)
 
 	def selectionChanged(self):
@@ -253,7 +253,7 @@ class FlashImage(Screen):
 						try:
 							statvfs = os.statvfs(path)
 							return (statvfs.f_bavail * statvfs.f_frsize) / (1 << 20)
-						except:
+						except (IOError, OSError) as err:
 							pass
 
 				def checkIfDevice(path, diskstats):
@@ -294,7 +294,7 @@ class FlashImage(Screen):
 							self.session.openWithCallback(self.startBackupsettings, MessageBox, _("Can only find a network drive to store the backup this means after the flash the autorestore will not work. Alternativaly you can mount the network drive after the flash and perform a manufacurer reset to autorestore"), simple=True)
 					else:
 						self.startDownload()
-				except:
+				except Exception:
 					self.session.openWithCallback(self.abort, MessageBox, _("Unable to create the required directories on the media (e.g. USB stick or Harddisk) - Please verify media and try again!"), type=MessageBox.TYPE_ERROR, simple=True)
 			else:
 				self.session.openWithCallback(self.abort, MessageBox, _("Could not find suitable media - Please remove some downloaded images or insert a media (e.g. USB stick) with sufficiant free space and try again!"), type=MessageBox.TYPE_ERROR, simple=True)
@@ -360,7 +360,7 @@ class FlashImage(Screen):
 		try:
 			zipfile.ZipFile(self.zippedimage, 'r').extractall(self.unzippedimage)
 			self.flashimage()
-		except:
+		except Exception:
 			self.session.openWithCallback(self.abort, MessageBox, _("Error during unzipping image\n%s") % self.imagename, type=MessageBox.TYPE_ERROR, simple=True)
 
 	def flashimage(self):

@@ -149,11 +149,11 @@ class EPGList(GUIComponent):
 		for x in self.onSelChanged:
 			if x is not None:
 				x()
-#				try:
-#					x()
-#				except: # FIXME!!!
-#					print("FIXME in EPGList.selectionChanged")
-#					pass
+				# try:
+				# 	x()
+				# except:  # FIXME!!!
+				# 	print("FIXME in EPGList.selectionChanged")
+				# 	pass
 
 	GUI_WIDGET = eListbox
 
@@ -172,7 +172,7 @@ class EPGList(GUIComponent):
 		height = esize.height()
 		try:
 			self.iconSize = self.clocks[0].size().height()
-		except:
+		except Exception:
 			pass
 		self.space = self.iconSize + self.iconDistance
 		self.dy = int((height - self.iconSize) / 2.)
@@ -322,16 +322,16 @@ class EPGList(GUIComponent):
 		return []
 
 	def fillMultiEPG(self, services, stime=-1):
-		#t = time()
+		# t = time()
 		test = [(service.ref.toString(), 0, stime) for service in services]
 		test.insert(0, 'X0RIBDTCn')
 		self.list = self.queryEPG(test)
 		self.l.setList(self.list)
-		#print(time() - t)
+		# print(time() - t)
 		self.selectionChanged()
 
 	def updateMultiEPG(self, direction):
-		#t = time()
+		# t = time()
 		test = [x[3] and (x[1], direction, x[3]) or (x[1], direction, 0) for x in self.list]
 		test.insert(0, 'XRIBDTCn')
 		tmp = self.queryEPG(test)
@@ -343,7 +343,7 @@ class EPGList(GUIComponent):
 					self.list[cnt] = (changecount, x[0], x[1], x[2], x[3], x[4], x[5], x[6])
 			cnt += 1
 		self.l.setList(self.list)
-		#print(time() - t)
+		# print(time() - t)
 		self.selectionChanged()
 
 	def fillSingleEPG(self, service):
@@ -403,10 +403,10 @@ class EPGList(GUIComponent):
 		# search similar broadcastings
 		if event_id is None:
 			return
-		l = self.epgcache.search(('RIBND', 1024, eEPGCache.SIMILAR_BROADCASTINGS_SEARCH, refstr, event_id))
-		if l and len(l):
-			l.sort(key=lambda x: x[2])
-		self.l.setList(l)
+		lst = self.epgcache.search(('RIBND', 1024, eEPGCache.SIMILAR_BROADCASTINGS_SEARCH, refstr, event_id))
+		if lst and len(lst):
+			lst.sort(key=lambda x: x[2])
+		self.l.setList(lst)
 		self.selectionChanged()
 		print(time() - t)
 
@@ -442,7 +442,7 @@ class EPGList(GUIComponent):
 			try:
 				locals().get(attrib)(value)
 				self.skinAttributes.remove((attrib, value))
-			except:
+			except Exception:
 				pass
 		self.l.setFont(0, self.eventItemFont)
 		self.l.setFont(1, self.eventTimeFont)

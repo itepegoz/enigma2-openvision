@@ -156,10 +156,10 @@ def scanDevice(mountpoint):
 	scanner = []
 
 	for p in plugins.getPlugins(PluginDescriptor.WHERE_FILESCAN):
-		l = p.__call__()
-		if not isinstance(l, list):
-			l = [l]
-		scanner += l
+		lst = p.__call__()
+		if not isinstance(lst, list):
+			lst = [lst]
+		scanner += lst
 
 	print("[Scanner] ", scanner)
 
@@ -177,7 +177,7 @@ def scanDevice(mountpoint):
 	# ...then remove with_subdir=False when same path exists
 	# with with_subdirs=True
 	for p in paths_to_scan:
-		if p.with_subdirs == True and ScanPath(path=p.path) in paths_to_scan:
+		if p.with_subdirs is True and ScanPath(path=p.path) in paths_to_scan:
 			paths_to_scan.remove(ScanPath(path=p.path))
 
 	from Components.Harddisk import harddiskmanager
@@ -213,11 +213,11 @@ def openList(session, files):
 	scanner = []
 
 	for p in plugins.getPlugins(PluginDescriptor.WHERE_FILESCAN):
-		l = p.__call__()
-		if not isinstance(l, list):
-			scanner.append(l)
+		lst = p.__call__()
+		if not isinstance(lst, list):
+			scanner.append(lst)
 		else:
-			scanner += l
+			scanner += lst
 
 	print("[Scanner] ", scanner)
 

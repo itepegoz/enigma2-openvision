@@ -152,7 +152,7 @@ class ServiceList(GUIComponent):
 			self.ServiceNextInfoFont = parseFont(value, ((5, 6), (1, 1)))
 
 		# def serviceNextInfoFont(value):
-		#	self.ServiceNextInfoFont = parseFont(value, ((1,1),(1,1)))
+		# 	self.ServiceNextInfoFont = parseFont(value, ((1,1),(1,1)))
 
 		def serviceNumberFont(value):
 			self.ServiceNumberFont = parseFont(value, ((1, 1), (1, 1)))
@@ -181,12 +181,12 @@ class ServiceList(GUIComponent):
 			try:
 				locals().get(attrib)(value)
 				self.skinAttributes.remove((attrib, value))
-			except:
+			except Exception:
 				pass
 		return GUIComponent.applySkin(self, desktop, parent)
 
 	def connectSelChanged(self, fnc):
-		if not fnc in self.onSelectionChanged:
+		if fnc not in self.onSelectionChanged:
 			self.onSelectionChanged.append(fnc)
 
 	def disconnectSelChanged(self, fnc):

@@ -66,18 +66,18 @@ class CIHelper:
 
 						if read_slot is not False and (read_services or read_providers or usingcaid):
 							self.CI_ASSIGNMENT_LIST.append((int(read_slot), (read_services, read_providers, usingcaid)))
-				except:
+				except Exception:
 					print("[CIHelper] CI_ASSIGNMENT %d ERROR parsing xml..." % ci)
 					try:
 						os.remove(filename)
-					except:
+					except Exception:
 						print("[CIHelper] CI_ASSIGNMENT %d ERROR remove damaged xml..." % ci)
 			if self.CI_ASSIGNMENT_LIST:
 				for item in self.CI_ASSIGNMENT_LIST:
 					try:
 						eDVBCIInterfaces.getInstance().setDescrambleRules(item[0], item[1])
 						print("[CIHelper] CI_ASSIGNMENT %d activate with following settings" % item[0])
-					except:
+					except Exception:
 						print("[CIHelper] CI_ASSIGNMENT %d ERROR setting DescrambleRules" % item[0])
 
 	def ciRecordEvent(self, service, event):
@@ -113,7 +113,7 @@ class CIHelper:
 				refstr = '1:7:0:0:0:0:0:0:0:0:(provider == "%s") && (type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 31) || (type == 134) || (type == 195) ORDER BY name:%s' % (x, x)
 				myref = eServiceReference(refstr)
 				servicelist = serviceHandler.list(myref)
-				if not servicelist is None:
+				if servicelist is not None:
 					while True:
 						service = servicelist.getNext()
 						if not service.valid():

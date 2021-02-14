@@ -188,7 +188,7 @@ class ParentalControl:
 			self.setSessionPinCached()
 			self.hideBlacklist()
 			self.callback(ref=service)
-		elif result == False:
+		elif result is False:
 			messageText = _("The pin code you entered is wrong.")
 			if self.session:
 				self.session.open(MessageBox, messageText, MessageBox.TYPE_INFO, timeout=5)
@@ -208,13 +208,13 @@ class ParentalControl:
 			for x in open(resolveFilename(SCOPE_CONFIG, sWhichList), 'r'):
 				sPlain = x.strip()
 				self.serviceMethodWrapper(sPlain, self.addServiceToList, result)
-		except:
+		except (IOError, OSError) as err:
 			pass
 		return result
 
 	def addServiceToList(self, service, type, vList):
 		if service in vList:
-			if not type in vList[service]:
+			if type not in vList[service]:
 				vList[service].append(type)
 		else:
 			vList[service] = [type]

@@ -230,7 +230,7 @@ class TimerEditList(Screen, ProtectedScreen):
 
 		showCleanup = True
 		for x in self.list:
-			if (not x[0].disabled) and (x[1] == True):
+			if (not x[0].disabled) and (x[1] is True):
 				break
 		else:
 			showCleanup = False
@@ -424,7 +424,7 @@ class TimerSanityConflict(Screen):
 		for x in timer:
 			self.list.append((timer[count], False))
 			count += 1
-		warning_color = "\c00????00"  # yellow
+		warning_color = "\\c00????00"  # yellow
 		title_text = count == 1 and warning_color + _("Channel not in services list") or warning_color + _("Timer sanity error")
 		self.setTitle(title_text)
 

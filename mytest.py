@@ -61,7 +61,7 @@ def setLoadUnlinkedUserbouquets(configElement):
 
 
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
-if config.clientmode.enabled.value == False:
+if config.clientmode.enabled.value is False:
 	enigma.eDVBDB.getInstance().reloadBouquets()
 
 profile("ParentalControl")
@@ -99,14 +99,14 @@ def setEPGCachePath(configElement):
 
 # demo code for use of standby enter leave callbacks
 # def leaveStandby():
-#	print("!!!!!!!!!!!!!!!!!leave standby")
+# 	print("!!!!!!!!!!!!!!!!!leave standby")
 
 # def standbyCountChanged(configElement):
-#	print("!!!!!!!!!!!!!!!!!enter standby num", configElement.value)
-#	from Screens.Standby import inStandby
-#	inStandby.onClose.append(leaveStandby)
+# 	print("!!!!!!!!!!!!!!!!!enter standby num", configElement.value)
+# 	from Screens.Standby import inStandby
+# 	inStandby.onClose.append(leaveStandby)
 
-#config.misc.standbyCounter.addNotifier(standbyCountChanged, initial_call = False)
+# config.misc.standbyCounter.addNotifier(standbyCountChanged, initial_call = False)
 ####################################################
 
 
@@ -130,7 +130,7 @@ except ImportError as e:
 try:
 	from twisted.python import log
 	config.misc.enabletwistedlog = ConfigYesNo(default=False)
-	if config.misc.enabletwistedlog.value == True:
+	if config.misc.enabletwistedlog.value is True:
 		log.startLogging(open('/tmp/twisted.log', 'w'))
 	else:
 		log.startLogging(sys.stdout)
@@ -228,7 +228,7 @@ class Session:
 		for p in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
 			try:
 				p.__call__(reason=0, session=self)
-			except:
+			except Exception:
 				print("[mytest] Plugin raised exception at WHERE_SESSIONSTART")
 				import traceback
 				traceback.print_exc()
@@ -240,7 +240,7 @@ class Session:
 
 		if self.current_dialog.isTmp:
 			self.current_dialog.doClose()
-#			dump(self.current_dialog)
+			# dump(self.current_dialog)
 			del self.current_dialog
 		else:
 			del self.current_dialog.callback
@@ -428,7 +428,7 @@ class PowerKey:
 				try:
 					exec("from " + selected[1] + " import *")
 					exec("self.session.open(" + ",".join(selected[2:]) + ")")
-				except:
+				except Exception:
 					print("[mytest] error during executing module %s, screen %s" % (selected[1], selected[2]))
 			elif selected[0] == "Menu":
 				root = mdom.getroot()
@@ -465,7 +465,7 @@ class AutoScartControl:
 		self.VCRSbChanged(self.current_vcr_sb)
 
 	def VCRSbChanged(self, value):
-		#print("vcr sb changed to", value)
+		# print("vcr sb changed to", value)
 		self.current_vcr_sb = value
 		if config.av.vcrswitch.value or value > 2:
 			if value:
@@ -583,8 +583,8 @@ def runScreenTest():
 		config.misc.prev_wakeup_time_type.save()
 	else:
 		config.misc.prev_wakeup_time.value = 0
-#		if not model.startswith('azboxm'): # skip for AZBox (mini)me - setting wakeup time to past reboots box
-#			setFPWakeuptime(int(nowTime) - 3600) # minus one hour -> overwrite old wakeup time
+		# if not model.startswith('azboxm'): # skip for AZBox (mini)me - setting wakeup time to past reboots box
+		# 	setFPWakeuptime(int(nowTime) - 3600) # minus one hour -> overwrite old wakeup time
 	config.misc.prev_wakeup_time.save()
 
 	profile("stopService")
@@ -682,11 +682,11 @@ profile("IPv6")
 if os.path.exists('/etc/enigma2/ipv6'):
 	try:
 		open("/proc/sys/net/ipv6/conf/all/disable_ipv6", "w").write("1")
-	except:
+	except (IOError, OSError):
 		pass
 
-#from enigma import dump_malloc_stats
-#t = eTimer()
+# from enigma import dump_malloc_stats
+# t = eTimer()
 # t.callback.append(dump_malloc_stats)
 # t.start(1000)
 
@@ -697,7 +697,7 @@ try:
 	plugins.shutdown()
 
 	Components.ParentalControl.parentalControl.save()
-except:
+except Exception:
 	print('EXCEPTION IN PYTHON STARTUP CODE:')
 	print('-' * 60)
 	print_exc(file=stdout)

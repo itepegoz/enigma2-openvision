@@ -205,7 +205,7 @@ class MMIDialog(Screen):
 			self["entries"].handleKey(key)
 			if self.is_pin_list == 4:
 				self.okbuttonClick()
-		except:
+		except Exception:
 			pass
 
 	def keyNumberGlobal(self, number):
@@ -230,7 +230,7 @@ class MMIDialog(Screen):
 		List = self["entries"]
 		try:
 			List.instance.moveSelectionTo(0)
-		except:
+		except Exception:
 			pass
 		List.l.setList(list)
 
@@ -417,7 +417,7 @@ class CiSelection(Screen):
 		try:
 			self["entries"].handleKey(key)
 			self["entries"].getCurrent()[1].save()
-		except:
+		except Exception:
 			pass
 
 	def keyLeft(self):

@@ -75,7 +75,7 @@ class Language:
 				self.lang[str(lang + "_" + country)] = ((name, lang, country, encoding))
 				self.langlist.append(str(lang + "_" + country))
 
-		except:
+		except Exception:
 			print("[Language] " + str(name) + " not found")
 		self.langlistselection.append((str(lang + "_" + country), name))
 
@@ -94,20 +94,20 @@ class Language:
 			for x in self.callbacks:
 				if x:
 					x()
-		except:
+		except Exception:
 			print("[Language] Error in activating language!")
 		# NOTE: we do not use LC_ALL, because LC_ALL will not set any of the categories, when one of the categories fails.
 		# We'd rather try to set all available categories, and ignore the others
 		for category in [locale.LC_CTYPE, locale.LC_COLLATE, locale.LC_TIME, locale.LC_MONETARY, locale.LC_MESSAGES, locale.LC_NUMERIC]:
 			try:
 				locale.setlocale(category, (self.getLanguage(), 'UTF-8'))
-			except:
+			except Exception:
 				pass
 
 		# Also write a locale.conf as /home/root/.config/locale.conf to apply language to interactive shells as well:
 		try:
 			os.stat('/home/root/.config')
-		except:
+		except (IOError, OSError) as err:
 			os.mkdir('/home/root/.config')
 
 		localeconf = open('/home/root/.config/locale.conf', 'w')
@@ -150,13 +150,13 @@ class Language:
 	def getLanguage(self):
 		try:
 			return str(self.lang[self.activeLanguage][1]) + "_" + str(self.lang[self.activeLanguage][2])
-		except:
+		except Exception:
 			return ''
 
 	def getGStreamerSubtitleEncoding(self):
 		try:
 			return str(self.lang[self.activeLanguage][3])
-		except:
+		except Exception:
 			return 'ISO-8859-15'
 
 	def addCallback(self, callback):

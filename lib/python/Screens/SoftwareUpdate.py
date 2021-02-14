@@ -97,7 +97,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		try:
 			status = dict(json.load(urlopen(url, timeout=5)))
 			print("[SoftwareUpdate] status is: ", status)
-		except:
+		except Exception:
 			pass
 
 		# process the status fetched
@@ -157,7 +157,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		def gettime(url):
 			try:
 				return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(calendar.timegm(urlopen("%s/Packages.gz" % url).info().getdate('Last-Modified')) - time.altzone))
-			except:
+			except Exception:
 				return ""
 		return sorted([gettime(open("/etc/opkg/%s" % file, "r").readlines()[0].split()[2]) for file in os.listdir("/etc/opkg") if not file.startswith("3rd-party") and file not in ("arch.conf", "opkg.conf", "picons-feed.conf")], reverse=True)[0]
 
@@ -185,19 +185,19 @@ class UpdatePlugin(Screen, ProtectedScreen):
 				self.slider.setValue(self.sliderPackages[param])
 			self.package.setText(param)
 			self.status.setText(_("Updating") + ": %s/%s" % (self.packages, self.total_packages))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_INSTALL:
 			self.package.setText(param)
 			self.status.setText(_("Installing"))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_REMOVE:
 			self.package.setText(param)
 			self.status.setText(_("Removing"))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_CONFIGURING:
@@ -274,7 +274,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 			if 'enigma2-plugin-settings-' in param[0] and self.channellist_only > 0:
 				self.channellist_name = param[0]
 				self.channellist_only = 2
-		#print(event, "-", param)
+		# print(event, "-", param)
 		pass
 
 	def setEndMessage(self, txt):

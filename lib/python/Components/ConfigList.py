@@ -106,11 +106,11 @@ class ConfigList(GUIComponent, object):
 		instance.selectionChanged.get().remove(self.selectionChanged)
 		instance.setContent(None)
 
-	def setList(self, l):
-		self.__list = l
+	def setList(self, lst):
+		self.__list = lst
 		self.l.setList(self.__list)
-		if l is not None:
-			for x in l:
+		if lst is not None:
+			for x in lst:
 				assert len(x) < 2 or isinstance(x[1], ConfigElement), "[ConfigList] Error: Entry in ConfigList '%s' must be a ConfigElement!" % str(x[1])
 
 	def getList(self):

@@ -2195,10 +2195,10 @@ class Config(ConfigSubsection):
 	def unpickle(self, lines, base_file=True):
 		tree = {}
 		configbase = tree.setdefault("config", {})
-		for l in lines:
-			if not l or l[0] == "#":
+		for line in lines:
+			if not line or line[0] == "#":
 				continue
-			result = l.split("=", 1)
+			result = line.split("=", 1)
 			if len(result) != 2:
 				continue
 			(name, val) = result

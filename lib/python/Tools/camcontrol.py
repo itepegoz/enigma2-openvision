@@ -25,10 +25,10 @@ class CamControl:
 
 	def current(self):
 		try:
-			l = os.readlink(self.link)
+			link = os.readlink(self.link)
 			prefix = self.name + '.'
-			return os.path.split(l)[1].split(prefix, 2)[1]
-		except:
+			return os.path.split(link)[1].split(prefix, 2)[1]
+		except (IOError, OSError) as err:
 			pass
 		return None
 
@@ -47,12 +47,11 @@ class CamControl:
 			return
 		try:
 			os.unlink(self.link)
-		except:
+		except (IOError, OSError) as err:
 			pass
 		try:
 			os.symlink(dst, self.link)
-		except:
+		except (IOError, OSError) as err:
 			print("[camcontrol] Failed to create symlink for softcam:", dst)
 			import sys
 			print(sys.exc_info()[:2])
-

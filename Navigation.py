@@ -122,7 +122,7 @@ class Navigation:
 			self.currentlyPlayingService = None
 
 	def dispatchRecordEvent(self, rec_service, event):
-#		print("[Navigation] record_event", rec_service, event)
+		# print("[Navigation] record_event", rec_service, event)
 		for x in self.record_event:
 			x(rec_service, event)
 
@@ -139,7 +139,7 @@ class Navigation:
 				else:
 					signal = 0
 				open("/proc/stb/lcd/symbol_signal", "w").write(str(signal))
-			except:
+			except Exception:
 				open("/proc/stb/lcd/symbol_signal", "w").write("0")
 		elif path.exists("/proc/stb/lcd/symbol_signal") and config.lcd.mode.value == '0':
 			open("/proc/stb/lcd/symbol_signal", "w").write("0")

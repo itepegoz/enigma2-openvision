@@ -94,7 +94,7 @@ class inputDevices:
 		return sorted(self.Devices.iterkeys())
 
 	def setDeviceAttribute(self, device, attribute, value):
-		#print("[InputDevice] setting for device", device, "attribute", attribute, " to value", value)
+		# print("[InputDevice] setting for device", device, "attribute", attribute, " to value", value)
 		if device in self.Devices:
 			self.Devices[device][attribute] = value
 
@@ -106,20 +106,20 @@ class inputDevices:
 
 	def setEnabled(self, device, value):
 		oldval = self.getDeviceAttribute(device, 'enabled')
-		#print("[InputDevice] setEnabled for device %s to %s from %s" % (device,value,oldval))
+		# print("[InputDevice] setEnabled for device %s to %s from %s" % (device,value,oldval))
 		self.setDeviceAttribute(device, 'enabled', value)
 		if oldval is True and value is False:
 			self.setDefaults(device)
 
 	def setName(self, device, value):
-		#print("[InputDevice] setName for device %s to %s" % (device,value))
+		# print("[InputDevice] setName for device %s to %s" % (device,value))
 		self.setDeviceAttribute(device, 'configuredName', value)
 
 	# struct input_event {
-	#	struct timeval time;    -> ignored
-	#	__u16 type;             -> EV_REP (0x14)
-	#	__u16 code;             -> REP_DELAY (0x00) or REP_PERIOD (0x01)
-	#	__s32 value;            -> DEFAULTS: 700(REP_DELAY) or 100(REP_PERIOD)
+	# 	struct timeval time;    -> ignored
+	# 	__u16 type;             -> EV_REP (0x14)
+	# 	__u16 code;             -> REP_DELAY (0x00) or REP_PERIOD (0x01)
+	# 	__s32 value;            -> DEFAULTS: 700(REP_DELAY) or 100(REP_PERIOD)
 	# }; -> size = 16
 
 	def setDefaults(self, device):
@@ -159,7 +159,7 @@ class InitInputDevices:
 		config.inputDevices = ConfigSubsection()
 		for device in sorted(iInputDevices.Devices.iterkeys()):
 			self.currentDevice = device
-			#print("[InitInputDevices] creating config entry for device: %s -> %s  " % (self.currentDevice, iInputDevices.Devices[device]["name"]))
+			# print("[InitInputDevices] creating config entry for device: %s -> %s  " % (self.currentDevice, iInputDevices.Devices[device]["name"]))
 			self.setupConfigEntries(self.currentDevice)
 			self.remapRemoteControl(self.currentDevice)
 			self.currentDevice = ""

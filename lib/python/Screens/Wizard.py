@@ -46,7 +46,7 @@ class Wizard(Screen):
 			self.lastStep = 0
 
 		def startElement(self, name, attrs):
-			#print("startElement", name)
+			# print("startElement", name)
 			self.currContent = name
 			if name == "step":
 				self.lastStep += 1
@@ -54,7 +54,7 @@ class Wizard(Screen):
 					id = str(attrs.get('id'))
 				else:
 					id = ""
-				#print("id:", id)
+				# print("id:", id)
 				if 'nextstep' in attrs:
 					nextstep = str(attrs.get('nextstep'))
 				else:
@@ -83,7 +83,7 @@ class Wizard(Screen):
 				if 'type' in attrs:
 					if attrs["type"] == "dynamic":
 						self.wizard[self.lastStep]["dynamiclist"] = attrs.get("source")
-					#self.wizard[self.lastStep]["list"].append(("Hallo", "test"))
+					# self.wizard[self.lastStep]["list"].append(("Hallo", "test"))
 				if "evaluation" in attrs:
 					# print("evaluation")
 					self.wizard[self.lastStep]["listevaluation"] = attrs.get("evaluation")
@@ -97,12 +97,12 @@ class Wizard(Screen):
 				if type == "ConfigList" or type == "standalone":
 					try:
 						exec("from Screens." + str(attrs.get('module')) + " import *")
-					except:
+					except Exception:
 						exec("from " + str(attrs.get('module')) + " import *")
 
 					self.wizard[self.lastStep]["config"]["screen"] = eval(str(attrs.get('screen')))
 					if 'args' in attrs:
-						#print("has args")
+						# print("has args")
 						self.wizard[self.lastStep]["config"]["args"] = str(attrs.get('args'))
 				elif type == "dynamic":
 					self.wizard[self.lastStep]["config"]["source"] = str(attrs.get('source'))
@@ -133,7 +133,7 @@ class Wizard(Screen):
 			elif name == 'condition':
 				self.wizard[self.lastStep]["condition"] = self.wizard[self.lastStep]["condition"].strip()
 			elif name == 'step':
-				#print("Step number", self.lastStep, ":", self.wizard[self.lastStep])
+				# print("Step number", self.lastStep, ":", self.wizard[self.lastStep])
 				pass
 
 		def characters(self, ch):
@@ -197,7 +197,7 @@ class Wizard(Screen):
 			self.list = []
 			self["list"] = List(self.list, enableWrapAround=True)
 			self["list"].onSelectionChanged.append(self.selChanged)
-			#self["list"] = MenuList(self.list, enableWrapAround = True)
+			# self["list"] = MenuList(self.list, enableWrapAround = True)
 
 		self.onShown.append(self.updateValues)
 
@@ -426,7 +426,7 @@ class Wizard(Screen):
 			if "onselect" in self.wizard[self.currStep]:
 				print("[Wizard] current:", self["list"].current)
 				self.selection = self["list"].current[-1]
-				#self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
+				# self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
 				exec("self." + self.wizard[self.currStep]["onselect"] + "()")
 		print("[Wizard] up")
 
@@ -440,10 +440,10 @@ class Wizard(Screen):
 			self["list"].selectNext()
 			if "onselect" in self.wizard[self.currStep]:
 				print("[Wizard] current:", self["list"].current)
-				#self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
-				#exec("self." + self.wizard[self.currStep]["onselect"] + "()")
+				# self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
+				# exec("self." + self.wizard[self.currStep]["onselect"] + "()")
 				self.selection = self["list"].current[-1]
-				#self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
+				# self.selection = self.wizard[self.currStep]["evaluatedlist"][self["list"].l.getCurrentSelectionIndex()][1]
 				exec("self." + self.wizard[self.currStep]["onselect"] + "()")
 		print("[Wizard] down")
 
@@ -545,7 +545,7 @@ class Wizard(Screen):
 				self.afterAsyncCode()
 
 	def afterAsyncCode(self):
-		if not self.updateValues in self.onShown:
+		if self.updateValues not in self.onShown:
 			self.onShown.append(self.updateValues)
 
 		if self.codeafter:
@@ -573,11 +573,11 @@ class Wizard(Screen):
 				if "dynamiclist" in self.wizard[self.currStep]:
 					print("[Wizard] dynamic list, calling", self.wizard[self.currStep]["dynamiclist"])
 					newlist = eval("self." + self.wizard[self.currStep]["dynamiclist"] + "()")
-					#self.wizard[self.currStep]["evaluatedlist"] = []
+					# self.wizard[self.currStep]["evaluatedlist"] = []
 					for entry in newlist:
 						# self.wizard[self.currStep]["evaluatedlist"].append(entry)
 						self.list.append(entry)
-					#del self.wizard[self.currStep]["dynamiclist"]
+					# del self.wizard[self.currStep]["dynamiclist"]
 				if len(self.wizard[self.currStep]["list"]) > 0:
 					# self["list"].instance.setZPosition(2)
 					for x in self.wizard[self.currStep]["list"]:
@@ -607,7 +607,7 @@ class Wizard(Screen):
 						else:
 							try:
 								self.configInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], eval(self.wizard[self.currStep]["config"]["args"]))
-							except:
+							except Exception:
 								self.configInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], self.wizard[self.currStep]["config"]["args"])
 						if SystemInfo["OSDAnimation"]:
 							self.configInstance.setAnimationMode(0)

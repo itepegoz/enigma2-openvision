@@ -16,7 +16,7 @@ def nosendfile(*args):
 
 try:
 	from sendfile import sendfile
-except:
+except ImportError:
 	sendfile = nosendfile
 
 
@@ -46,7 +46,7 @@ class CopyFileTask(Components.Task.PythonTask):
 		for src, dst in fileList:
 			try:
 				self.end += os.stat(src).st_size
-			except:
+			except Exception:
 				print("[CopyFiles] Failed to stat", src)
 		if not self.end:
 			self.end = 1
@@ -66,14 +66,14 @@ class CopyFileTask(Components.Task.PythonTask):
 							print("[CopyFiles] aborting")
 							raise Exception("Aborted")
 						try:
-							l = sendfile(fdd, fds, offset, bs)
+							bufLen = sendfile(fdd, fds, offset, bs)
 						except OSError as ex:
 							if offset == 0:
 								raise GiveupOnSendfile("sendfile failed, probably not suitable for mmap")
-						self.pos += l
-						if l < bs:
+						self.pos += bufLen
+						if bufLen < bs:
 							break
-						offset += l
+						offset += bufLen
 				except GiveupOnSendfile as ex:
 					print("[CopyFiles]", ex)
 					bs = 65536
@@ -82,18 +82,18 @@ class CopyFileTask(Components.Task.PythonTask):
 						if self.aborted:
 							print("[CopyFiles] aborting")
 							raise Exception("Aborted")
-						l = src.readinto(d)
-						if l < bs:
-							if not l:
+						bufLen = src.readinto(d)
+						if bufLen < bs:
+							if not bufLen:
 								# EOF
 								src.close()
 								dst.close()
 								break
-							dst.write(buffer(d, 0, l))
+							dst.write(buffer(d, 0, bufLen))
 						else:
 							dst.write(d)
-						self.pos += l
-		except:
+						self.pos += bufLen
+		except Exception:
 			# In any event, close all handles
 			for src, dst in self.handles:
 				src.close()
@@ -102,7 +102,7 @@ class CopyFileTask(Components.Task.PythonTask):
 				# Remove incomplete data.
 				try:
 					os.unlink(d)
-				except:
+				except (IOError, OSError) as err:
 					pass
 			raise
 

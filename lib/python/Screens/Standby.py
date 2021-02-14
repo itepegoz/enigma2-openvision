@@ -121,17 +121,17 @@ class StandbyScreen(Screen):
 		if SystemInfo["HiSilicon"]:
 			try:
 				open("/proc/stb/hdmi/output", "w").write("off")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		if SystemInfo["AmlogicFamily"]:
 			try:
 				open("/sys/class/leds/led-sys/brightness", "w").write("0")
-			except:
+			except (IOError, OSError) as err:
 				pass
 			try:
 				open("/sys/class/cec/cmd", "w").write("0f 36")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
@@ -195,17 +195,17 @@ class StandbyScreen(Screen):
 		if SystemInfo["HiSilicon"]:
 			try:
 				open("/proc/stb/hdmi/output", "w").write("on")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		if SystemInfo["AmlogicFamily"]:
 			try:
 				open("/sys/class/leds/led-sys/brightness", "w").write("1")
-			except:
+			except (IOError, OSError) as err:
 				pass
 			try:
 				open("/sys/class/cec/cmd", "w").write("10 04")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 	def setMute(self):
@@ -406,12 +406,12 @@ class TryQuitMainloop(MessageBox):
 				print("[Standby] LCDminiTV off")
 				try:
 					open("/proc/stb/lcd/mode", "w").write(0)
-				except:
+				except (IOError, OSError) as err:
 					pass
 			if getBoxType() == "vusolo4k":
 				try:
 					open("/proc/stb/fp/oled_brightness", "w").write("0")
-				except:
+				except (IOError, OSError) as err:
 					pass
 			self.quitMainloop()
 		else:

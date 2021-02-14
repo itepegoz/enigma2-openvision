@@ -19,7 +19,7 @@ from Components.Sources.StaticText import StaticText
 import Components.Harddisk
 from Components.UsageConfig import preferredTimerPath
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-#from Components.Sources.Boolean import Boolean
+# from Components.Sources.Boolean import Boolean
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
@@ -39,7 +39,7 @@ import os
 import time
 try:
 	import cPickle as pickle
-except:
+except ImportError:
 	import pickle
 import six
 
@@ -235,7 +235,7 @@ def buildMovieLocationList(bookmarks):
 			# improve shortcuts to mountpoints
 			try:
 				bookmarks[bookmarks.index((d, d))] = (p.tabbedDescription(), d)
-			except:
+			except Exception:
 				pass  # When already listed as some "friendly" name
 		else:
 			bookmarks.append((p.tabbedDescription(), d))
@@ -254,9 +254,9 @@ class MovieBrowserConfiguration(ConfigListScreen, Screen):
 		Screen.setTitle(self, _(self.setup_title))
 
 		# No ConfigText fields in MovieBrowserConfiguration so these are not currently used.
-		#self["HelpWindow"] = Pixmap()
+		# self["HelpWindow"] = Pixmap()
 		# self["HelpWindow"].hide()
-		#self["VKeyIcon"] = Boolean(False)
+		# self["VKeyIcon"] = Boolean(False)
 
 		self['footnote'] = Label("")
 
@@ -283,7 +283,7 @@ class MovieBrowserConfiguration(ConfigListScreen, Screen):
 		}, -2)
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
@@ -396,9 +396,9 @@ class MovieContextMenu(Screen, ProtectedScreen):
 		Screen.setTitle(self, _(self.setup_title))
 
 		# No ConfigText fields in MovieBrowserConfiguration so these are not currently used.
-		#self["HelpWindow"] = Pixmap()
+		# self["HelpWindow"] = Pixmap()
 		# self["HelpWindow"].hide()
-		#self["VKeyIcon"] = Boolean(False)
+		# self["VKeyIcon"] = Boolean(False)
 
 		self['footnote'] = Label("")
 		self["description"] = StaticText()
@@ -1104,7 +1104,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 			else:
 				try:
 					check = getattr(self, 'can_' + action)
-				except:
+				except Exception:
 					check = self.can_default
 			gui = self["key_" + name]
 			if check(item):
@@ -1672,7 +1672,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				parentalControl.setSessionPinCached()
 				parentalControl.hideBlacklist()
 				self.gotFilename(res, selItem)
-			elif result == False:
+			elif result is False:
 				self.session.open(MessageBox, _("The pin code you entered is wrong."), MessageBox.TYPE_INFO, timeout=5)
 		if not res:
 			return
@@ -1725,7 +1725,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 	def showTagsN(self, tagele):
 		if not self.tags:
 			self.showTagWarning()
-		elif not tagele or (self.selected_tags and tagele.value in self.selected_tags) or not tagele.value in self.tags:
+		elif not tagele or (self.selected_tags and tagele.value in self.selected_tags) or tagele.value not in self.tags:
 			self.showTagsMenu(tagele)
 		else:
 			self.selected_tags_ele = tagele
@@ -1826,7 +1826,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 						if size > fileSize:
 							fileSize = size
 							self.playfile = folder + name
-				except:
+				except Exception:
 					print("[MovieSelection] Error calculate size for %s" % (folder + name))
 			if self.playfile:
 				return True
@@ -2178,7 +2178,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 							self["list"].removeService(current)
 							self.showActionFeedback(_("Deleted") + " " + name)
 							return
-						except:
+						except Exception:
 							msg = _("Cannot move to the trash can") + "\n"
 							are_you_sure = _("Do you really want to delete %s ?") % name
 					else:
@@ -2267,7 +2267,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 						delResumePoint(current)
 						self.showActionFeedback(_("Deleted") + " " + name)
 						return
-					except:
+					except Exception:
 						msg = _("Cannot move to the trash can") + "\n"
 						are_you_sure = _("Do you really want to delete %s ?") % name
 				else:

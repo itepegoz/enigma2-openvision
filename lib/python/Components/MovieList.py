@@ -55,7 +55,7 @@ class StubInfo:
 	def getFileSize(self, serviceref):
 		try:
 			return os.stat(serviceref.getPath()).st_size
-		except:
+		except (IOError, OSError) as err:
 			return -1
 
 	def getEvent(self, serviceref, *args):
@@ -116,7 +116,7 @@ def moviePlayState(cutsFileName, ref, length):
 		if lastPosition >= length:
 			return 100
 		return (100 * lastPosition) // length
-	except:
+	except Exception:
 		last = lastPlayPosFromCache(ref)
 		if last:
 			lastPosition = last[1]
@@ -148,10 +148,10 @@ def resetMoviePlayState(cutsFileName, ref=None):
 				cutlist.append(data)
 		f.close()
 		open(cutsFileName, 'wb').write(''.join(cutlist))
-	except:
+	except Exception:
 		pass
-		#import sys
-		#print("Exception in resetMoviePlayState: %s: %s" % sys.exc_info()[:2])
+		# import sys
+		# print("Exception in resetMoviePlayState: %s: %s" % sys.exc_info()[:2])
 
 
 class MovieList(GUIComponent):
@@ -170,14 +170,12 @@ class MovieList(GUIComponent):
 
 	HIDE_DESCRIPTION = 1
 	SHOW_DESCRIPTION = 2
-
-# So MovieSelection.selectSortby() can find out whether we are
-# in a Trash folder and, if so, what the last sort was
-# The numbering starts after SORT_* values above.
-# in MovieSelection.py (that has no SORT_GROUPWISE)
-# NOTE! that these two *must* *follow on* from the end of the
-#		SORT_* items above!
-#
+	# So MovieSelection.selectSortby() can find out whether we are
+	# in a Trash folder and, if so, what the last sort was
+	# The numbering starts after SORT_* values above.
+	# in MovieSelection.py (that has no SORT_GROUPWISE)
+	# NOTE! that these two *must* *follow on* from the end of the
+	# 	SORT_* items above!
 	TRASHSORT_SHOWRECORD = 13
 	TRASHSORT_SHOWDELETE = 14
 	UsingTrashSort = False
@@ -277,7 +275,7 @@ class MovieList(GUIComponent):
 			self.reloadDelayTimer.start(5000, 1)
 
 	def connectSelChanged(self, fnc):
-		if not fnc in self.onSelectionChanged:
+		if fnc not in self.onSelectionChanged:
 			self.onSelectionChanged.append(fnc)
 
 	def disconnectSelChanged(self, fnc):
@@ -350,7 +348,7 @@ class MovieList(GUIComponent):
 			try:
 				locals().get(attrib)(value)
 				self.skinAttributes.remove((attrib, value))
-			except:
+			except Exception:
 				pass
 		rc = GUIComponent.applySkin(self, desktop, parent)
 		self.listHeight = self.instance.size().height()
@@ -568,12 +566,12 @@ class MovieList(GUIComponent):
 		return self.instance.getCurrentIndex()
 
 	def getCurrentEvent(self):
-		l = self.l.getCurrentSelection()
-		return l and l[0] and l[1] and l[1].getEvent(l[0])
+		lst = self.l.getCurrentSelection()
+		return lst and lst[0] and lst[1] and lst[1].getEvent(lst[0])
 
 	def getCurrent(self):
-		l = self.l.getCurrentSelection()
-		return l and l[0]
+		lst = self.l.getCurrentSelection()
+		return lst and lst[0]
 
 	def getItem(self, index):
 		if self.list:
@@ -718,7 +716,7 @@ class MovieList(GUIComponent):
 				this_tags_fullname = set(this_tags_fullname)
 				this_tags = set(this_tags)
 				if not this_tags.issuperset(filter_tags) and not this_tags_fullname.issuperset(filter_tags):
-#					print("Skipping", name, "tags=", this_tags, " filter=", filter_tags)
+					# print("Skipping", name, "tags=", this_tags, " filter=", filter_tags)
 					continue
 			if begin2 != 0:
 				self.list.append((serviceref, info, begin, -1, begin2))
@@ -738,7 +736,7 @@ class MovieList(GUIComponent):
 		try:
 			self.current_sort = self.temp_sort
 			del self.temp_sort
-		except:
+		except Exception:
 			self.current_sort = self.sort_type
 
 		if MovieList.UsingTrashSort:	  # Same as SORT_RECORDED, but must come first...
@@ -954,7 +952,7 @@ class MovieList(GUIComponent):
 					found = True
 					self.instance.moveSelectionTo(index + currentIndex + 1)
 					break
-		if found == False and currentIndex > 0:
+		if found is False and currentIndex > 0:
 			itemsAbove = self.list[1:currentIndex]  # first item (0) points parent folder - no point to include
 			for index, item in enumerate(itemsAbove):
 				ref = item[0]

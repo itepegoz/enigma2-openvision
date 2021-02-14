@@ -160,7 +160,7 @@ def getFPWasTimerWakeup(check=False):
 	try:
 		wasTimerWakeup = int(open("/proc/stb/fp/was_timer_wakeup", "r").read()) and True or False
 		open("/tmp/was_timer_wakeup.txt", "w").write(str(wasTimerWakeup))
-	except:
+	except (IOError, OSError) as err:
 		try:
 			fp = open("/dev/dbox/fp0")
 			wasTimerWakeup = unpack('B', ioctl(fp.fileno(), 9, ' '))[0] and True or False
@@ -178,9 +178,9 @@ def getFPWasTimerWakeup(check=False):
 def clearFPWasTimerWakeup():
 	try:
 		open("/proc/stb/fp/was_timer_wakeup", "w").write('0')
-	except:
+	except (IOError, OSError) as err:
 		try:
 			fp = open("/dev/dbox/fp0")
 			ioctl(fp.fileno(), 10)
-		except IOError:
+		except (IOError, OSError) as err:
 			print("clearFPWasTimerWakeup failed!")

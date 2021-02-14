@@ -32,7 +32,7 @@ class ConsoleItem:
 		if callback is None:
 			try:
 				os.waitpid(self.container.getPID(), 0)
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 	def dataAvailCB(self, data):

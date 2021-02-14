@@ -47,7 +47,7 @@ class PlayList(MenuList):
 			png = self.icons[state]
 			x, y, w, h = skin.parameters.get("PlayListIcon", (5, 3, 16, 16))
 			res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, w, h, png))
-		except:
+		except Exception:
 			pass
 		return res
 
@@ -110,12 +110,12 @@ class PlayList(MenuList):
 		return self.currPlaying
 
 	def getCurrentEvent(self):
-		l = self.l.getCurrentSelection()
-		return l and self.serviceHandler.info(l[0]).getEvent(l[0])
+		lst = self.l.getCurrentSelection()
+		return lst and self.serviceHandler.info(lst[0]).getEvent(lst[0])
 
 	def getCurrent(self):
-		l = self.l.getCurrentSelection()
-		return l and l[0]
+		lst = self.l.getCurrentSelection()
+		return lst and lst[0]
 
 	def getServiceRefList(self):
 		return [x[0] for x in self.list]

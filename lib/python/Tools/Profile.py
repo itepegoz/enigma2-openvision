@@ -26,7 +26,7 @@ try:
 		t = float(t)
 		total_time = t
 		profile_data[id] = t
-except:
+except (IOError, OSError) as err:
 	print("[Profile] no profile data available")
 
 try:

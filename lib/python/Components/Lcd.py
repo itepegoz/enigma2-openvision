@@ -52,7 +52,7 @@ class IconCheckPoller:
 	def iconcheck(self):
 		try:
 			threads.deferToThread(self.JobTask)
-		except:
+		except Exception:
 			pass
 		self.timer.startLongTimer(30)
 
@@ -297,14 +297,14 @@ def InitLcd():
 				try:
 					print('[Lcd] setLCDModeMinitTV', configElement.value)
 					open("/proc/stb/lcd/mode", "w").write(configElement.value)
-				except:
+				except (IOError, OSError) as err:
 					pass
 
 			def setMiniTVFPS(configElement):
 				try:
 					print('[Lcd] setMiniTVFPS', configElement.value)
 					open("/proc/stb/lcd/fps", "w").write(configElement.value)
-				except:
+				except (IOError, OSError) as err:
 					pass
 
 			def setLCDModePiP(configElement):
@@ -546,7 +546,7 @@ def InitLcd():
 				try:
 					InfoBarInstance = InfoBar.instance
 					InfoBarInstance and InfoBarInstance.session.open(dummyScreen)
-				except:
+				except Exception:
 					pass
 			config.lcd.showTv = ConfigYesNo(default=False)
 			config.lcd.showTv.addNotifier(lcdLiveTvChanged)

@@ -20,7 +20,7 @@ def filter(g):
 			continue
 
 		if t[1] != "\n":
-#			print(t)
+			# print(t)
 			yield t[1]
 
 
@@ -38,7 +38,7 @@ def do_file(f, mode):
 	while True:
 		try:
 			t = tokens.next()
-		except:
+		except Exception:
 			break
 
 		if t == "class":
@@ -63,12 +63,12 @@ def do_file(f, mode):
 				if tokens.next() != "{":
 					try:
 						print(classname)
-					except:
+					except Exception:
 						pass
 
 					try:
 						print(actionname)
-					except:
+					except Exception:
 						pass
 
 					raise Exception("action enum must be simple.")

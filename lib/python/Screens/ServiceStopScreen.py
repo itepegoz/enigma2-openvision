@@ -8,7 +8,7 @@ class ServiceStopScreen:
 	def __init__(self):
 		try:
 			self.session
-		except:
+		except Exception:
 			print("[ServiceStopScreen] ERROR: no self.session set")
 		self.oldref = None
 		self.onClose.append(self.__onClose)
@@ -18,7 +18,7 @@ class ServiceStopScreen:
 		try:
 			self.session.pipshown
 			pipavailable = True
-		except:
+		except Exception:
 			pipavailable = False
 		return pipavailable
 

@@ -24,7 +24,7 @@ class ServicePosition(PerServiceDisplay, object):
 			})
 		self.type = type
 		self.relative_base = 0
-#		self.setType(type)
+		# self.setType(type)
 
 	def newService(self):
 		self.setType(self.type)

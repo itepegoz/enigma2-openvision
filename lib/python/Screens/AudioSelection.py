@@ -218,7 +218,7 @@ class AudioSelection(Screen, ConfigListScreen):
 							language = _(LanguageCodes[x[4]][0])
 						else:
 							language = x[4]
-				except:
+				except Exception:
 					language = ""
 
 				if x[0] == 0:
@@ -234,7 +234,7 @@ class AudioSelection(Screen, ConfigListScreen):
 							_("SRT file"), _("VOB file"), _("PGS file"))
 					try:
 						description = types[x[2]]
-					except:
+					except Exception:
 						description = _("unknown") + ": %s" % x[2]
 					number = str(int(number) + 1)
 
@@ -243,7 +243,7 @@ class AudioSelection(Screen, ConfigListScreen):
 
 			conflist.append(getConfigListEntry(_("To audio selection"), self.settings.menupage))
 
-			if self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0) and not ".DVDPlayer'>" in `self.infobar`:
+			if self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0) and ".DVDPlayer'>" not in `self.infobar`:
 				self["key_blue"].setBoolean(True)
 				conflist.append(getConfigListEntry(_("Subtitle Quickmenu"), ConfigNothing()))
 
@@ -381,7 +381,7 @@ class AudioSelection(Screen, ConfigListScreen):
 						self.plugincallfunc()
 				elif self.settings.menupage.getValue() == PAGE_SUBTITLES and self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0):
 					self.session.open(QuickSubtitlesConfigMenu, self.infobar)
-		if self.focus == FOCUS_STREAMS and self["streams"].count() and config == False:
+		if self.focus == FOCUS_STREAMS and self["streams"].count() and config is False:
 			self["streams"].setIndex(self["streams"].count() - 1)
 
 	def keyRed(self):

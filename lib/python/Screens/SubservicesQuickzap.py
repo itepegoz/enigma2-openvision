@@ -98,7 +98,7 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu,
 	def playSubservice(self, number=0):
 		try:
 			newservice = eServiceReference(self.subservices[number][1])
-		except:
+		except Exception:
 			newservice = None
 		if newservice and newservice.valid():
 			self.__lastservice = self.currentlyPlayingSubservice

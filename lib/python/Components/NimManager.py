@@ -268,7 +268,7 @@ class SecConfigure:
 					self.linked[connto].append(slotid)
 				else:
 					config.Nims[slotid].advanced.unicableconnectedTo.save_forced = False
-		except:
+		except Exception:
 			pass
 
 		lnbSat = {}
@@ -562,7 +562,7 @@ class NIM(object):
 					self.config.configModeDVBC.value and x.startswith("DVB-C") or
 					self.config.configModeDVBT.value and x.startswith("DVB-T") or
 					self.config.configModeATSC.value and x.startswith("ATSC")]
-		except:
+		except Exception:
 			pass
 		return [self.getType()]
 
@@ -578,7 +578,7 @@ class NIM(object):
 				return [x for x in self.multi_type.values() if x.startswith("DVB-S")][0]
 			if self.isMultiType():
 				return self.multi_type[self.config.multiType.value]
-		except:
+		except Exception:
 			pass
 		return self.type
 
@@ -1074,10 +1074,10 @@ class NimManager:
 		list = []
 		if self.nim_slots[slotid].isCompatible("DVB-S"):
 			nim = config.Nims[slotid]
-			#print("slotid:", slotid)
+			# print("slotid:", slotid)
 
-			#print("self.satellites:", self.satList[config.Nims[slotid].diseqcA.index])
-			#print("diseqcA:", config.Nims[slotid].diseqcA.value)
+			# print("self.satellites:", self.satList[config.Nims[slotid].diseqcA.index])
+			# print("diseqcA:", config.Nims[slotid].diseqcA.value)
 			configMode = nim.configMode.value
 
 			if configMode == "equal":
@@ -1620,7 +1620,7 @@ def InitNimManager(nimmgr, update_slots=[]):
 							try:
 								oldvalue = open("/sys/module/dvb_core/parameters/dvb_shutdown_timeout", "r").readline()
 								open("/sys/module/dvb_core/parameters/dvb_shutdown_timeout", "w").write("0")
-							except:
+							except (IOError, OSError) as err:
 								print("[NimManager] tunerTypeChanged read /sys/module/dvb_core/parameters/dvb_shutdown_timeout failed")
 
 						frontend.closeFrontend()
@@ -1630,7 +1630,7 @@ def InitNimManager(nimmgr, update_slots=[]):
 						if is_dvb_shutdown_timeout:
 							try:
 								open("/sys/module/dvb_core/parameters/dvb_shutdown_timeout", "w").write(oldvalue)
-							except:
+							except (IOError, OSError) as err:
 								print("[NimManager] tunerTypeChanged write to /sys/module/dvb_core/parameters/dvb_shutdown_timeout failed")
 
 						nimmgr.enumerateNIMs()

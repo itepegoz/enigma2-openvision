@@ -37,7 +37,7 @@ def getIfConfig(ifname):
 	try:
 		for k, v in infos.items():
 			ifreq[k] = _ifinfo(sock, v, ifname)
-	except:
+	except Exception:
 		pass
 	return ifreq
 
@@ -62,7 +62,7 @@ def getImageVersionString():
 		tm = time.localtime(st.st_mtime)
 		if tm.tm_year >= 2018:
 			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
-	except:
+	except (IOError, OSError) as err:
 		pass
 	return _("unavailable")
 
@@ -78,7 +78,7 @@ def getBuildDateString():
 		if os.path.isfile('/etc/version'):
 			version = open("/etc/version", "r").read()
 			return "%s-%s-%s" % (version[:4], version[4:6], version[6:8])
-	except:
+	except (IOError, OSError) as err:
 		pass
 	return _("unknown")
 
@@ -91,7 +91,7 @@ def getUpdateDateString():
 			build = open("/etc/openvision/compiledate", "r").read().strip()
 		if build.isdigit():
 			return "%s-%s-%s" % (build[:4], build[4:6], build[6:])
-	except:
+	except (IOError, OSError) as err:
 		pass
 	return _("unknown")
 
@@ -109,11 +109,11 @@ def getGStreamerVersionString(cpu):
 	try:
 		gst = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/gstreamer[0-9].[0-9].control")[0], "r") if x.startswith("Version:")][0]
 		return "%s" % gst[1].split("+")[0].replace("\n", "")
-	except:
+	except Exception:
 		try:
 			gst = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/gstreamer.[0-9].control")[0], "r") if x.startswith("Version:")][0]
 			return "%s" % gst[1].split("+")[0].replace("\n", "")
-		except:
+		except Exception:
 			return _("Not Required") if cpu.upper().startswith('HI') else _("Not Installed")
 
 
@@ -123,14 +123,14 @@ def getFFmpegVersionString():
 		ffmpeg = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/ffmpeg.control")[0], "r") if x.startswith("Version:")][0]
 		version = ffmpeg[1].split("-")[0].replace("\n", "")
 		return "%s" % version.split("+")[0]
-	except:
+	except Exception:
 		return _("unknown")
 
 
 def getKernelVersionString():
 	try:
 		return open("/proc/version", "r").read().split(' ', 4)[2].split('-', 2)[0]
-	except:
+	except (IOError, OSError) as err:
 		return _("unknown")
 
 
@@ -154,7 +154,7 @@ def getCPUBenchmark():
 			return "%s DMIPS per core\n%s DMIPS for all (%s) cores (%s)" % (cpubench, cpumaxbench, cpucount, benchmarkstatus)
 		else:
 			return "%s DMIPS (%s)" % (cpubench, benchmarkstatus)
-	except:
+	except Exception:
 		return _("unknown")
 
 
@@ -186,11 +186,11 @@ def getCPUInfoString():
 		if not cpu_speed:
 			try:
 				cpu_speed = int(open("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq").read()) / 1000
-			except:
+			except Exception:
 				try:
 					import binascii
 					cpu_speed = int(int(binascii.hexlify(open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb').read()), 16) / 100000000) * 100
-				except:
+				except Exception:
 					cpu_speed = "-"
 
 		temperature = None
@@ -207,17 +207,17 @@ def getCPUInfoString():
 		elif os.path.isfile("/sys/devices/virtual/thermal/thermal_zone0/temp"):
 			try:
 				temperature = int(open("/sys/devices/virtual/thermal/thermal_zone0/temp").read().strip()) / 1000
-			except:
+			except Exception:
 				pass
 		elif os.path.isfile("/sys/class/thermal/thermal_zone0/temp"):
 			try:
 				temperature = int(open("/sys/class/thermal/thermal_zone0/temp").read().strip()) / 1000
-			except:
+			except Exception:
 				pass
 		elif os.path.isfile("/proc/hisi/msp/pm_cpu"):
 			try:
-				temperature = re.search('temperature = (\d+) degree', open("/proc/hisi/msp/pm_cpu").read()).group(1)
-			except:
+				temperature = re.search('temperature = (\\d+) degree', open("/proc/hisi/msp/pm_cpu").read()).group(1)
+			except Exception:
 				pass
 		if temperature:
 			degree = u"\u00B0"
@@ -225,7 +225,7 @@ def getCPUInfoString():
 				degree = degree.encode("UTF-8", errors="ignore")
 			return "%s %s MHz (%s) %s%sC" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count, temperature, degree)
 		return "%s %s MHz (%s)" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count)
-	except:
+	except Exception:
 		return _("undefined")
 
 
@@ -233,7 +233,7 @@ def getChipSetString():
 	try:
 		chipset = open("/proc/stb/info/chipset", "r").read()
 		return str(chipset.lower().replace('\n', ''))
-	except IOError:
+	except (IOError, OSError) as err:
 		return _("undefined")
 
 
@@ -292,14 +292,14 @@ def getDriverInstalledDate():
 			else:
 				driver = [x.split("-")[-2:-1][0][-8:] for x in open(glob("/var/lib/opkg/info/*-dvb-modules-*.control")[0], "r") if x.startswith("Version:")][0]
 				return "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
-		except:
+		except Exception:
 			try:
 				driver = [x.split("Version:") for x in open(glob("/var/lib/opkg/info/*-dvb-proxy-*.control")[0], "r") if x.startswith("Version:")][0]
 				return "%s" % driver[1].replace("\n", "")
-			except:
+			except Exception:
 				driver = [x.split("Version:") for x in open(glob("/var/lib/opkg/info/*-platform-util-*.control")[0], "r") if x.startswith("Version:")][0]
 				return "%s" % driver[1].replace("\n", "")
-	except:
+	except Exception:
 		return _("unknown")
 
 
@@ -307,11 +307,11 @@ def getPythonVersionString():
 	try:
 		try:
 			import commands
-		except:
+		except ImportError:
 			import subprocess as commands
 		status, output = commands.getstatusoutput("python -V")
 		return output.split(' ')[1]
-	except:
+	except Exception:
 		return _("unknown")
 
 
@@ -364,7 +364,7 @@ def getBoxUptime():
 		time += ngettext("%d hour", "%d hours", h) % h + " "
 		time += ngettext("%d minute", "%d minutes", m) % m
 		return "%s" % time
-	except:
+	except Exception:
 		return '-'
 
 

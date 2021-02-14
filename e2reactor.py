@@ -17,7 +17,7 @@ import sys
 # Twisted imports
 from twisted.python import log, failure
 from twisted.internet import main, posixbase, error
-#from twisted.internet.pollreactor import PollReactor, poller
+# from twisted.internet.pollreactor import PollReactor, poller
 
 from enigma import getApplication
 
@@ -81,7 +81,7 @@ class PollReactor(posixbase.PosixReactorBase):
 			# make sure the fd is actually real.  In some situations we can get
 			# -1 here.
 			mdict[fd]
-		except:
+		except Exception:
 			# the hard way: necessary because fileno() may disappear at any
 			# moment, thanks to python's underlying sockets impl
 			for fd, fdes in selectables.items():
@@ -153,18 +153,18 @@ class PollReactor(posixbase.PosixReactorBase):
 			timeout = int(timeout * 1000)  # convert seconds to milliseconds
 
 		try:
-			l = poller.poll(timeout)
-			if l is None:
+			pol = poller.poll(timeout)
+			if pol is None:
 				if self.running:
 					self.stop()
-				l = []
+				pol = []
 		except select.error as e:
 			if e[0] == errno.EINTR:
 				return
 			else:
 				raise
 		_drdw = self._doReadOrWrite
-		for fd, event in l:
+		for fd, event in pol:
 			try:
 				selectable = selectables[fd]
 			except KeyError:
@@ -201,7 +201,7 @@ class PollReactor(posixbase.PosixReactorBase):
 					why = sys.exc_info()[1]
 				else:
 					why = None
-			except:
+			except Exception:
 				log.deferr()
 				why = sys.exc_info()[1]
 		if why:

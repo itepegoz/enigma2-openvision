@@ -184,7 +184,7 @@ class ServiceInfo(Screen):
 						(_("Provider"), self.getServiceInfoValue(iServiceInformation.sProvider), TYPE_TEXT),
 						(_("Videocodec, size & format"), resolution, TYPE_TEXT)]
 					if "%3a//" in refstr:
-					#fallback, movistartv
+					# fallback, movistartv
 						fillList = fillList + [(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
 							(_("URL"), refstr.split(":")[10].replace("%3a", ":"), TYPE_TEXT)]
 					else:
@@ -199,11 +199,11 @@ class ServiceInfo(Screen):
 					(_("TSID"), self.getServiceInfoValue(iServiceInformation.sTSID), TYPE_VALUE_HEX_DEC, 4),
 					(_("ONID"), self.getServiceInfoValue(iServiceInformation.sONID), TYPE_VALUE_HEX_DEC, 4),
 					(_("Service ID"), self.getServiceInfoValue(iServiceInformation.sSID), TYPE_VALUE_HEX_DEC, 4),
-					(_("Video PID"), self.getServiceInfoValue(iServiceInformation.sVideoPID), TYPE_VALUE_HEX_DEC, 4)]
-					+ trackList + [(_("PCR PID"), self.getServiceInfoValue(iServiceInformation.sPCRPID), TYPE_VALUE_HEX_DEC, 4),
+					(_("Video PID"), self.getServiceInfoValue(iServiceInformation.sVideoPID), TYPE_VALUE_HEX_DEC, 4)] +
+					trackList + [(_("PCR PID"), self.getServiceInfoValue(iServiceInformation.sPCRPID), TYPE_VALUE_HEX_DEC, 4),
 					(_("PMT PID"), self.getServiceInfoValue(iServiceInformation.sPMTPID), TYPE_VALUE_HEX_DEC, 4),
 					(_("TXT PID"), self.getServiceInfoValue(iServiceInformation.sTXTPID), TYPE_VALUE_HEX_DEC, 4)])
-				if self.showAll == True:
+				if self.showAll is True:
 					fillList = fillList + self.subList
 
 			self.fillList(fillList)
@@ -280,7 +280,7 @@ class ServiceInfo(Screen):
 							_("SRT File"), _("VOB File"), _("PGS File"))
 					try:
 						description = types[x[2]]
-					except:
+					except KeyError:
 						description = _("unknown") + ": %s" % x[2]
 					subNumber = str(int(subNumber) + 1)
 					subList += [(_("Other Subtitles & lang"), "%s - %s - %s" % (subNumber, description, subLang), TYPE_TEXT)]

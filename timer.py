@@ -22,7 +22,7 @@ class TimerEntry:
 		self.findRunningEvent = True
 		self.findNextEvent = False
 		self.resetRepeated()
-		#begindate = localtime(self.begin)
+		# begindate = localtime(self.begin)
 		# newdate = datetime.datetime(begindate.tm_year, begindate.tm_mon, begindate.tm_mday 0, 0, 0);
 		self.repeatedbegindate = begin
 		self.backoff = 0
@@ -85,8 +85,10 @@ class TimerEntry:
 
 			# if day is NOT in the list of repeated days
 			# OR if the day IS in the list of the repeated days, check, if event is currently running... then if findRunningEvent is false, go to the next event
-			while ((day[localbegin.tm_wday] != 0) or (mktime(localrepeatedbegindate) > mktime(localbegin)) or
-				(day[localbegin.tm_wday] == 0 and (findRunningEvent and localend < localnow) or ((not findRunningEvent) and localbegin < localnow))):
+			while (
+				(day[localbegin.tm_wday] != 0) or (mktime(localrepeatedbegindate) > mktime(localbegin)) or
+				(day[localbegin.tm_wday] == 0 and (findRunningEvent and localend < localnow) or ((not findRunningEvent) and localbegin < localnow))
+			):
 				localbegin = self.addOneDay(localbegin)
 				localend = self.addOneDay(localend)
 
@@ -112,7 +114,7 @@ class TimerEntry:
 	# check if a timer entry must be skipped
 	def shouldSkip(self):
 		if self.disabled:
-			if self.end <= time() and not "PowerTimerEntry" in [self]:
+			if self.end <= time() and "PowerTimerEntry" not in [self]:
 				self.disabled = False
 			return True
 		if "PowerTimerEntry" in [self]:
@@ -205,25 +207,25 @@ class Timer:
 				self.calcNextActivation()
 
 # small piece of example code to understand how to use record simulation
-#		if NavigationInstance.instance:
-#			lst = [ ]
-#			cnt = 0
-#			for timer in self.timer_list:
-#				print("timer", cnt)
-#				cnt += 1
-#				if timer.state == 0: #waiting
-#					lst.append(NavigationInstance.instance.recordService(timer.service_ref))
-#				else:
-#					print("STATE: ", timer.state)
+# 		if NavigationInstance.instance:
+# 			lst = [ ]
+# 			cnt = 0
+# 			for timer in self.timer_list:
+# 				print("timer", cnt)
+# 				cnt += 1
+# 				if timer.state == 0: #waiting
+# 					lst.append(NavigationInstance.instance.recordService(timer.service_ref))
+# 				else:
+# 					print("STATE: ", timer.state)
 #
-#			for rec in lst:
-#				if rec.start(True): #simulate
-#					print("FAILED!!!!!!!!!!!!")
-#				else:
-#					print("OK!!!!!!!!!!!!!!")
-#				NavigationInstance.instance.stopRecordService(rec)
-#		else:
-#			print("no NAV")
+# 			for rec in lst:
+# 				if rec.start(True): #simulate
+# 					print("FAILED!!!!!!!!!!!!")
+# 				else:
+# 					print("OK!!!!!!!!!!!!!!")
+# 				NavigationInstance.instance.stopRecordService(rec)
+# 		else:
+# 			print("no NAV")
 
 	def setNextActivation(self, now, when):
 		delay = int((when - now) * 1000)
@@ -268,7 +270,7 @@ class Timer:
 		else:
 			try:
 				self.timer_list.remove(timer)
-			except:
+			except ValueError:
 				print("[timer] Failed to remove, not in list")
 				return
 		# give the timer a chance to re-enqueue

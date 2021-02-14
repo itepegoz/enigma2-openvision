@@ -4,7 +4,7 @@ from twisted.web import client
 from twisted.internet import reactor, defer
 try:
 	from urlparse import urlparse
-except:
+except ImportError:
 	from urllib.parse import urlparse
 from enigma import getBoxType, getBoxBrand
 

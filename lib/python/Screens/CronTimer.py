@@ -49,7 +49,7 @@ class CronTimers(Screen):
 		self.list = []
 		self['list'] = List(self.list)
 		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"], {'ok': self.info, 'back': self.UninstallCheck, 'red': self.delcron, 'green': self.addtocron, 'yellow': self.CrondStart, 'blue': self.autostart})
-		if not self.selectionChanged in self["list"].onSelectionChanged:
+		if self.selectionChanged not in self["list"].onSelectionChanged:
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = 'cronie'
 		self.onLayoutFinish.append(self.InstallCheck)
@@ -122,7 +122,7 @@ class CronTimers(Screen):
 				name = str(self["list"].getCurrent()[0])
 			else:
 				name = ""
-		except:
+		except Exception:
 			name = ""
 		desc = _("Current status:") + ' ' + self.summary_running
 		for cb in self.onChangedEntry:
@@ -188,32 +188,32 @@ class CronTimers(Screen):
 					if parts[1] == '*':
 						try:
 							line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-						except:
+						except Exception:
 							try:
 								line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-							except:
+							except Exception:
 								try:
 									line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-								except:
+								except Exception:
 									try:
 										line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-									except:
+									except Exception:
 										line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
 					elif parts[2] == '*' and parts[4] == '*':
 						try:
 							line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-						except:
+						except Exception:
 							try:
 								line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-							except:
+							except Exception:
 								try:
 									line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-								except:
+								except Exception:
 									try:
 										line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-									except:
+									except Exception:
 										line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
@@ -221,16 +221,16 @@ class CronTimers(Screen):
 						if parts[4] == "*":
 							try:
 								line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-							except:
+							except Exception:
 								try:
 									line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-								except:
+								except Exception:
 									try:
 										line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-									except:
+									except Exception:
 										try:
 											line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-										except:
+										except Exception:
 											line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						header = 'W:  '
 						day = ""
@@ -252,16 +252,16 @@ class CronTimers(Screen):
 						if day:
 							try:
 								line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-							except:
+							except Exception:
 								try:
 									line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-								except:
+								except Exception:
 									try:
 										line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-									except:
+									except Exception:
 										try:
 											line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-										except:
+										except Exception:
 											line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
@@ -283,7 +283,7 @@ class CronTimers(Screen):
 			mysel = self['list'].getCurrent()
 			if mysel:
 				myline = mysel[1]
-				open('/etc/cron/crontabs/root.tmp', 'w').writelines([l for l in open('/etc/cron/crontabs/root').readlines() if myline not in l])
+				open('/etc/cron/crontabs/root.tmp', 'w').writelines([x for x in open('/etc/cron/crontabs/root').readlines() if myline not in x])
 				rename('/etc/cron/crontabs/root.tmp', '/etc/cron/crontabs/root')
 				rc = Console().ePopen('crontab /etc/cron/crontabs/root -c /etc/cron/crontabs')
 				self.updateList()

@@ -75,7 +75,7 @@ class MovingPixmap(Pixmap):
 		self.time -= 1
 		try:
 			self.move(int(self.x), int(self.y))
-		except:  # moving not possible... widget not there any more... stop moving
+		except Exception:  # moving not possible... widget not there any more... stop moving
 			self.stopMoving()
 
 		if self.time == 0:

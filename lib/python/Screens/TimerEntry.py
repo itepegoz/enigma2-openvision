@@ -173,7 +173,7 @@ class TimerEntry(Screen, ConfigListScreen):
 		servicename = "N/A"
 		try:  # no current service available?
 			servicename = str(self.timer.service_ref.getServiceName())
-		except:
+		except Except:
 			pass
 		self.timerentry_service_ref = self.timer.service_ref
 		self.timerentry_service = ConfigSelection([servicename])
@@ -551,7 +551,7 @@ class TimerEntry(Screen, ConfigListScreen):
 			self["config"].invalidate(self.entryEndTime)
 
 	def subserviceSelected(self, service):
-		if not service is None:
+		if service is not None:
 			self.timer.service_ref = ServiceReference(service[1])
 		self.saveTimer()
 		self.close((True, self.timer))

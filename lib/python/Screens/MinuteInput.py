@@ -67,7 +67,7 @@ class MinuteInput(Screen):
 		def ok(self):
 			try:
 				self.close(int(self["minutes"].getText()))
-			except:
+			except Exception:
 				self.session.open(MessageBox, _("Incorrect format for skip value: '%s'\nSkip cancelled.") % self["minutes"].getText(), MessageBox.TYPE_WARNING, timeout=5)
 				self.cancel()
 

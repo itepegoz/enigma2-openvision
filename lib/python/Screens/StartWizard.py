@@ -7,7 +7,7 @@ from Screens.WizardLanguage import WizardLanguage
 from Screens.Rc import Rc
 try:
 	from Plugins.SystemPlugins.OSDPositionSetup.overscanwizard import OverscanWizard
-except:
+except ImportError:
 	OverscanWizard = None
 from boxbranding import getImageVersion
 from Components.Pixmap import Pixmap
@@ -59,7 +59,7 @@ def setLanguageFromBackup(backupfile):
 							language.activateLanguage(languageToSelect)
 							break
 		tar.close()
-	except:
+	except Exception:
 		pass
 
 

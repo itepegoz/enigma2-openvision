@@ -171,7 +171,7 @@ class EPGSelection(Screen):
 				eventname = eventname.replace('', '')
 				try:
 					tmbdsearch = config.plugins.tmbd.profile.value
-				except:
+				except Exception:
 					tmbdsearch = None
 				if tmbdsearch is not None:
 					if config.plugins.tmbd.profile.value == "0":
@@ -180,7 +180,7 @@ class EPGSelection(Screen):
 						try:
 							from Plugins.Extensions.TMBD.plugin import KinoRu
 							self.session.open(KinoRu, eventname, False)
-						except:
+						except Exception:
 							pass
 				else:
 					self.session.open(TMBD, eventname, False)
@@ -294,29 +294,29 @@ class EPGSelection(Screen):
 
 	# just used in multipeg
 	def onCreate(self):
-		l = self["list"]
-		l.recalcEntrySize()
+		entry = self["list"]
+		entry.recalcEntrySize()
 		if self.type == EPG_TYPE_MULTI:
-			l.fillMultiEPG(self.services, self.ask_time)
-			l.moveToService(Screens.InfoBar.InfoBar.instance and Screens.InfoBar.InfoBar.instance.servicelist.getCurrentSelection() or self.session.nav.getCurrentlyPlayingServiceOrGroup())
+			entry.fillMultiEPG(self.services, self.ask_time)
+			entry.moveToService(Screens.InfoBar.InfoBar.instance and Screens.InfoBar.InfoBar.instance.servicelist.getCurrentSelection() or self.session.nav.getCurrentlyPlayingServiceOrGroup())
 		elif self.type == EPG_TYPE_SINGLE:
 			service = self.currentService
 			self["Service"].newService(service.ref)
 			if not self.saved_title:
 				self.saved_title = self.instance.getTitle()
 			self.setTitle(self.saved_title + ' - ' + service.getServiceName())
-			l.fillSingleEPG(service)
+			entry.fillSingleEPG(service)
 		else:
-			l.fillSimilarList(self.currentService, self.eventid)
+			entry.fillSimilarList(self.currentService, self.eventid)
 
 	def eventViewCallback(self, setEvent, setService, val):
-		l = self["list"]
-		old = l.getCurrent()
+		entry = self["list"]
+		old = entry.getCurrent()
 		if val == -1:
 			self.moveUp()
 		elif val == +1:
 			self.moveDown()
-		cur = l.getCurrent()
+		cur = entry.getCurrent()
 		if self.type == EPG_TYPE_MULTI and cur[0] is None and cur[1].ref != old[1].ref:
 			self.eventViewCallback(setEvent, setService, val)
 		else:

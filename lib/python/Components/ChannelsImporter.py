@@ -306,7 +306,7 @@ class ChannelsImporter():
 							if result is None:
 								continue
 							self.alternatives.append(result.group(1))
-				except:
+				except Exception:
 					pass
 
 	def removeFiles(self, targetdir, target):
@@ -359,5 +359,5 @@ class ChannelsImporter():
 			print('[ChannelsImporter] saveEPGonRemoteReceiver ERROR:', err.reason[0])
 		except urllib2 as err:
 			print('[ChannelsImporter] saveEPGonRemoteReceiver ERROR:', err)
-		except:
+		except Exception:
 			print('[ChannelsImporter] saveEPGonRemoteReceiver undefined error')

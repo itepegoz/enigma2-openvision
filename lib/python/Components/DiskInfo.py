@@ -26,7 +26,7 @@ class DiskInfo(VariableText, GUIComponent):
 	def update(self):
 		try:
 			stat = statvfs(self.path)
-		except OSError:
+		except (IOError, OSError) as err:
 			return -1
 
 		if self.type == self.FREE:
@@ -40,7 +40,7 @@ class DiskInfo(VariableText, GUIComponent):
 				else:
 					free = _("%d GB") % (free >> 30)
 				self.setText(_("%s %s free disk space") % (free, percent))
-			except:
+			except Exception:
 				# occurs when f_blocks is 0 or a similar error
 				self.setText("-?-")
 

@@ -20,7 +20,7 @@ settingfiles = ('lamedb', 'bouquets.', 'userbouquet.', 'blacklist', 'whitelist',
 class ImportChannels():
 
 	def __init__(self):
-		if config.usage.remote_fallback_enabled.value and config.usage.remote_fallback_import.value and config.usage.remote_fallback.value and not "ChannelsImport" in [x.name for x in threading.enumerate()]:
+		if config.usage.remote_fallback_enabled.value and config.usage.remote_fallback_import.value and config.usage.remote_fallback.value and "ChannelsImport" not in [x.name for x in threading.enumerate()]:
 			self.header = None
 			if config.usage.remote_fallback_enabled.value and config.usage.remote_fallback_import.value and config.usage.remote_fallback_import_url.value != "same" and config.usage.remote_fallback_import_url.value:
 				self.url = config.usage.remote_fallback_import_url.value.rsplit(":", 1)[0]
@@ -70,7 +70,7 @@ class ImportChannels():
 			print("[ImportChannels] Writing epg.dat file on sever box")
 			try:
 				self.getUrl("%s/web/saveepg" % self.url, timeout=30).read()
-			except:
+			except Exception:
 				self.ImportChannelsDone(False, _("Error when writing epg.dat on server"))
 				return
 			print("[ImportChannels] Get EPG Location")
@@ -78,10 +78,10 @@ class ImportChannels():
 				epgdatfile = self.getFallbackSettingsValue(settings, "config.misc.epgcache_filename") or "/hdd/epg.dat"
 				try:
 					files = [file for file in loads(self.getUrl("%s/file?dir=%s" % (self.url, os.path.dirname(epgdatfile))).read())["files"] if os.path.basename(file).startswith(os.path.basename(epgdatfile))]
-				except:
+				except Exception:
 					files = [file for file in loads(self.getUrl("%s/file?dir=/" % self.url).read())["files"] if os.path.basename(file).startswith("epg.dat")]
 				epg_location = files[0] if files else None
-			except:
+			except Exception:
 				self.ImportChannelsDone(False, _("Error while retreiving location of epg.dat on server"))
 				return
 			if epg_location:
@@ -89,7 +89,7 @@ class ImportChannels():
 				try:
 					open(os.path.join(self.tmp_dir, "epg.dat"), "wb").write(self.getUrl("%s/file?file=%s" % (self.url, epg_location)).read())
 					shutil.move(os.path.join(self.tmp_dir, "epg.dat"), config.misc.epgcache_filename.value)
-				except:
+				except (IOError, OSError) as err:
 					self.ImportChannelsDone(False, _("Error while retreiving epg.dat from server"))
 					return
 			else:
@@ -103,10 +103,10 @@ class ImportChannels():
 					print("[ImportChannels] Downloading %s" % file)
 					try:
 						open(os.path.join(self.tmp_dir, os.path.basename(file)), "wb").write(self.getUrl("%s/file?file=%s" % (self.url, file)).read())
-					except:
+					except (IOError, OSError) as err:
 						self.ImportChannelsDone(False, _("ERROR downloading file %s") % file)
 						return
-			except:
+			except Exception:
 				self.ImportChannelsDone(False, _("Error %s") % self.url)
 				return
 			print("[ImportChannels] Removing files...")

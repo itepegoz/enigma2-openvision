@@ -42,7 +42,7 @@ def onPartitionChange(why, part):
 			try:
 				opkgDestinations.remove(mountpoint)
 				print("[Opkg] Removed from OPKG destinations:", mountpoint)
-			except:
+			except KeyError:
 				pass
 
 

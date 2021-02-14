@@ -5,16 +5,16 @@ from __future__ import print_function
 
 """Cleans up PO translation files
 
-   This script will iterate through all .po files and unset ( "" ) msgstr 
-   translation entries which match exactly their msgid value. 
-   The 'fuzzy' flag for each (if it exists) will be removed in such cases. 
+   This script will iterate through all .po files and unset ( "" ) msgstr
+   translation entries which match exactly their msgid value.
+   The 'fuzzy' flag for each (if it exists) will be removed in such cases.
    Polib will be required, see the docs at
    https://polib.readthedocs.io/en/latest/installation.html#installation
 
    This script is functional over efficient!
 
    Known issues / notes:
-   - normalised entries (those found in other translation files) 
+   - normalised entries (those found in other translation files)
      are currently appended for ease of diffing
    - comments in source code files should probably be ignored
    - FIXED: colour hex values (eg. "#25062748") should be ignored
@@ -60,7 +60,7 @@ prefs = {
   'outputFinalStats': True,
   'processMaxEntries': 0,  # useful for testing; 0 will process all entries
   'include': ["*.xml", "*.py"],  # for files only
-  'exclude': ["*/\.*", codeBasePath + "/po/*"]  # for dirs and files
+  'exclude': ["*/\\.*", codeBasePath + "/po/*"]  # for dirs and files
 }
 
 # transform glob patterns to regular expressions
@@ -105,7 +105,7 @@ def stripUnchangedMsgstrs(poEntry):
         if (poEntry.msgid_plural == poEntry.msgstr_plural[1]):
           poEntry.msgstr_plural[1] = ""
           percentCleared += 50
-      except:
+      except Exception:
         pass  # let's just pretend that didn't happen >_<
     elif poEntry.msgid == poEntry.msgstr:
       poEntry.msgstr = ""
@@ -263,7 +263,7 @@ def normaliseAllPoFiles(filesGlob):
               tcomment="normalised"
             )
             poFile.append(newEntry)
-          except:
+          except Exception:
             print("error adding")
             pass
         elif len(matchedEntries) == 1 and matchedEntries[0].obsolete:

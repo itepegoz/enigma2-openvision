@@ -20,7 +20,7 @@ import os
 import time
 try:
 	import urllib2
-except:
+except ImportError:
 	import urllib
 	from urllib.request import HTTPHandler, HTTPDigestAuthHandler
 import skin
@@ -99,7 +99,7 @@ class OscamInfo:
 
 	def getUserData(self):
 		[webif, port, conf, ipcompiled, conffile] = self.confPath()
-		if conf == None:
+		if conf is None:
 			conf = ""
 		if conffile == "":
 			conffile = "oscam.conf"
@@ -235,12 +235,12 @@ class OscamInfo:
 		if result[0]:
 			if not self.showLog:
 				data = ElementTree.XML(result[1])
-#				if typ=="version":
-#					if "version" in data.attrib:
-#						self.version = data.attrib["version"]
-#					else:
-#						self.version = "n/a"
-#					return self.version
+				# if typ=="version":
+				# 	if "version" in data.attrib:
+				# 		self.version = data.attrib["version"]
+				# 	else:
+				# 		self.version = "n/a"
+				# 	return self.version
 				status = data.find("status")
 				clients = status.findall("client")
 				for cl in clients:
@@ -1171,16 +1171,15 @@ class oscReaderStats(Screen, OscamInfo):
 			if xmldata[0]:
 				xdata = ElementTree.XML(xmldata[1])
 				rdr = xdata.find("reader")
-#					emms = rdr.find("emmstats")
-#					if "totalwritten" in emms.attrib:
-#						emm_wri = emms.attrib["totalwritten"]
-#					if "totalskipped" in emms.attrib:
-#						emm_ski = emms.attrib["totalskipped"]
-#					if "totalblocked" in emms.attrib:
-#						emm_blk = emms.attrib["totalblocked"]
-#					if "totalerror" in emms.attrib:
-#						emm_err = emms.attrib["totalerror"]
-
+					# emms = rdr.find("emmstats")
+					# if "totalwritten" in emms.attrib:
+					# 	emm_wri = emms.attrib["totalwritten"]
+					# if "totalskipped" in emms.attrib:
+					# 	emm_ski = emms.attrib["totalskipped"]
+					# if "totalblocked" in emms.attrib:
+					# 	emm_blk = emms.attrib["totalblocked"]
+					# if "totalerror" in emms.attrib:
+					# 	emm_err = emms.attrib["totalerror"]
 				ecmstat = rdr.find("ecmstats")
 				totalecm = ecmstat.attrib["totalecm"]
 				ecmcount = ecmstat.attrib["count"]
@@ -1208,8 +1207,8 @@ class oscReaderStats(Screen, OscamInfo):
 								last_req = ""
 						else:
 							avg_time = last_time = last_req = ""
-#						if lastreq != "":
-#							last_req = lastreq.split("T")[1][:-5]
+						# if lastreq != "":
+						# 	last_req = lastreq.split("T")[1][:-5]
 						if self.allreaders:
 							result.append((i[1], caid, channel, avg_time, last_time, rcs, last_req, int(num)))
 							title2 = _("( All readers)")

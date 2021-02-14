@@ -268,6 +268,6 @@ def legacyEncode(string):
 		else:
 			try:
 				string2 += char.encode('ascii', 'strict')
-			except:
+			except Exception:
 				string2 += "_"
 	return string2.upper()

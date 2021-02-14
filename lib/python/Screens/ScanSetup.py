@@ -21,7 +21,7 @@ def buildTerTransponder(frequency,
 	inversion=2, bandwidth=7000000, fechigh=6, feclow=6,
 	modulation=2, transmission=2, guard=4,
 	hierarchy=4, system=0, plp_id=0):
-	#print("freq", frequency, "inv", inversion, "bw", bandwidth, "fech", fechigh, "fecl", feclow, "mod", modulation, "tm", transmission, "guard", guard, "hierarchy", hierarchy, "system", system, "plp_id", plp_id)
+	# print("freq", frequency, "inv", inversion, "bw", bandwidth, "fech", fechigh, "fecl", feclow, "mod", modulation, "tm", transmission, "guard", guard, "hierarchy", hierarchy, "system", system, "plp_id", plp_id)
 	parm = eDVBFrontendParametersTerrestrial()
 	parm.frequency = frequency
 	parm.inversion = inversion
@@ -141,7 +141,7 @@ def GetDeviceId(filter, nim_idx):
 	for nim in nimmanager.nim_slots:
 		try:
 			name_token = nim.description.split(' ')[-1][4:-1]
-		except:
+		except Exception:
 			name_token = ""
 		if name_token == filter:
 			if socket_id == nim_idx:
@@ -277,7 +277,7 @@ class CableTransponderSearchSupport:
 			if bus is None:
 				print("[ScanSetup] ERROR: could not get I2C device for nim", nim_idx, "for cable transponder search")
 				bus = 2
-		except:
+		except Exception:
 			# older API
 			if nim_idx < 2:
 				if getBoxType() == "dm500hd":
@@ -435,7 +435,7 @@ class TerrestrialTransponderSearchSupport:
 	def setTerrestrialTransponderData(self):
 		data = self.terrestrial_search_data.split()
 		if len(data):
-#			print("[setTerrestrialTransponderData] data : ", data)
+			# print("[setTerrestrialTransponderData] data : ", data)
 			if data[0] == 'OK':
 				# DVB-T : OK frequency bandwidth delivery system -1
 				# DVB-T2 : OK frequency bandwidth delivery system number_of_plp plp_id0:plp_type0

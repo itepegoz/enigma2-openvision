@@ -430,11 +430,11 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 					choices.append((str(id), nimmanager.getNimDescription(id)))
 				if len(choices):
 					if self.nim.isFBCLink():
-						if self.nimConfig.advanced.unicableconnected.value != True:
+						if self.nimConfig.advanced.unicableconnected.value is not True:
 							self.nimConfig.advanced.unicableconnected.value = True
 					self.advancedConnected = getConfigListEntry(self.indent % _("Connected"), self.nimConfig.advanced.unicableconnected, _("Select 'yes' if this tuner is connected to the SCR device through another tuner, otherwise select 'no'."))
 					self.list.append(self.advancedConnected)
-					if self.nimConfig.advanced.unicableconnected.value == True:
+					if self.nimConfig.advanced.unicableconnected.value is True:
 						self.nimConfig.advanced.unicableconnectedTo.setChoices(choices)
 						self.list.append(getConfigListEntry(self.indent % _("Connected to"), self.nimConfig.advanced.unicableconnectedTo, _("Select the tuner to which the signal cable of the SCR device is connected.")))
 
@@ -567,7 +567,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 			try:
 				# why we need this cast?
 				sat_name = str(nimmanager.getSatDescription(orbpos))
-			except:
+			except Exception:
 				if orbpos > 1800:  # west
 					orbpos = 3600 - orbpos
 					h = _("W")
@@ -610,7 +610,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		self.createSetup()
 		self.setTitle(_("Setup") + " " + self.nim.friendly_full_description)
 
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 

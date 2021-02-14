@@ -69,7 +69,7 @@ class InfoHandler(xml.sax.ContentHandler):
 					if "directory" not in attrs:
 						directory = self.directory
 					type = attrs["type"]
-					if not type in self.validFileTypes:
+					if type not in self.validFileTypes:
 						self.printError("file tag with invalid type attribute")
 					else:
 						self.filetype = type
@@ -192,7 +192,7 @@ class PackageInfoHandler:
 			self.directory = [self.directory]
 
 		for directory in self.directory:
-			packages += crawlDirectory(directory, ".*\.info$")
+			packages += crawlDirectory(directory, ".*\\.info$")
 
 		for package in packages:
 			self.readInfo(package[0] + "/", package[0] + "/" + package[1])
@@ -245,7 +245,7 @@ class PackageInfoHandler:
 				return True
 		else:
 			if "tag" in prerequisites:
-				if not self.neededTag in prerequisites["tag"]:
+				if self.neededTag not in prerequisites["tag"]:
 					return False
 			else:
 				return False
@@ -255,7 +255,7 @@ class PackageInfoHandler:
 				return False
 		else:
 			if "flag" in prerequisites:
-				if not self.neededFlag in prerequisites["flag"]:
+				if self.neededFlag not in prerequisites["flag"]:
 					return False
 			else:
 				return True

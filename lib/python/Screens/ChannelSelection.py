@@ -241,7 +241,7 @@ class ChannelContextMenu(Screen):
 						else:
 							append_when_current_valid(current, menu, (_("Remove selected satellite"), self.removeSatelliteServices), level=0)
 					if haveBouquets:
-						if not self.inBouquet and not "PROVIDERS" in current_sel_path:
+						if not self.inBouquet and "PROVIDERS" not in current_sel_path:
 							append_when_current_valid(current, menu, (_("Copy to bouquets"), self.copyCurrentToBouquetList), level=0)
 					if ("flags == %d" % (FLAG_SERVICE_NEW_FOUND)) in current_sel_path:
 						append_when_current_valid(current, menu, (_("Remove all new found flags"), self.removeAllNewFoundFlags), level=0)
@@ -732,7 +732,7 @@ class SelectionEventInfo:
 					if end_time > now:
 						self.update_root = True
 						self.timer.start((end_time - now) * 1000, True)
-		except:
+		except Exception:
 			pass
 
 
@@ -833,7 +833,7 @@ class ChannelSelectionEPG(InfoBarHotkey):
 	def getServicesList(self, root):
 		services = []
 		servicelist = root and eServiceCenter.getInstance().list(root)
-		if not servicelist is None:
+		if servicelist is not None:
 			while True:
 				service = servicelist.getNext()
 				if not service.valid():
@@ -967,7 +967,7 @@ class ChannelSelectionEdit:
 			})
 
 	def getMutableList(self, root=eServiceReference()):
-		if not self.mutableList is None:
+		if self.mutableList is not None:
 			return self.mutableList
 		serviceHandler = eServiceCenter.getInstance()
 		if not root.valid():
@@ -1302,7 +1302,7 @@ class ChannelSelectionEdit:
 
 	def addServiceToBouquet(self, dest, service=None):
 		mutableList = self.getMutableList(dest)
-		if not mutableList is None:
+		if mutableList is not None:
 			if service is None:  # use current selected service
 				service = self.servicelist.getCurrent()
 			if not mutableList.addService(service):
@@ -1450,7 +1450,7 @@ class ChannelSelectionBase(Screen):
 		if 'userbouquet.' in bouquet.toCompareString():
 			serviceHandler = eServiceCenter.getInstance()
 			servicelist = serviceHandler.list(bouquet)
-			if not servicelist is None:
+			if servicelist is not None:
 				while True:
 					serviceIterator = servicelist.getNext()
 					if not serviceIterator.valid():  # check if end of list
@@ -1652,7 +1652,7 @@ class ChannelSelectionBase(Screen):
 					addCableAndTerrestrialLater = []
 					serviceHandler = eServiceCenter.getInstance()
 					servicelist = serviceHandler.list(ref)
-					if not servicelist is None:
+					if servicelist is not None:
 						while True:
 							service = servicelist.getNext()
 							if not service.valid():  # check if end of list
@@ -1677,7 +1677,7 @@ class ChannelSelectionBase(Screen):
 								else:
 									try:
 										service_name = str(nimmanager.getSatDescription(orbpos))
-									except:
+									except Exception:
 										if orbpos > 1800:  # west
 											orbpos = 3600 - orbpos
 											h = _("W")
@@ -2269,7 +2269,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			tmp.append(ref)
 			try:
 				del self.history[self.history_pos + 1:]
-			except:
+			except Exception:
 				pass
 			self.history.append(tmp)
 			hlen = len(self.history)

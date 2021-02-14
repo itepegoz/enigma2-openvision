@@ -20,7 +20,7 @@ class GetEcmInfo:
 		global ecm
 		try:
 			ecm_time = os.stat(ECM_INFO).st_mtime
-		except:
+		except (IOError, OSError) as err:
 			ecm_time = old_ecm_time
 			data = EMPTY_ECM_INFO
 			info = {}
@@ -34,7 +34,7 @@ class GetEcmInfo:
 			old_ecm_time = ecm_time
 			try:
 				ecm = open(ECM_INFO, 'r').readlines()
-			except:
+			except (IOError, OSError) as err:
 				ecm = ''
 			for line in ecm:
 				d = line.split(':', 1)
@@ -88,7 +88,7 @@ class GetEcmInfo:
 									break
 							else:
 								self.textvalue = cardid
-						except:
+						except (IOError, OSError) as err:
 							self.textvalue = decode
 					else:
 						self.textvalue = decode
@@ -136,7 +136,7 @@ class GetEcmInfo:
 			decCI = info.get('caid', info.get('CAID', '0'))
 			provid = info.get('provid', info.get('prov', info.get('Provider', '0')))
 			ecmpid = info.get('pid', info.get('ECM PID', '0'))
-		except:
+		except Exception:
 			ecm = ''
 			self.textvalue = ""
 			decCI = '0'

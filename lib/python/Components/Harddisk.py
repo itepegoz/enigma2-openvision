@@ -13,7 +13,7 @@ import re
 
 try:
 	hw_type = getBoxProc()
-except:
+except Exception:
 	hw_type = getMachineProcModel()
 
 
@@ -78,7 +78,7 @@ class Harddisk:
 		try:
 			data = open("/sys/block/%s/queue/rotational" % device, "r").read().strip()
 			self.rotational = int(data)
-		except:
+		except Exception:
 			self.rotational = True
 
 		if SystemInfo["Udev"]:
@@ -154,14 +154,14 @@ class Harddisk:
 			line = readFile(self.sysfsPath('size'))
 			cap = int(line)
 			return cap / 1000 * 512 / 1000
-		except:
+		except Exception:
 			dev = self.findMount()
 			if dev:
 				try:
 					stat = os.statvfs(dev)
 					cap = int(stat.f_blocks * stat.f_bsize)
 					return cap / 1000 / 1000
-				except:
+				except Exception:
 					pass
 		return cap
 
@@ -195,7 +195,7 @@ class Harddisk:
 			try:
 				stat = os.statvfs(dev)
 				return (stat.f_bfree / 1000) * (stat.f_bsize / 1024)
-			except:
+			except (IOError, OSError) as err:
 				pass
 		return -1
 
@@ -209,7 +209,7 @@ class Harddisk:
 			try:
 				stat = os.statvfs(mpath)
 				freetot += (stat.f_bfree / 1000) * (stat.f_bsize / 1000)
-			except:
+			except (IOError, OSError) as err:
 				pass
 		return freetot
 
@@ -463,10 +463,10 @@ class Harddisk:
 	# we set the hdd into standby.
 	def readStats(self):
 		try:
-			l = open("/sys/block/%s/stat" % self.device).read()
-		except IOError:
+			info = open("/sys/block/%s/stat" % self.device).read()
+		except (IOError, OSError) as err:
 			return -1, -1
-		data = l.split(None, 5)
+		data = info.split(None, 5)
 		return (int(data[0]), int(data[4]))
 
 	def startIdle(self):
@@ -490,10 +490,10 @@ class Harddisk:
 		idle_time = t - self.last_access
 
 		stats = self.readStats()
-		l = sum(stats)
+		data = sum(stats)
 
-		if l != self.last_stat and l >= 0:  # access
-			self.last_stat = l
+		if data != self.last_stat and data >= 0:  # access
+			self.last_stat = data
 			self.last_access = t
 			idle_time = 0
 			self.is_sleeping = False
@@ -749,8 +749,8 @@ class HarddiskManager:
 			if p.mountpoint:  # Plugins won't expect unmounted devices
 				self.on_partition_list_change("add", p)
 			# see if this is a harddrive
-			l = len(device)
-			if l and (not device[l - 1].isdigit() or device.startswith('mmcblk')):
+			data = len(device)
+			if data and (not device[data - 1].isdigit() or device.startswith('mmcblk')):
 				self.hdd.append(Harddisk(device, removable))
 				self.hdd.sort()
 				SystemInfo["Harddisk"] = True

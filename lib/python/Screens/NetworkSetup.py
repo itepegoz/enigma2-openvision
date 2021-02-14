@@ -22,7 +22,7 @@ from Plugins.Plugin import PluginDescriptor
 from enigma import eTimer, eConsoleAppContainer, getBoxType
 try:
 	import commands
-except:
+except ImportError:
 	import subprocess as commands
 from Components.Console import Console
 from Screens.Standby import TryQuitMainloop
@@ -559,7 +559,7 @@ class IPv6Setup(Screen, ConfigListScreen, HelpableScreen):
 	def restoreinetdData2(self):
 		sockTypetcp = "tcp"
 		sockTypeudp = "udp"
-		if self.IPv6ConfigEntry.value == True:
+		if self.IPv6ConfigEntry.value is True:
 			sockTypetcp = "tcp6"
 			sockTypeudp = "udp6"
 
@@ -602,7 +602,7 @@ class IPv6Setup(Screen, ConfigListScreen, HelpableScreen):
 
 	def ok(self):
 		ipv6 = '/etc/enigma2/ipv6'
-		if self.IPv6ConfigEntry.value == False:
+		if self.IPv6ConfigEntry.value is False:
 			open("/proc/sys/net/ipv6/conf/all/disable_ipv6", "w").write("1")
 			open("/etc/enigma2/ipv6", "w").write("1")
 		else:
@@ -1238,7 +1238,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 			self["devicepic"].setPixmapNum(1)
 			try:
 				from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
-			except:
+			except ImportErrpr:
 				self["statuspic"].setPixmapNum(1)
 				self["statuspic"].show()
 			else:
@@ -1375,7 +1375,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 		if data is not None:
 			if data is True:
 				if status is not None:
-					if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] == False:
+					if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] is False:
 						self.LinkState = False
 						self["statuspic"].setPixmapNum(1)
 						self["statuspic"].show()
@@ -1731,7 +1731,7 @@ class NetworkAdapterTest(Screen):
 		if iface in iNetwork.wlan_interfaces:
 			try:
 				from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
-			except:
+			except ImportError:
 				self["Network"].setForegroundColorNum(1)
 				self["Network"].setText(_("disconnected"))
 				self["NetworkInfo_Check"].setPixmapNum(1)
@@ -1798,7 +1798,7 @@ class NetworkAdapterTest(Screen):
 		if data is not None:
 			if data is True:
 				if status is not None:
-					if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] == False:
+					if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] is False:
 						self["Network"].setForegroundColorNum(1)
 						self["Network"].setText(_("disconnected"))
 						self["NetworkInfo_Check"].setPixmapNum(1)
@@ -1862,7 +1862,7 @@ class NetworkMountsMenu(Screen, HelpableScreen):
 			"right": self.right,
 		}, -2)
 
-		if not self.selectionChanged in self["menulist"].onSelectionChanged:
+		if self.selectionChanged not in self["menulist"].onSelectionChanged:
 			self["menulist"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
@@ -2733,7 +2733,7 @@ class NetworkInadynSetup(Screen, ConfigListScreen):
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
 		self.updateList()
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 
 	def createSummary(self):
@@ -3048,7 +3048,7 @@ class NetworkuShareSetup(Screen, ConfigListScreen):
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
 		self.updateList()
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 
 	def createSummary(self):
@@ -3203,7 +3203,7 @@ class NetworkuShareSetup(Screen, ConfigListScreen):
 	def selectfolders(self):
 		try:
 			self["config"].getCurrent()[1].help_window.hide()
-		except:
+		except Exception:
 			pass
 		self.session.openWithCallback(self.updateList, uShareSelection)
 
@@ -3240,7 +3240,7 @@ class uShareSelection(Screen):
 			"down": self.down,
 			"up": self.up
 		}, -1)
-		if not self.selectionChanged in self["checkList"].onSelectionChanged:
+		if self.selectionChanged not in self["checkList"].onSelectionChanged:
 			self["checkList"].onSelectionChanged.append(self.selectionChanged)
 		self.onLayoutFinish.append(self.layoutFinished)
 
@@ -3466,7 +3466,7 @@ class NetworkMiniDLNASetup(Screen, ConfigListScreen):
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
 		self.updateList()
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 
 	def createSummary(self):
@@ -3607,7 +3607,7 @@ class NetworkMiniDLNASetup(Screen, ConfigListScreen):
 	def selectfolders(self):
 		try:
 			self["config"].getCurrent()[1].help_window.hide()
-		except:
+		except Exception:
 			pass
 		self.session.openWithCallback(self.updateList, MiniDLNASelection)
 
@@ -3645,7 +3645,7 @@ class MiniDLNASelection(Screen):
 			"down": self.down,
 			"up": self.up
 		}, -1)
-		if not self.selectionChanged in self["checkList"].onSelectionChanged:
+		if self.selectionChanged not in self["checkList"].onSelectionChanged:
 			self["checkList"].onSelectionChanged.append(self.selectionChanged)
 		self.onLayoutFinish.append(self.layoutFinished)
 

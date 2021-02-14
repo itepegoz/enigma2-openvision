@@ -335,7 +335,7 @@ class PluginDownloadBrowser(Screen):
 	def resetPostInstall(self):
 		try:
 			del self.postInstallCall
-		except:
+		except Exception:
 			pass
 
 	def installDestinationCallback(self, result):
@@ -437,7 +437,7 @@ class PluginDownloadBrowser(Screen):
 			self.resetPostInstall()
 		try:
 			os.unlink('/tmp/opkg.conf')
-		except:
+		except (IOError, OSError) as err:
 			pass
 		for plugin in self.pluginlist:
 			if plugin[3] == self["list"].l.getCurrentSelection()[0].name:
@@ -487,7 +487,7 @@ class PluginDownloadBrowser(Screen):
 		if six.PY3:
 			str = str.decode()
 		str = self.remainingdata + str
-		#split in lines
+		# split in lines
 		lines = str.split('\n')
 		# 'str' should end with '\n', so when splitting, the last line should be empty. If this is not the case, we received an incomplete line
 		if len(lines[-1]):

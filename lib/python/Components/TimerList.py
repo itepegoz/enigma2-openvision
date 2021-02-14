@@ -152,7 +152,7 @@ class TimerList(GUIComponent, object):
 			try:
 				locals().get(attrib)(value)
 				self.skinAttributes.remove((attrib, value))
-			except:
+			except Exception:
 				pass
 		self.l.setItemHeight(self.itemHeight)
 		self.l.setFont(0, self.serviceNameFont)
