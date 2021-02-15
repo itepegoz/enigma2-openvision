@@ -9,7 +9,8 @@ from Components.config import config, ConfigSubsection, ConfigInteger
 from Components.SystemInfo import SystemInfo
 
 profile("VolumeControl")
-#TODO .. move this to a own .py file
+
+
 class VolumeControl:
 	instance = None
 	"""Volume control, handles volUp, volDown, volMute actions and display
@@ -24,13 +25,13 @@ class VolumeControl:
 		VolumeControl.instance = self
 
 		config.audio = ConfigSubsection()
-		config.audio.volume = ConfigInteger(default = 50, limits = (0, 100))
+		config.audio.volume = ConfigInteger(default=50, limits=(0, 100))
 
 		self.volumeDialog = session.instantiateDialog(Volume)
+		self.muteDialog = session.instantiateDialog(Mute)
+
 		if SystemInfo["OSDAnimation"]:
 			self.volumeDialog.setAnimationMode(0)
-		self.muteDialog = session.instantiateDialog(Mute)
-		if SystemInfo["OSDAnimation"]:
 			self.muteDialog.setAnimationMode(0)
 
 		self.hideVolTimer = eTimer()
@@ -42,10 +43,7 @@ class VolumeControl:
 		self.volctrl.setVolume(vol, vol)
 
 	def volSave(self):
-		if self.volctrl.isMuted():
-			config.audio.volume.value = 0
-		else:
-			config.audio.volume.value = self.volctrl.getVolume()
+		config.audio.volume.value = 0 if self.volctrl.isMuted() else self.volctrl.getVolume()
 		config.audio.volume.save()
 
 	def volUp(self):
@@ -63,9 +61,9 @@ class VolumeControl:
 		vol = self.volctrl.getVolume()
 		self.volumeDialog.show()
 		if is_muted:
-			self.volMute() # unmute
+			self.volMute()  # unmute
 		elif not vol:
-			self.volMute(False, True) # mute but dont show mute symbol
+			self.volMute(False, True)  # mute but dont show mute symbol
 		if self.volctrl.isMuted():
 			self.volumeDialog.setValue(0)
 		else:
