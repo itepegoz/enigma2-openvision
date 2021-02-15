@@ -11,15 +11,18 @@ import six
 opkgDestinations = []
 opkgStatusPath = ''
 
+
 def opkgExtraDestinations():
 	global opkgDestinations
 	return ''.join([" --add-dest %s:%s" % (i, i) for i in opkgDestinations])
+
 
 def opkgAddDestination(mountpoint):
 	global opkgDestinations
 	if mountpoint not in opkgDestinations:
 		opkgDestinations.append(mountpoint)
 		print("[Opkg] Added to OPKG destinations:", mountpoint)
+
 
 def onPartitionChange(why, part):
 	global opkgDestinations
@@ -39,8 +42,9 @@ def onPartitionChange(why, part):
 			try:
 				opkgDestinations.remove(mountpoint)
 				print("[Opkg] Removed from OPKG destinations:", mountpoint)
-			except:
+			except KeyError:
 				pass
+
 
 def enumFeeds():
 	for fn in os.listdir('/etc/opkg'):
@@ -52,6 +56,7 @@ def enumFeeds():
 				pass
 			except IOError:
 				pass
+
 
 def enumPlugins(filter_start=''):
 	list_dir = listsDirPath()
@@ -91,6 +96,7 @@ def enumPlugins(filter_start=''):
 		except IOError:
 			pass
 
+
 def listsDirPath():
 	try:
 		for line in open('/etc/opkg/opkg.conf', "r"):
@@ -102,6 +108,7 @@ def listsDirPath():
 		print("[Opkg]", ex)
 	return '/var/lib/opkg/lists'
 
+
 if __name__ == '__main__':
 	for p in enumPlugins('enigma'):
 		print(p)
@@ -109,6 +116,7 @@ if __name__ == '__main__':
 harddiskmanager.on_partition_list_change.append(onPartitionChange)
 for part in harddiskmanager.getMountedPartitions():
 	onPartitionChange('add', part)
+
 
 class OpkgComponent:
 	EVENT_INSTALL = 0
@@ -129,14 +137,14 @@ class OpkgComponent:
 	CMD_UPGRADE = 4
 	CMD_UPGRADE_LIST = 5
 
-	def __init__(self, opkg = 'opkg'):
+	def __init__(self, opkg='opkg'):
 		self.opkg = opkg
 		self.cmd = eConsoleAppContainer()
 		self.cache = None
 		self.callbackList = []
 		self.setCurrentCommand()
 
-	def setCurrentCommand(self, command = None):
+	def setCurrentCommand(self, command=None):
 		self.currentCommand = command
 
 	def runCmdEx(self, cmd):
@@ -149,7 +157,7 @@ class OpkgComponent:
 		if self.cmd.execute("%s %s" % (self.opkg, cmd)):
 			self.cmdFinished(-1)
 
-	def startCmd(self, cmd, args = None):
+	def startCmd(self, cmd, args=None):
 		if cmd == self.CMD_UPDATE:
 			self.runCmdEx("update")
 		elif cmd == self.CMD_UPGRADE:
@@ -232,7 +240,7 @@ class OpkgComponent:
 			print("[Opkg] Failed to parse: '%s'" % data)
 			print("[Opkg]", ex)
 
-	def callCallbacks(self, event, param = None):
+	def callCallbacks(self, event, param=None):
 		for callback in self.callbackList:
 			callback(event, param)
 

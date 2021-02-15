@@ -9,12 +9,14 @@ from keyids import KEYIDS
 # these are only informational (for help)...
 from Tools.KeyBindings import addKeyBinding
 
+
 class KeymapError(Exception):
 	def __init__(self, message):
 		self.msg = message
 
 	def __str__(self):
 		return self.msg
+
 
 def getKeyId(id):
 	if len(id) == 1:
@@ -29,11 +31,13 @@ def getKeyId(id):
 	else:
 		try:
 			keyid = KEYIDS[id]
-		except:
+		except KeyError:
 			raise KeymapError("[keymapparser] key id '" + str(id) + "' is illegal")
 	return keyid
 
+
 unmapDict = {}
+
 
 def parseKeys(context, filename, actionmap, device, keys):
 	for x in keys.findall("key"):
@@ -47,13 +51,14 @@ def parseKeys(context, filename, actionmap, device, keys):
 			assert id, "[keymapparser] %s: must specify id in context %s, unmap '%s'" % (filename, context, unmap)
 			keyid = getKeyId(id)
 			actionmap.unbindPythonKey(context, keyid, unmap)
-			unmapDict.update({(context, id, unmap):filename})
-		else:	
+			unmapDict.update({(context, id, unmap): filename})
+		else:
 			assert mapto, "[keymapparser] %s: must specify mapto (or unmap) in context %s, id '%s'" % (filename, context, id)
 			assert id, "[keymapparser] %s: must specify id in context %s, mapto '%s'" % (filename, context, mapto)
 			keyid = getKeyId(id)
 
-			flag_ascii_to_id = lambda x: {'m':1,'b':2,'r':4,'l':8}[x]
+			def flag_ascii_to_id(x):
+				return {'m': 1, 'b': 2, 'r': 4, 'l': 8}[x]
 
 			flags = sum(map(flag_ascii_to_id, flags))
 
@@ -61,9 +66,10 @@ def parseKeys(context, filename, actionmap, device, keys):
 
 			# if a key was unmapped, it can only be assigned a new function in the same keymap file (avoid file parsing sequence dependency)
 			if unmapDict.get((context, id, mapto)) in [filename, None]:
-#				print("[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid))
+				# print("[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid))
 				actionmap.bindKey(filename, device, keyid, flags, context, mapto)
 				addKeyBinding(filename, keyid, context, mapto, flags)
+
 
 def parseTrans(filename, actionmap, device, keys):
 	for x in keys.findall("toggle"):
@@ -80,10 +86,11 @@ def parseTrans(filename, actionmap, device, keys):
 		assert keyin, "[keymapparser] %s: must specify key to translate from '%s'" % (filename, keyin)
 		assert keyout, "[keymapparser] %s: must specify key to translate to '%s'" % (filename, keyout)
 
-		keyin  = getKeyId(keyin)
+		keyin = getKeyId(keyin)
 		keyout = getKeyId(keyout)
 		toggle = int(toggle)
 		actionmap.bindTranslation(filename, device, keyin, keyout, toggle)
+
 
 def readKeymap(filename):
 	p = enigma.eActionMap.getInstance()
@@ -91,13 +98,13 @@ def readKeymap(filename):
 
 	try:
 		source = open(filename)
-	except:
+	except (IOError, OSError):
 		print("[keymapparser] keymap file " + filename + " not found")
 		return
 
 	try:
 		dom = xml.etree.cElementTree.parse(source)
-	except:
+	except xml.etree.cElementTree.ParseError:
 		raise KeymapError("[keymapparser] keymap %s not well-formed." % filename)
 
 	source.close()
@@ -115,6 +122,7 @@ def readKeymap(filename):
 	for ctrans in keymap.findall("translate"):
 		for device in ctrans.findall("device"):
 			parseTrans(filename, p, device.attrib.get("name"), device)
+
 
 def removeKeymap(filename):
 	p = enigma.eActionMap.getInstance()

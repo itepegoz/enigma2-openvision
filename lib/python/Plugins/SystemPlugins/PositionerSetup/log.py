@@ -11,7 +11,7 @@ from __future__ import print_function
 import sys
 try:
 	from cStringIO import StringIO
-except:
+except BaseException:
 	from io import StringIO
 import threading
 
@@ -21,12 +21,14 @@ mutex = None
 
 size = None
 
-def open(buffersize = 16384):
+
+def open(buffersize=16384):
 	global logfile, mutex, size
 	if logfile is None:
 		logfile = StringIO()
 		mutex = threading.Lock()
 		size = buffersize
+
 
 def write(data):
 	global logfile, mutex
@@ -40,6 +42,7 @@ def write(data):
 		mutex.release()
 	sys.stdout.write(data)
 
+
 def getvalue():
 	global logfile, mutex
 	mutex.acquire()
@@ -51,6 +54,7 @@ def getvalue():
 	finally:
 		mutex.release()
 	return head + tail
+
 
 def close():
 	global logfile

@@ -16,12 +16,13 @@ except ImportError:
 			pass
 	no_comments = True
 
+
 class parseXML(ContentHandler, LexicalHandler):
 	def __init__(self, attrlist):
 		self.isPointsElement, self.isReboundsElement = 0, 0
 		self.attrlist = attrlist
 		self.last_comment = None
-		self.ishex = re.compile('#[0-9a-fA-F]+\Z')
+		self.ishex = re.compile('  #[0-9a-fA-F]+\\Z')
 
 	def comment(self, comment):
 		if "TRANSLATORS:" in comment:
@@ -36,6 +37,7 @@ class parseXML(ContentHandler, LexicalHandler):
 					self.last_comment = None
 			except KeyError:
 				pass
+
 
 parser = make_parser()
 
@@ -59,11 +61,11 @@ for arg in sys.argv[1:]:
 
 	for (k, c) in attrlist:
 		print()
-		print('#: ' + arg)
+		print('  #: ' + arg)
 		string.replace(k, "\\n", "\"\n\"")
 		if c:
-			for l in c.split('\n'):
-				print("#. ", l)
+			for line in c.split('\n'):
+				print("#. ", line)
 		print('msgid "' + str(k) + '"')
 		print('msgstr ""')
 

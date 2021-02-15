@@ -6,14 +6,16 @@ from os import statvfs
 
 from enigma import eLabel
 
+
 # TODO: Harddisk.py has similiar functions, but only similiar.
 # fix this to use same code
+#
 class DiskInfo(VariableText, GUIComponent):
 	FREE = 0
 	USED = 1
 	SIZE = 2
 
-	def __init__(self, path, type, update = True):
+	def __init__(self, path, type, update=True):
 		GUIComponent.__init__(self)
 		VariableText.__init__(self)
 		self.type = type
@@ -24,7 +26,7 @@ class DiskInfo(VariableText, GUIComponent):
 	def update(self):
 		try:
 			stat = statvfs(self.path)
-		except OSError:
+		except (IOError, OSError) as err:
 			return -1
 
 		if self.type == self.FREE:
@@ -38,7 +40,7 @@ class DiskInfo(VariableText, GUIComponent):
 				else:
 					free = _("%d GB") % (free >> 30)
 				self.setText(_("%s %s free disk space") % (free, percent))
-			except:
+			except Exception:
 				# occurs when f_blocks is 0 or a similar error
 				self.setText("-?-")
 

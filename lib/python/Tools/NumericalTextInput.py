@@ -27,7 +27,7 @@ MODES = {
 }
 
 PUNCTUATION0 = u"0,?!'\"\\()<>[]{}~^`|"
-PUNCTUATION1 = u"1 .:;+-*/=_@#$%&"
+PUNCTUATION1 = u"1 .:;+-*/=_@  #$%&"
 
 MAPPINGS = (
 	# Text, TextUpper, TextLower, Search, SearchUpper, SearchLower, Hex, HexUpper, HexLower, HexFast, HexFastUpper, HexFastLower, HexLogical, HexLogicalUpper, HexLogicalLower

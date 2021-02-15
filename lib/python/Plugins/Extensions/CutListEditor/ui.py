@@ -21,12 +21,14 @@ from Components.Sources.List import List
 from Components.config import config, ConfigYesNo
 from Screens.MovieSelection import MovieSelection
 
-apscParser = Struct(">qq")    # big-endian, 64-bit offset and 64-bit PTS/data
+apscParser = Struct(">qq")  # big-endian, 64-bit offset and 64-bit PTS/data
 
 config.usage.cutlisteditor_tutorial_seen = ConfigYesNo(default=False)
 
+
 def SecToMSS(sec):
 	return "%d:%02d" % (sec / 60, sec % 60)
+
 
 def CutListEntry(where, what, where_next=None):
 	w = where / 90
@@ -35,17 +37,18 @@ def CutListEntry(where, what, where_next=None):
 	m = (w / 60000) % 60
 	h = w / 3600000
 	type, type_col = (
-		("IN",   0x004000),
-		("OUT",  0x400000),
+		("IN", 0x004000),
+		("OUT", 0x400000),
 		("MARK", 0x000040),
 		("LAST", 0x000000),
-		("EOF",  0x000000),
-		("",     0x000000)
+		("EOF", 0x000000),
+		("", 0x000000)
 	)[what if what < 5 else 5]
 
 	d = SecToMSS((where_next / 90 - w) / 1000) if where_next else ""
 
 	return (where, what), "%dh:%02dm:%02ds:%03d" % (h, m, s, ms), type, d, type_col
+
 
 class CutListContextMenu(FixedMenu):
 	RET_STARTCUT = 0
@@ -67,7 +70,7 @@ class CutListContextMenu(FixedMenu):
 	SHOW_DELETECUT = 2
 
 	def __init__(self, session, state, nearmark, cut_state):
-		menu = [(_("back"), self.close)] #, (None, )]
+		menu = [(_("back"), self.close)]  # , (None, )]
 
 		if state == self.SHOW_STARTCUT:
 			menu.append((_("start cut here (reset)"), self.startCut))
@@ -145,6 +148,7 @@ class CutListContextMenu(FixedMenu):
 	def grabFrame(self):
 		self.close(self.RET_GRABFRAME)
 
+
 class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, HelpableScreen):
 	skin = """
 	<screen flags="wfNoBorder" position="0,0" size="1280,720" title="Cutlist editor">
@@ -197,9 +201,9 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		self.skin = CutListEditor.skin
 		Screen.__init__(self, session)
 		Screen.setTitle(self, _("Cutlist editor"))
-		InfoBarSeek.__init__(self, actionmap = "CutlistSeekActions")
+		InfoBarSeek.__init__(self, actionmap="CutlistSeekActions")
 		InfoBarCueSheetSupport.__init__(self)
-		InfoBarBase.__init__(self, steal_current_service = True)
+		InfoBarBase.__init__(self, steal_current_service=True)
 		HelpableScreen.__init__(self)
 		self.old_service = session.nav.getCurrentlyPlayingServiceReference()
 		self.service = service
@@ -228,38 +232,37 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		self.onPlayStateChanged.append(self.updateStateLabel)
 		self.updateStateLabel(self.seekstate)
 
-		self["key_red"]    = Label(_("Start cut"))
-		self["key_green"]  = Label(_("End cut"))
+		self["key_red"] = Label(_("Start cut"))
+		self["key_green"] = Label(_("End cut"))
 		self["key_yellow"] = Label(_("Step back"))
-		self["key_blue"]   = Label(_("Step forward"))
+		self["key_blue"] = Label(_("Step forward"))
 
 		self["SeekActions"].actions.update({"stepFwd": self.stepFwd})
 		self.helpList.append((self["SeekActions"], "CutlistSeekActions", [("stepFwd", _("Step forward"))]))
 
 		desktopSize = getDesktop(0).size()
-		self["Video"] = VideoWindow(decoder = 0, fb_width=desktopSize.width(), fb_height=desktopSize.height())
+		self["Video"] = VideoWindow(decoder=0, fb_width=desktopSize.width(), fb_height=desktopSize.height())
 
 		self["actions"] = HelpableActionMap(self, ["CutListEditorActions"],
-			{
-				"setIn": (self.setIn, _("Make this mark an 'in' point")),
-				"setOut": (self.setOut, _("Make this mark an 'out' point")),
-				"setStart": (self.setStart, _("Make this mark the initial 'in' point")),
-				"setEnd": (self.setEnd, _("Make this mark the final 'out' point")),
-				"setMark": (self.setMark, _("Make this mark just a mark")),
-				"addMark": (self.__addMark, _("Add a mark")),
-				"removeMark": (self.__removeMark, _("Remove a mark")),
-				"execute": (self.execute, _("Execute cuts and exit")),
-				"quickExecute": (self.quickExecute, _("Quick execute...")),
-				"leave": (self.exit, _("Exit editor")),
-				"showMenu": (self.showMenu, _("Menu")),
-				"backMenu": (self.backMenu, _("Restore previous cuts...")),
-			}, prio=-4)
+											{
+			"setIn": (self.setIn, _("Make this mark an 'in' point")),
+			"setOut": (self.setOut, _("Make this mark an 'out' point")),
+			"setStart": (self.setStart, _("Make this mark the initial 'in' point")),
+			"setEnd": (self.setEnd, _("Make this mark the final 'out' point")),
+			"setMark": (self.setMark, _("Make this mark just a mark")),
+			"addMark": (self.__addMark, _("Add a mark")),
+			"removeMark": (self.__removeMark, _("Remove a mark")),
+			"execute": (self.execute, _("Execute cuts and exit")),
+			"quickExecute": (self.quickExecute, _("Quick execute...")),
+			"leave": (self.exit, _("Exit editor")),
+			"showMenu": (self.showMenu, _("Menu")),
+			"backMenu": (self.backMenu, _("Restore previous cuts...")),
+		}, prio=-4)
 
 		self.onExecBegin.append(self.showTutorial)
-		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
-			{
-				iPlayableService.evCuesheetChanged: self.refillList
-			})
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
+			iPlayableService.evCuesheetChanged: self.refillList
+		})
 
 		# to track new entries we save the last version of the cutlist
 		self.last_cuts = self.getCutlist()
@@ -282,7 +285,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 			if not [x for x in self.cut_list if x[1] != self.CUT_TYPE_MARK]:
 				# Assume the start mark has been missed if it's not less than
 				# 16 minutes.
-				if self.cut_list[0][0] < 16*60*90000:
+				if self.cut_list[0][0] < 16 * 60 * 90000:
 					cl.index = 1
 			else:
 				# Playback will start at the initial IN cut, so point the list
@@ -378,7 +381,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		self.putCuesheet()
 
 	def __addMark(self):
-		self.toggleMark(onlyadd=True, tolerance=90000) # do not allow two marks in <1s
+		self.toggleMark(onlyadd=True, tolerance=90000)  # do not allow two marks in <1s
 
 	def __removeMark(self):
 		m = self["cutlist"].getCurrent()
@@ -416,14 +419,14 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		if first_cut is None:
 			first_cut = self.CUT_TYPE_IN
 		cl = self.cut_list
-		if cl and cl[0][1] == self.CUT_TYPE_LAST and cl[0][0] <= 1: # remove state indicator marks
+		if cl and cl[0][1] == self.CUT_TYPE_LAST and cl[0][0] <= 1:  # remove state indicator marks
 			cl = cl[1:]
 		r = [CutListEntry(0, first_cut, cl[0][0] if cl else length)]
 		for i, e in enumerate(cl):
 			if i == len(cl) - 1:
 				n = length
 			else:
-				n = cl[i+1][0]
+				n = cl[i + 1][0]
 			r.append(CutListEntry(*e, where_next=n))
 		if length:
 			r.append(CutListEntry(length, self.CUT_TYPE_EOF))
@@ -445,7 +448,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 			# seekable, but better than waiting for a timeout when it's not).
 			if where[0][1] == self.CUT_TYPE_EOF:
 				curpos = seek.getPlayPosition()
-				seek.seekTo(pts-2)
+				seek.seekTo(pts - 2)
 				i = 0
 				while i < 15:
 					i += 1
@@ -466,11 +469,13 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 
 		l1 = len(new_list) - 1
 		l2 = len(self.last_cuts) - 1
-		if new_list[l1][0][1] != self.CUT_TYPE_EOF: l1 += 1
-		if self.last_cuts[l2][0][1] != self.CUT_TYPE_EOF: l2 += 1
+		if new_list[l1][0][1] != self.CUT_TYPE_EOF:
+			l1 += 1
+		if self.last_cuts[l2][0][1] != self.CUT_TYPE_EOF:
+			l2 += 1
 		for i in range(min(l1, l2)):
-			if new_list[l1-i-1][0] != self.last_cuts[l2-i-1][0]:
-				self["cutlist"].setIndex(l1-i-1)
+			if new_list[l1 - i - 1][0] != self.last_cuts[l2 - i - 1][0]:
+				self["cutlist"].setIndex(l1 - i - 1)
 				break
 		self.last_cuts = new_list
 
@@ -502,7 +507,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 					self.cut_end = None
 					self["Timeline"].instance.setCutMark(self.cut_start, self.CUT_TYPE_OUT)
 					return
-			else: # CutListContextMenu.RET_ENDCUT
+			else:  # CutListContextMenu.RET_ENDCUT
 				self.cut_end = self.context_position
 				self.state = CutListContextMenu.SHOW_ENDCUT
 				if self.cut_start is None or self.cut_end <= self.cut_start:
@@ -544,7 +549,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 			for (i, (where, what)) in enumerate(self.cut_list[:]):
 				if what == self.CUT_TYPE_IN:
 					if not first:
-						self.cut_list.insert(i+added, (where, self.CUT_TYPE_MARK))
+						self.cut_list.insert(i + added, (where, self.CUT_TYPE_MARK))
 						added += 1
 					first = False
 			self.putCuesheet(inhibit_seek=True)
@@ -584,7 +589,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		elif result == CutListContextMenu.RET_EXECUTECUTS:
 			try:
 				from Plugins.Extensions.MovieCut.plugin import MovieCut
-				self.session.nav.stopService()	# need to stop to save the cuts file
+				self.session.nav.stopService()  # need to stop to save the cuts file
 				self.session.openWithCallback(self.executeCallback, MovieCut, self.service)
 			except ImportError as e:
 				self.session.open(MessageBox, _("The MovieCut plugin is not installed."), type=MessageBox.TYPE_INFO, timeout=10)
@@ -706,7 +711,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 
 	def punch(self, movie):
 		outpts = [x[0] for x in self.cut_list if x[1] == self.CUT_TYPE_OUT]
-		inpts  = [x[0] for x in self.cut_list if x[1] == self.CUT_TYPE_IN]
+		inpts = [x[0] for x in self.cut_list if x[1] == self.CUT_TYPE_IN]
 		if not outpts and not inpts:
 			return
 		if not outpts or inpts[0] < outpts[0]:
@@ -715,7 +720,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		try:
 			so = CDLL("libext2fs.so.2")
 			fallocate64 = so.fallocate64
-		except:
+		except BaseException:
 			return
 		with open(movie, "r+b") as f:
 			fd = f.fileno()
@@ -740,7 +745,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		try:
 			with open(movie + ".ap", "rb") as f:
 				data = f.read()
-		except:
+		except BaseException:
 			return False
 		if len(data) < 2 * apscParser.size:
 			return False
@@ -761,8 +766,8 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		for i in zip(data[0::2], data[1::2]):
 			current = i[1] - currentDelta
 			diff = current - lastpts_t
-			if diff <= 0 or diff > 90000*10:
-				currentDelta = i[1] - lastpts_t - 90000/25
+			if diff <= 0 or diff > 90000 * 10:
+				currentDelta = i[1] - lastpts_t - 90000 / 25
 			lastpts_t = i[1] - currentDelta
 			append((lastpts_t, i[0]))
 

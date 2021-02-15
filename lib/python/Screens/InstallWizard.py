@@ -10,9 +10,10 @@ from Components.Opkg import OpkgComponent
 from enigma import eDVBDB
 
 config.misc.installwizard = ConfigSubsection()
-config.misc.installwizard.hasnetwork = ConfigBoolean(default = False)
-config.misc.installwizard.opkgloaded = ConfigBoolean(default = False)
-config.misc.installwizard.channellistdownloaded = ConfigBoolean(default = False)
+config.misc.installwizard.hasnetwork = ConfigBoolean(default=False)
+config.misc.installwizard.opkgloaded = ConfigBoolean(default=False)
+config.misc.installwizard.channellistdownloaded = ConfigBoolean(default=False)
+
 
 class InstallWizard(Screen, ConfigListScreen):
 
@@ -21,7 +22,7 @@ class InstallWizard(Screen, ConfigListScreen):
 	INSTALL_PLUGINS = 2
 	SCAN = 3
 
-	def __init__(self, session, args = None):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
 
 		self.index = args
@@ -33,13 +34,13 @@ class InstallWizard(Screen, ConfigListScreen):
 			config.misc.installwizard.hasnetwork.value = False
 			config.misc.installwizard.opkgloaded.value = False
 			modes = {0: " "}
-			self.enabled = ConfigSelection(choices = modes, default = 0)
+			self.enabled = ConfigSelection(choices=modes, default=0)
 			self.adapters = [adapter for adapter in iNetwork.getAdapterList() if adapter in ('eth0', 'eth1')]
 			self.checkNetwork()
 		elif self.index == self.STATE_CHOISE_CHANNELLIST:
-			self.enabled = ConfigYesNo(default = True, graphic = False)
+			self.enabled = ConfigYesNo(default=True, graphic=False)
 			modes = {"19e-23e-basis": "Astra1 Astra3 basis", "19e-23e": "Astra 1 Astra 3", "19e-23e-28e": "Astra 1 Astra 2 Astra 3", "13e-19e-23e-28e": "Astra 1 Astra 2 Astra 3 Hotbird", "9e-13e-19e-23e-28e-rotating": "Rotating", "kabelnl": "Kabel-NL"}
-			self.channellist_type = ConfigSelection(choices = modes, default = "19e-23e-basis")
+			self.channellist_type = ConfigSelection(choices=modes, default="19e-23e-basis")
 			self.createMenu()
 		elif self.index == self.INSTALL_PLUGINS:
 			self.noplugins = ConfigNothing()
@@ -79,7 +80,7 @@ class InstallWizard(Screen, ConfigListScreen):
 	def createMenu(self):
 		try:
 			test = self.index
-		except:
+		except Exception:
 			return
 		self.list = []
 		if self.index == self.STATE_UPDATE:
@@ -149,13 +150,14 @@ class InstallWizard(Screen, ConfigListScreen):
 			else:
 				self.doNextStep = True
 
+
 class InstallWizardOpkgUpdater(Screen):
 	skin = """
 	<screen position="c-300,c-25" size="600,50" title=" ">
 		<widget source="statusbar" render="Label" position="10,5" zPosition="10" size="e-10,30" halign="center" valign="center" font="Regular;22" transparent="1" shadowColor="black" shadowOffset="-1,-1" />
 	</screen>"""
 
-	def __init__(self, session, index, info, cmd, pkg = None):
+	def __init__(self, session, index, info, cmd, pkg=None):
 		self.skin = InstallWizardOpkgUpdater.skin
 		Screen.__init__(self, session)
 

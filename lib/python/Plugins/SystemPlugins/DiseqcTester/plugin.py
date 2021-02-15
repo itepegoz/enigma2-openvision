@@ -17,6 +17,7 @@ from Components.ConfigList import ConfigListScreen
 from Components.config import getConfigListEntry, ConfigSelection, ConfigYesNo
 import random
 
+
 class ResultParser:
 	TYPE_BYORBPOS = 0
 	TYPE_BYINDEX = 1
@@ -34,7 +35,7 @@ class ResultParser:
 		elif self.type == self.TYPE_BYINDEX:
 			self.index = parameter
 
-	def getTextualResultForIndex(self, index, logfulltransponders = False):
+	def getTextualResultForIndex(self, index, logfulltransponders=False):
 		text = ""
 		text += "%s:\n" % self.getTextualIndexRepresentation(index)
 
@@ -118,9 +119,10 @@ class ResultParser:
 				text += "Orbital position %s:" % str(orbpos)
 				text += "\n*****************************************\n"
 				for index in orderedResults[orbpos]:
-					text += self.getTextualResultForIndex(index, logfulltransponders = True)
+					text += self.getTextualResultForIndex(index, logfulltransponders=True)
 					text += "\n-----------------------------------------------------\n"
 		return text
+
 
 class DiseqcTester(Screen, TuneTest, ResultParser):
 	skin = """
@@ -128,8 +130,8 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 			<widget source="progress_list" render="Listbox" position="0,0" size="510,150" scrollbarMode="showOnDemand">
 				<convert type="TemplatedMultiContent">
 					{"template": [
-							MultiContentEntryText(pos = (10, 0), size = (330, 25), flags = RT_HALIGN_LEFT, text = 1), # index 1 is the index name,
-							MultiContentEntryText(pos = (330, 0), size = (150, 25), flags = RT_HALIGN_RIGHT, text = 2) # index 2 is the status,
+							MultiContentEntryText(pos = (10, 0), size = (330, 25), flags = RT_HALIGN_LEFT, text = 1),  # index 1 is the index name,
+							MultiContentEntryText(pos = (330, 0), size = (150, 25), flags = RT_HALIGN_RIGHT, text = 2)  # index 2 is the status,
 						],
 					"fonts": [gFont("Regular", 20)],
 					"itemHeight": 25
@@ -155,7 +157,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 	TEST_TYPE_RANDOM = 1
 	TEST_TYPE_COMPLETE = 2
 
-	def __init__(self, session, feid, test_type = TEST_TYPE_QUICK, loopsfailed = 3, loopssuccessful = 1, log = False):
+	def __init__(self, session, feid, test_type=TEST_TYPE_QUICK, loopsfailed=3, loopssuccessful=1, log=False):
 		Screen.__init__(self, session)
 		self.setup_title = _("DiSEqC Tester")
 		self.feid = feid
@@ -169,14 +171,14 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		self["Failed"] = Label(_("Failed:"))
 		self["Succeeded"] = Label(_("Succeeded:"))
 		self["Not_tested"] = Label(_("Not tested:"))
-		self["With_errors"] = Label (_("With errors:"))
+		self["With_errors"] = Label(_("With errors:"))
 		self["actions"] = NumberActionMap(["SetupActions"],
-		{
+										  {
 			"ok": self.select,
 			"cancel": self.keyCancel,
 		}, -2)
 
-		TuneTest.__init__(self, feid, stopOnSuccess = self.loopssuccessful, stopOnError = self.loopsfailed)
+		TuneTest.__init__(self, feid, stopOnSuccess=self.loopssuccessful, stopOnError=self.loopsfailed)
 		self["overall_progress"] = Progress()
 		self["sub_progress"] = Progress()
 		self["failed_counter"] = StaticText("0")
@@ -234,9 +236,9 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 
 	def getIndexForTransponder(self, transponder):
 		if transponder[0] < 11700:
-			band = 1 # low
+			band = 1  # low
 		else:
-			band = 0 # high
+			band = 0  # high
 		polarisation = transponder[2]
 		sat = transponder[5]
 		index = (band, polarisation, sat)
@@ -293,7 +295,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		if self.test_type == self.TEST_TYPE_QUICK:
 			self.myindex = 0
 			keys = self.indexlist.keys()
-			keys.sort(key = lambda a: a[2]) # sort by orbpos
+			keys.sort(key=lambda a: a[2])  # sort by orbpos
 			self["overall_progress"].setRange(len(keys))
 			self["overall_progress"].setValue(self.myindex)
 			return keys[0]
@@ -342,7 +344,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		if self.test_type == self.TEST_TYPE_QUICK:
 			self.myindex += 1
 			keys = self.indexlist.keys()
-			keys.sort(key = lambda a: a[2]) # sort by orbpos
+			keys.sort(key=lambda a: a[2])  # sort by orbpos
 
 			self["overall_progress"].setValue(self.myindex)
 			if self.myindex < len(keys):
@@ -460,8 +462,8 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 					self.setResultType(ResultParser.TYPE_ALL)
 					file.write(self.getTextualResult())
 					file.close()
-					self.session.open(MessageBox, text = _("The results have been written to %s") % "/tmp/diseqctester.log", type = MessageBox.TYPE_INFO, timeout = 5)
-				except:
+					self.session.open(MessageBox, text=_("The results have been written to %s") % "/tmp/diseqctester.log", type=MessageBox.TYPE_INFO, timeout=5)
+				except BaseException:
 					pass
 
 	def go(self):
@@ -485,7 +487,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 				self.frontend = None
 			if hasattr(self, 'raw_channel'):
 				del self.raw_channel
-		except:
+		except BaseException:
 			pass
 		self.session.nav.playService(self.oldref)
 		self.close()
@@ -502,6 +504,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		if len(self.list) > 0 and not self.running:
 			self["CmdText"].setText(_("Press OK to get further details for %s") % str(self["progress_list"].getCurrent()[1]))
 
+
 class DiseqcTesterTestTypeSelection(Screen, ConfigListScreen):
 
 	def __init__(self, session, feid):
@@ -509,18 +512,18 @@ class DiseqcTesterTestTypeSelection(Screen, ConfigListScreen):
 		# for the skin: first try 'DiseqcTesterTestTypeSelection', then 'Setup', this allows individual skinning
 		self.skinName = ["DiseqcTesterTestTypeSelection", "Setup"]
 		self.setup_title = _("DiSEqC-tester settings")
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.feid = feid
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
 
 		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
-			{
-				"cancel": self.keyCancel,
-				"save": self.keyOK,
-				"ok": self.keyOK,
-				"menu": self.closeRecursive,
-			}, -2)
+									{
+			"cancel": self.keyCancel,
+			"save": self.keyOK,
+			"ok": self.keyOK,
+			"menu": self.closeRecursive,
+		}, -2)
 
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))
@@ -532,16 +535,16 @@ class DiseqcTesterTestTypeSelection(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 
 	def createSetup(self):
-		self.testtype = ConfigSelection(choices={"quick": _("Quick"), "random": _("Random"), "complete": _("Complete")}, default = "quick")
+		self.testtype = ConfigSelection(choices={"quick": _("Quick"), "random": _("Random"), "complete": _("Complete")}, default="quick")
 		self.testtypeEntry = getConfigListEntry(_("Test type"), self.testtype)
 		self.list.append(self.testtypeEntry)
 
-		self.loopsfailed = ConfigSelection(choices={"-1": _("Every known"), "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8"}, default = "3")
-		self.loopsfailedEntry = getConfigListEntry(_("Stop testing plane after # failed transponders"), self.loopsfailed)
+		self.loopsfailed = ConfigSelection(choices={"-1": _("Every known"), "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8"}, default="3")
+		self.loopsfailedEntry = getConfigListEntry(_("Stop testing plane after  # failed transponders"), self.loopsfailed)
 		self.list.append(self.loopsfailedEntry)
 
-		self.loopssuccessful = ConfigSelection(choices={"-1": _("Every known"), "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8"}, default = "1")
-		self.loopssuccessfulEntry = getConfigListEntry(_("Stop testing plane after # successful transponders"), self.loopssuccessful)
+		self.loopssuccessful = ConfigSelection(choices={"-1": _("Every known"), "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8"}, default="1")
+		self.loopssuccessfulEntry = getConfigListEntry(_("Stop testing plane after  # successful transponders"), self.loopssuccessful)
 		self.list.append(self.loopssuccessfulEntry)
 
 		self.log = ConfigYesNo(False)
@@ -560,7 +563,7 @@ class DiseqcTesterTestTypeSelection(Screen, ConfigListScreen):
 			testtype = DiseqcTester.TEST_TYPE_RANDOM
 		elif self.testtype.getValue() == "complete":
 			testtype = DiseqcTester.TEST_TYPE_COMPLETE
-		self.session.open(DiseqcTester, feid = self.feid, test_type = testtype, loopsfailed = int(self.loopsfailed.value), loopssuccessful = int(self.loopssuccessful.value), log = self.log.value)
+		self.session.open(DiseqcTester, feid=self.feid, test_type=testtype, loopsfailed=int(self.loopsfailed.value), loopssuccessful=int(self.loopssuccessful.value), log=self.log.value)
 
 	def keyCancel(self):
 		self.close()
@@ -580,9 +583,10 @@ class DiseqcTesterTestTypeSelection(Screen, ConfigListScreen):
 		from Screens.Setup import SetupSummary
 		return SetupSummary
 
+
 class DiseqcTesterNimSelection(NimSelection):
 
-	def __init__(self, session, args = None):
+	def __init__(self, session, args=None):
 		NimSelection.__init__(self, session)
 		# for the skin: first try 'DiseqcTesterNimSelection', then 'NimSelection', this allows individual skinning
 		self.skinName = ["DiseqcTesterNimSelection", "NimSelection"]
@@ -601,6 +605,7 @@ class DiseqcTesterNimSelection(NimSelection):
 			return True
 		return False
 
+
 def DiseqcTesterMain(session, **kwargs):
 	nimList = nimmanager.getNimListOfType("DVB-S")
 	if len(nimList) == 0:
@@ -611,14 +616,16 @@ def DiseqcTesterMain(session, **kwargs):
 		else:
 			session.open(DiseqcTesterNimSelection)
 
+
 def DiseqcTesterStart(menuid, **kwargs):
 	if menuid == "scan":
 		return [(_("DiSEqC Tester"), DiseqcTesterMain, "diseqc_tester", None)]
 	else:
 		return []
 
+
 def Plugins(**kwargs):
 	if (nimmanager.hasNimType("DVB-S")):
-		return PluginDescriptor(name="DiSEqC Tester", description=_("Test DiSEqC settings"), where = PluginDescriptor.WHERE_MENU, fnc=DiseqcTesterStart)
+		return PluginDescriptor(name="DiSEqC Tester", description=_("Test DiSEqC settings"), where=PluginDescriptor.WHERE_MENU, fnc=DiseqcTesterStart)
 	else:
 		return []

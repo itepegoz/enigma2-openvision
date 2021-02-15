@@ -6,6 +6,7 @@ from Components.config import config, getConfigListEntry
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 
+
 class HdmiCECSetupScreen(Screen, ConfigListScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -22,7 +23,7 @@ class HdmiCECSetupScreen(Screen, ConfigListScreen):
 		self["description"] = Label("")
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "MenuActions"],
-		{
+									{
 			"ok": self.keyOk,
 			"save": self.keyGo,
 			"cancel": self.keyCancel,
@@ -35,7 +36,7 @@ class HdmiCECSetupScreen(Screen, ConfigListScreen):
 
 		self.list = []
 		self.logpath_entry = None
-		ConfigListScreen.__init__(self, self.list, session = self.session)
+		ConfigListScreen.__init__(self, self.list, session=self.session)
 		self.createSetup()
 		self.updateAddress()
 
@@ -76,7 +77,7 @@ class HdmiCECSetupScreen(Screen, ConfigListScreen):
 	def createSummary(self):
 		from Screens.Setup import SetupSummary
 		return SetupSummary
-	###
+	##  #
 
 	def updateDescription(self):
 		self["description"].setText("%s\n\n%s\n\n%s" % (self.current_address, self.fixed_address, self.getCurrentDescription()))
@@ -134,12 +135,14 @@ class HdmiCECSetupScreen(Screen, ConfigListScreen):
 		from Screens.LocationBox import LocationBox
 		txt = _("Select directory for logfile")
 		self.session.openWithCallback(self.logPath, LocationBox, text=txt, currDir=config.hdmicec.log_path.value,
-				bookmarks=config.hdmicec.bookmarks, autoAdd=False, editDir=True,
-				inhibitDirs=inhibitDirs, minFree=1
-				)
+									  bookmarks=config.hdmicec.bookmarks, autoAdd=False, editDir=True,
+									  inhibitDirs=inhibitDirs, minFree=1
+									  )
+
 
 def main(session, **kwargs):
 	session.open(HdmiCECSetupScreen)
+
 
 def startSetup(menuid):
 	# only show in the menu when set to intermediate or higher
@@ -147,10 +150,11 @@ def startSetup(menuid):
 		return [(_("HDMI-CEC setup"), main, "hdmi_cec_setup", 0)]
 	return []
 
+
 def Plugins(**kwargs):
 	from os import path
 	if path.exists("/dev/hdmi_cec") or path.exists("/dev/misc/hdmi_cec0"):
 		import Components.HdmiCec
 		from Plugins.Plugin import PluginDescriptor
-		return [PluginDescriptor(where = PluginDescriptor.WHERE_MENU, fnc = startSetup)]
+		return [PluginDescriptor(where=PluginDescriptor.WHERE_MENU, fnc=startSetup)]
 	return []

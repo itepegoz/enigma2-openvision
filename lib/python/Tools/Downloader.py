@@ -4,9 +4,10 @@ from twisted.web import client
 from twisted.internet import reactor, defer
 try:
 	from urlparse import urlparse
-except:
+except ImportError:
 	from urllib.parse import urlparse
 from enigma import getBoxType, getBoxBrand
+
 
 class HTTPProgressDownloader(client.HTTPDownloader):
 	def __init__(self, url, outfile, headers=None):
@@ -43,6 +44,7 @@ class HTTPProgressDownloader(client.HTTPDownloader):
 		if self.end_callback:
 			self.end_callback()
 		return ret
+
 
 class downloadWithProgress:
 	def __init__(self, url, outputfile, contextFactory=None, *args, **kwargs):

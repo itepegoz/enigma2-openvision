@@ -8,6 +8,7 @@ from time import time, localtime, strftime
 from skin import parseColor
 from Tools.Hex2strColor import Hex2strColor
 
+
 class NextEpgInfo(Renderer, VariableText):
 	def __init__(self):
 		Renderer.__init__(self)
@@ -17,7 +18,7 @@ class NextEpgInfo(Renderer, VariableText):
 		self.hideLabel = 0
 		self.timecolor = ""
 		self.labelcolor = ""
-		self.foregroundColor = "\c00?0?0?0"
+		self.foregroundColor = "\\c00?0?0?0"
 		self.numOfSpaces = 1
 
 	GUI_WIDGET = eLabel
@@ -68,8 +69,8 @@ class NextEpgInfo(Renderer, VariableText):
 				attribs.append((attrib, value))
 		for (attrib, value) in attribs:
 			self.skinAttributes.remove((attrib, value))
-		if self.timecolor == "": # fallback to foregroundColor
+		if self.timecolor == "":  # fallback to foregroundColor
 			self.timecolor = self.foregroundColor
-		if self.labelcolor == "": # fallback to foregroundColor
+		if self.labelcolor == "":  # fallback to foregroundColor
 			self.labelcolor = self.foregroundColor
 		return Renderer.applySkin(self, desktop, parent)

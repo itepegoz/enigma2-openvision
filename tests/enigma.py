@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+
+
 # fake-enigma
+#
 class slot:
 	def __init__(self):
-		self.list = [ ]
+		self.list = []
 
 	def get(self):
 		return self.list
@@ -13,13 +16,15 @@ class slot:
 		for x in self.list:
 			x()
 
+
 timers = set()
 
 import time
 
 from events import eventfnc
 
-##################### ENIGMA BASE
+# ENIGMA BASE
+
 
 class eTimer:
 	def __init__(self):
@@ -27,7 +32,7 @@ class eTimer:
 		self.next_activation = None
 		print("[enigma] NEW TIMER")
 
-	def start(self, msec, singleshot = False):
+	def start(self, msec, singleshot=False):
 		print("[enigma] start timer", msec)
 		self.next_activation = time.time() + msec / 1000.0
 		self.msec = msec
@@ -45,6 +50,7 @@ class eTimer:
 			self.stop()
 		self.next_activation += self.msec / 1000.0
 		self.timeout()
+
 
 def runIteration():
 	running_timers = list(timers)
@@ -66,13 +72,16 @@ def runIteration():
 		running_timers[0].do()
 		running_timers = running_timers[1:]
 
+
 stopped = False
+
 
 def stop():
 	global stopped
 	stopped = True
 
-def run(duration = 1000):
+
+def run(duration=1000):
 	stoptimer = eTimer()
 	stoptimer.start(duration * 1000.0)
 	stoptimer.callback.append(stop)
@@ -80,7 +89,7 @@ def run(duration = 1000):
 		runIteration()
 
 
-##################### ENIGMA GUI
+# ENIGMA GUI
 
 eSize = None
 ePoint = None
@@ -98,6 +107,7 @@ eListboxPythonStringContent = None
 eListbox = None
 eSubtitleWidget = None
 
+
 class eEPGCache:
 	@classmethod
 	def getInstance(self):
@@ -111,9 +121,11 @@ class eEPGCache:
 	def lookupEventTime(self, ref, query):
 		return None
 
+
 eEPGCache()
 
 getBestPlayableServiceReference = None
+
 
 class pNavigation:
 	def __init__(self):
@@ -135,20 +147,22 @@ class pNavigation:
 	def __repr__(self):
 		return "pNavigation"
 
+
 eRCInput = None
 getPrevAsciiCode = None
 
+
 class eServiceReference:
 
-	isDirectory=1
-	mustDescent=2
-	canDescent=4
-	flagDirectory=isDirectory|mustDescent|canDescent
-	shouldSort=8
-	hasSortKey=16
-	sort1=32
-	isMarker=64
-	isGroup=128
+	isDirectory = 1
+	mustDescent = 2
+	canDescent = 4
+	flagDirectory = isDirectory | mustDescent | canDescent
+	shouldSort = 8
+	hasSortKey = 16
+	sort1 = 32
+	isMarker = 64
+	isGroup = 128
 
 	def __init__(self, ref):
 		self.ref = ref
@@ -159,6 +173,7 @@ class eServiceReference:
 
 	def __repr__(self):
 		return self.toString()
+
 
 class iRecordableService:
 	def __init__(self, ref):
@@ -179,7 +194,9 @@ class iRecordableService:
 	def __repr__(self):
 		return "iRecordableService(%s)" % repr(self.ref)
 
+
 quitMainloop = None
+
 
 class eAVSwitch:
 	@classmethod
@@ -209,9 +226,11 @@ class eAVSwitch:
 	def setInput(self, value):
 		print("[enigma] eAVSwitch wss set to %d" % value)
 
+
 eAVSwitch()
 
 eDVBVolumecontrol = None
+
 
 class eRFmod:
 	@classmethod
@@ -241,6 +260,7 @@ class eRFmod:
 	def setFinetune(self, value):
 		print("[enigma] eRFmod set finetune to %d" % value)
 
+
 eRFmod()
 
 
@@ -266,9 +286,11 @@ class eDBoxLCD:
 	def setInverted(self, value):
 		print("[enigma] eDBoxLCD set inverted to %d" % value)
 
+
 eDBoxLCD()
 
 Misc_Options = None
+
 
 class eServiceCenter:
 	@classmethod
@@ -283,15 +305,16 @@ class eServiceCenter:
 	def info(self, ref):
 		return None
 
+
 eServiceCenter()
 
-##################### ENIGMA CHROOT
+# ENIGMA CHROOT
 
 print("[enigma] import directories")
 import Tools.Directories
 print("[enigma] done")
 
-chroot="."
+chroot = "."
 
 for (x, (y, z)) in Tools.Directories.defaultPaths.items():
 	Tools.Directories.defaultPaths[x] = (chroot + y, z)
@@ -299,41 +322,46 @@ for (x, (y, z)) in Tools.Directories.defaultPaths.items():
 Tools.Directories.defaultPaths[Tools.Directories.SCOPE_SKIN] = ("../data/", Tools.Directories.PATH_DONTCREATE)
 Tools.Directories.defaultPaths[Tools.Directories.SCOPE_CONFIG] = ("/etc/enigma2/", Tools.Directories.PATH_DONTCREATE)
 
-##################### ENIGMA CONFIG
+# ENIGMA CONFIG
 
 print("[enigma] import config")
 import Components.config
 print("[enigma] done")
 
 my_config = [
-"config.skin.primary_skin=None\n"
+	"config.skin.primary_skin=None\n"
 ]
 
 Components.config.config.unpickle(my_config)
 
-##################### ENIGMA ACTIONS
+# ENIGMA ACTIONS
+
 
 class eActionMap:
 	def __init__(self):
 		pass
 
 
-##################### ENIGMA STARTUP:
+# ENIGMA STARTUP:
 
 def init_nav():
 	print("[enigma] init nav")
-	import Navigation, NavigationInstance
+	import Navigation
+	import NavigationInstance
 	NavigationInstance.instance = Navigation.Navigation()
+
 
 def init_record_config():
 	print("[enigma] init recording")
 	import Components.RecordingConfig
 	Components.RecordingConfig.InitRecordingConfig()
 
+
 def init_parental_control():
 	print("[enigma] init parental")
 	from Components.ParentalControl import InitParentalControl
 	InitParentalControl()
+
 
 def init_all():
 	# this is stuff from mytest.py

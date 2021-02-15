@@ -7,6 +7,7 @@ from Components.Element import cached
 
 WIDESCREEN = [3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10]
 
+
 class ServiceInfo(Converter):
 	HAS_TELETEXT = 0
 	IS_MULTICHANNEL = 1
@@ -51,46 +52,46 @@ class ServiceInfo(Converter):
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		self.type, self.interesting_events = {
-				"HasTelext": (self.HAS_TELETEXT, (iPlayableService.evUpdatedInfo,)),
-				"IsMultichannel": (self.IS_MULTICHANNEL, (iPlayableService.evUpdatedInfo,)),
-				"IsStereo": (self.IS_STEREO, (iPlayableService.evUpdatedInfo,)),
-				"IsCrypted": (self.IS_CRYPTED, (iPlayableService.evUpdatedInfo,)),
-				"IsWidescreen": (self.IS_WIDESCREEN, (iPlayableService.evVideoSizeChanged,)),
-				"IsNotWidescreen": (self.IS_NOT_WIDESCREEN, (iPlayableService.evVideoSizeChanged,)),
-				"SubservicesAvailable": (self.SUBSERVICES_AVAILABLE, (iPlayableService.evStart,)),
-				"VideoWidth": (self.XRES, (iPlayableService.evVideoSizeChanged,)),
-				"VideoHeight": (self.YRES, (iPlayableService.evVideoSizeChanged,)),
-				"AudioPid": (self.APID, (iPlayableService.evUpdatedInfo,)),
-				"VideoPid": (self.VPID, (iPlayableService.evUpdatedInfo,)),
-				"PcrPid": (self.PCRPID, (iPlayableService.evUpdatedInfo,)),
-				"PmtPid": (self.PMTPID, (iPlayableService.evUpdatedInfo,)),
-				"TxtPid": (self.TXTPID, (iPlayableService.evUpdatedInfo,)),
-				"TsId": (self.TSID, (iPlayableService.evUpdatedInfo,)),
-				"OnId": (self.ONID, (iPlayableService.evUpdatedInfo,)),
-				"Sid": (self.SID, (iPlayableService.evUpdatedInfo,)),
-				"Framerate": (self.FRAMERATE, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"TransferBPS": (self.TRANSFERBPS, (iPlayableService.evUpdatedInfo)),
-				"HasHBBTV": (self.HAS_HBBTV, (iPlayableService.evUpdatedInfo, iPlayableService.evHBBTVInfo, iPlayableService.evStart)),
-				"AudioTracksAvailable": (self.AUDIOTRACKS_AVAILABLE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"SubtitlesAvailable": (self.SUBTITLES_AVAILABLE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"Editmode": (self.EDITMODE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"IsStream": (self.IS_STREAM, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"IsSD": (self.IS_SD, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"IsHD": (self.IS_HD, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
-				"IsSDAndWidescreen": (self.IS_SD_AND_WIDESCREEN, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"IsSDAndNotWidescreen": (self.IS_SD_AND_NOT_WIDESCREEN, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"Is4K": (self.IS_4K, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"Is1080": (self.IS_1080, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"Is720": (self.IS_720, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
-				"IsSDR": (self.IS_SDR, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
-				"IsHDR": (self.IS_HDR, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
-				"IsHDR10": (self.IS_HDR10, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
-				"IsHLG": (self.IS_HLG, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
-				"IsVideoMPEG2": (self.IS_VIDEO_MPEG2, (iPlayableService.evUpdatedInfo,)),
-				"IsVideoAVC": (self.IS_VIDEO_AVC, (iPlayableService.evUpdatedInfo,)),
-				"IsVideoHEVC": (self.IS_VIDEO_HEVC, (iPlayableService.evUpdatedInfo,)),
-				"IsHDHDR": (self.IS_HDHDR, (iPlayableService.evVideoSizeChanged, iPlayableService.evVideoGammaChanged,)),
-			}[type]
+			"HasTelext": (self.HAS_TELETEXT, (iPlayableService.evUpdatedInfo,)),
+			"IsMultichannel": (self.IS_MULTICHANNEL, (iPlayableService.evUpdatedInfo,)),
+			"IsStereo": (self.IS_STEREO, (iPlayableService.evUpdatedInfo,)),
+			"IsCrypted": (self.IS_CRYPTED, (iPlayableService.evUpdatedInfo,)),
+			"IsWidescreen": (self.IS_WIDESCREEN, (iPlayableService.evVideoSizeChanged,)),
+			"IsNotWidescreen": (self.IS_NOT_WIDESCREEN, (iPlayableService.evVideoSizeChanged,)),
+			"SubservicesAvailable": (self.SUBSERVICES_AVAILABLE, (iPlayableService.evStart,)),
+			"VideoWidth": (self.XRES, (iPlayableService.evVideoSizeChanged,)),
+			"VideoHeight": (self.YRES, (iPlayableService.evVideoSizeChanged,)),
+			"AudioPid": (self.APID, (iPlayableService.evUpdatedInfo,)),
+			"VideoPid": (self.VPID, (iPlayableService.evUpdatedInfo,)),
+			"PcrPid": (self.PCRPID, (iPlayableService.evUpdatedInfo,)),
+			"PmtPid": (self.PMTPID, (iPlayableService.evUpdatedInfo,)),
+			"TxtPid": (self.TXTPID, (iPlayableService.evUpdatedInfo,)),
+			"TsId": (self.TSID, (iPlayableService.evUpdatedInfo,)),
+			"OnId": (self.ONID, (iPlayableService.evUpdatedInfo,)),
+			"Sid": (self.SID, (iPlayableService.evUpdatedInfo,)),
+			"Framerate": (self.FRAMERATE, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"TransferBPS": (self.TRANSFERBPS, (iPlayableService.evUpdatedInfo)),
+			"HasHBBTV": (self.HAS_HBBTV, (iPlayableService.evUpdatedInfo, iPlayableService.evHBBTVInfo, iPlayableService.evStart)),
+			"AudioTracksAvailable": (self.AUDIOTRACKS_AVAILABLE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"SubtitlesAvailable": (self.SUBTITLES_AVAILABLE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"Editmode": (self.EDITMODE, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"IsStream": (self.IS_STREAM, (iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"IsSD": (self.IS_SD, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"IsHD": (self.IS_HD, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo, iPlayableService.evStart)),
+			"IsSDAndWidescreen": (self.IS_SD_AND_WIDESCREEN, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"IsSDAndNotWidescreen": (self.IS_SD_AND_NOT_WIDESCREEN, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"Is4K": (self.IS_4K, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"Is1080": (self.IS_1080, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"Is720": (self.IS_720, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo)),
+			"IsSDR": (self.IS_SDR, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
+			"IsHDR": (self.IS_HDR, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
+			"IsHDR10": (self.IS_HDR10, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
+			"IsHLG": (self.IS_HLG, (iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
+			"IsVideoMPEG2": (self.IS_VIDEO_MPEG2, (iPlayableService.evUpdatedInfo,)),
+			"IsVideoAVC": (self.IS_VIDEO_AVC, (iPlayableService.evUpdatedInfo,)),
+			"IsVideoHEVC": (self.IS_VIDEO_HEVC, (iPlayableService.evUpdatedInfo,)),
+			"IsHDHDR": (self.IS_HDHDR, (iPlayableService.evVideoSizeChanged, iPlayableService.evVideoGammaChanged,)),
+		}[type]
 		if self.type in (self.IS_SD, self.IS_HD, self.IS_SD_AND_WIDESCREEN, self.IS_SD_AND_NOT_WIDESCREEN, self.IS_4K, self.IS_1080, self.IS_720):
 			self.videoHeight = None
 			if self.type in (self.IS_SD_AND_WIDESCREEN, self.IS_SD_AND_NOT_WIDESCREEN):
@@ -100,7 +101,7 @@ class ServiceInfo(Converter):
 		serviceInfo = info.getInfoString(iServiceInformation.sServiceref).split(':')
 		return len(serviceInfo) < 3 or serviceInfo[2] != '2'
 
-	def getServiceInfoString(self, info, what, convert = lambda x: "%d" % x):
+	def getServiceInfoString(self, info, what, convert=lambda x: "%d" % x):
 		v = info.getInfo(what)
 		if v == -1:
 			return _("N/A")
@@ -217,7 +218,7 @@ class ServiceInfo(Converter):
 			elif self.type == self.SID:
 				return self.getServiceInfoString(info, iServiceInformation.sSID)
 			elif self.type == self.TRANSFERBPS:
-				return self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: _("%d kB/s") % (x/1024))
+				return self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: _("%d kB/s") % (x / 1024))
 			elif self.type == self.HAS_HBBTV:
 				return info.getInfoString(iServiceInformation.sHBBTVUrl)
 			elif self.isVideoService(info):
@@ -226,7 +227,7 @@ class ServiceInfo(Converter):
 				elif self.type == self.YRES:
 					return self.getServiceInfoString(info, iServiceInformation.sVideoHeight)
 				elif self.type == self.FRAMERATE:
-					return self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: _("%d fps") % ((x+500)/1000))
+					return self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: _("%d fps") % ((x + 500) / 1000))
 				elif self.type == self.VPID:
 					return self.getServiceInfoString(info, iServiceInformation.sVideoPID)
 		return ""

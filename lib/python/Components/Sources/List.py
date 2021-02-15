@@ -3,6 +3,7 @@
 from Components.Sources.Source import Source
 from Components.Element import cached
 
+
 class List(Source, object):
 	"""The datasource of a listbox. Currently, the format depends on the used converter. So
 if you put a simple string list in here, you need to use a StringList converter, if you are
@@ -11,15 +12,16 @@ setup the "fonts".
 
 This has been done so another converter could convert the list to a different format, for example
 to generate HTML."""
-	def __init__(self, list = [ ], enableWrapAround = False, item_height = 25, fonts = [ ]):
+
+	def __init__(self, list=[], enableWrapAround=False, item_height=25, fonts=[]):
 		Source.__init__(self)
 		self.__list = list
-		self.onSelectionChanged = [ ]
+		self.onSelectionChanged = []
 		self.item_height = item_height
 		self.fonts = fonts
 		self.disable_callbacks = False
 		self.enableWrapAround = enableWrapAround
-		self.__style = "default" # style might be an optional string which can be used to define different visualisations in the skin
+		self.__style = "default"  # style might be an optional string which can be used to define different visualisations in the skin
 
 	def setList(self, list):
 		self.__list = list

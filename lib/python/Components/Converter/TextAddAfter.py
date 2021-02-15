@@ -3,6 +3,7 @@
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
+
 class TextAddAfter(Converter, object):
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -10,6 +11,6 @@ class TextAddAfter(Converter, object):
 
 	@cached
 	def getText(self):
-		return  str(str(self.source.text) + str(self.type))
+		return str(str(self.source.text) + str(self.type))
 
 	text = property(getText)

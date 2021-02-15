@@ -11,6 +11,7 @@ codec_data = {-1: ' ', 0: 'MPEG2', 1: 'AVC', 2: 'H263', 3: 'VC1', 4: 'MPEG4-VC',
 
 WIDESCREEN = [3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10]
 
+
 class ServiceInfoEX(Poll, Converter, object):
 	apid = 0
 	vpid = 1
@@ -157,12 +158,12 @@ class ServiceInfoEX(Poll, Converter, object):
 		self.poll_interval = 1000
 		self.poll_enabled = True
 
-	def getServiceInfoString2(self, info, what, convert = lambda x: "%d" % x):
+	def getServiceInfoString2(self, info, what, convert=lambda x: "%d" % x):
 		v = info.getInfo(what)
 		if v == -3:
 			t_objs = info.getInfoObject(what)
 			if t_objs and (len(t_objs) > 0):
-				ret_val=""
+				ret_val = ""
 				for t_obj in t_objs:
 					ret_val += "%.4X " % t_obj
 				return ret_val[:-1]
@@ -170,7 +171,7 @@ class ServiceInfoEX(Poll, Converter, object):
 				return ""
 		return convert(v)
 
-	def getServiceInfoString(self, info, what, convert = lambda x: "%d" % x):
+	def getServiceInfoString(self, info, what, convert=lambda x: "%d" % x):
 		v = info.getInfo(what)
 		if v == -1:
 			return "N/A"
@@ -180,7 +181,7 @@ class ServiceInfoEX(Poll, Converter, object):
 
 	@cached
 	def getText(self):
-		self.stream = { 'apid': "N/A", 'vpid': "N/A", 'sid': "N/A", 'onid': "N/A", 'tsid': "N/A", 'prcpid': "N/A", 'caids': "FTA", 'pmtpid': "N/A", 'txtpid': "N/A", 'xres': " ", 'yres': " ", 'gamma': " ", 'atype': " ", 'vtype': " ", 'avtype': " ", 'fps': " ", 'tbps': " ", 'vsize': " ",}
+		self.stream = {'apid': "N/A", 'vpid': "N/A", 'sid': "N/A", 'onid': "N/A", 'tsid': "N/A", 'prcpid': "N/A", 'caids': "FTA", 'pmtpid': "N/A", 'txtpid': "N/A", 'xres': " ", 'yres': " ", 'gamma': " ", 'atype': " ", 'vtype': " ", 'avtype': " ", 'fps': " ", 'tbps': " ", 'vsize': " ", }
 		streaminfo = ""
 		array_caids = []
 		service = self.source.service
@@ -213,7 +214,7 @@ class ServiceInfoEX(Poll, Converter, object):
 			self.stream['xres'] = self.getServiceInfoString(info, iServiceInformation.sVideoWidth)
 		try:
 			self.stream['gamma'] = gamma_data[info.getInfo(iServiceInformation.sGamma)]
-		except:
+		except BaseException:
 			pass
 		audio = service.audioTracks()
 		if audio:
@@ -221,10 +222,10 @@ class ServiceInfoEX(Poll, Converter, object):
 				self.stream['atype'] = str(audio.getTrackInfo(audio.getCurrentTrack()).getDescription()).replace(",", "")
 		self.stream['vtype'] = codec_data[info.getInfo(iServiceInformation.sVideoType)]
 		self.stream['avtype'] = self.stream['vtype'] + '/' + self.stream['atype']
-		if self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x+500)/1000)) != "N/A":
-			self.stream['fps'] = self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x+500)/1000))
-		if self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: "%d kB/s" % (x/1024)) != "N/A":
-			self.stream['tbps'] = self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: "%d kB/s" % (x/1024))
+		if self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x + 500) / 1000)) != "N/A":
+			self.stream['fps'] = self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x + 500) / 1000))
+		if self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: "%d kB/s" % (x / 1024)) != "N/A":
+			self.stream['tbps'] = self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: "%d kB/s" % (x / 1024))
 		self.tpdata = info.getInfoObject(iServiceInformation.sTransponderData)
 		if self.tpdata:
 			self.stream['ttype'] = self.tpdata.get('tuner_type', '')
@@ -331,7 +332,7 @@ class ServiceInfoEX(Poll, Converter, object):
 				idx = 0
 				while idx < n:
 					i = audio.getTrackInfo(idx)
-					description = i.getDescription();
+					description = i.getDescription()
 					if "AC3" in description or "AC-3" in description or "DTS" in description:
 						return True
 					idx += 1
@@ -348,11 +349,11 @@ class ServiceInfoEX(Poll, Converter, object):
 		elif self.type == self.HAS_HBBTV:
 			try:
 				return info.getInfoString(iServiceInformation_ENUMS.sHBBTVUrl) != ''
-			except:
+			except BaseException:
 				pass
 			try:
 				return info.getInfoString(iServiceInformation.sHBBTVUrl) != ''
-			except:
+			except BaseException:
 				pass
 
 		elif self.type == self.AUDIOTRACKS_AVAILABLE:
@@ -360,11 +361,11 @@ class ServiceInfoEX(Poll, Converter, object):
 			return audio and audio.getNumberOfTracks() > 1
 		elif self.type == self.SUBTITLES_AVAILABLE:
 			try:
-			       subtitle = service and service.subtitle()
-			       subtitlelist = subtitle and subtitle.getSubtitleList()
-			except:
-			       subtitle = service and service.subtitleTracks()
-			       subtitlelist = subtitle and subtitle.getNumberOfSubtitleTracks()
+				subtitle = service and service.subtitle()
+				subtitlelist = subtitle and subtitle.getSubtitleList()
+			except BaseException:
+				subtitle = service and service.subtitleTracks()
+				subtitlelist = subtitle and subtitle.getNumberOfSubtitleTracks()
 			if subtitlelist:
 				return len(subtitlelist) > 0
 			return False

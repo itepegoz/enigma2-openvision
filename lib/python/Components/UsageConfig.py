@@ -1288,7 +1288,7 @@ def InitUsageConfig():
 
 	def updatedebug_path(configElement):
 		if not exists(config.crash.debug_path.value):
-			mkdir(config.crash.debug_path.value, 0755)
+			mkdir(config.crash.debug_path.value, 0o755)
 	config.crash.debug_path.addNotifier(updatedebug_path, immediate_feedback=False)
 
 	config.seek = ConfigSubsection()
@@ -1788,7 +1788,7 @@ def updateChoices(sel, choices):
 	if choices:
 		defval = None
 		val = int(sel.value)
-		if not val in choices:
+		if val not in choices:
 			tmp = choices[:]
 			tmp.reverse()
 			for x in tmp:
@@ -1800,7 +1800,7 @@ def updateChoices(sel, choices):
 
 def preferredPath(path):
 	if config.usage.setup_level.index < 2 or path == "<default>" or not path:
-		return None	 # config.usage.default_path.value, but delay lookup until usage
+		return None  # config.usage.default_path.value, but delay lookup until usage
 	elif path == "<current>":
 		return config.movielist.last_videodir.value
 	elif path == "<timer>":
@@ -1899,14 +1899,14 @@ def patchTuxtxtConfFile(dummyConfigElement):
 	command = "sed -i -r '"
 	for f in tuxtxt2:
 		# replace keyword (%s) followed by any value ([-0-9]+) by that keyword \1 and the new value %d
-		command += "s|(%s)\s+([-0-9]+)|\\1 %d|;" % (f[0], f[1])
+		command += "s|(%s)\\s+([-0-9]+)|\\1 %d|;" % (f[0], f[1])
 	command += "' %s" % TUXTXT_CFG_FILE
 	for f in tuxtxt2:
 		# if keyword is not found in file, append keyword and value
 		command += " ; if ! grep -q '%s' %s ; then echo '%s %d' >> %s ; fi" % (f[0], TUXTXT_CFG_FILE, f[0], f[1], TUXTXT_CFG_FILE)
 	try:
 		Console().ePopen(command)
-	except:
+	except Exception:
 		print("[UsageConfig] Error: failed to patch %s!" % TUXTXT_CFG_FILE)
 	print("[UsageConfig] patched tuxtxt2.conf")
 

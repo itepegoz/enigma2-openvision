@@ -61,17 +61,21 @@ KEY_NUMBERS = ACTIONKEY_NUMBERS
 KEY_0 = ACTIONKEY_0
 KEY_9 = ACTIONKEY_9
 
+
 def getKeyNumber(key):
 	assert key in ACTIONKEY_NUMBERS
 	return key - ACTIONKEY_0
+
 
 def getConfigListEntry(*args):
 	assert len(args) > 1, "getConfigListEntry needs a minimum of two arguments (descr, configElement)"
 	return args
 
+
 def updateConfigElement(element, newelement):
 	newelement.value = element.value
 	return newelement
+
 
 def NoSave(element):
 	element.disableSave()
@@ -1202,6 +1206,8 @@ class ConfigSequence(ConfigElement):
 
 
 cec_limits = [(0, 15), (0, 15), (0, 15), (0, 15)]
+
+
 class ConfigCECAddress(ConfigSequence):
 	def __init__(self, default, auto_jump=False):
 		ConfigSequence.__init__(self, seperator=".", limits=cec_limits, default=default)
@@ -1276,6 +1282,8 @@ class ConfigCECAddress(ConfigSequence):
 
 
 clock_limits = [(0, 23), (0, 59)]
+
+
 class ConfigClock(ConfigSequence):
 	def __init__(self, default):
 		self.t = localtime(default)
@@ -1375,6 +1383,8 @@ class ConfigClock(ConfigSequence):
 
 
 date_limits = [(1, 31), (1, 12), (1970, 2050)]
+
+
 class ConfigDate(ConfigSequence):
 	def __init__(self, default):
 		d = localtime(default)
@@ -1401,6 +1411,8 @@ class ConfigFloat(ConfigSequence):
 
 
 integer_limits = (0, 9999999999)
+
+
 class ConfigInteger(ConfigSequence):
 	def __init__(self, default, limits=integer_limits):
 		ConfigSequence.__init__(self, seperator=":", limits=[limits], default=default)
@@ -1432,6 +1444,8 @@ class ConfigPIN(ConfigInteger):
 
 
 ip_limits = [(0, 255), (0, 255), (0, 255), (0, 255)]
+
+
 class ConfigIP(ConfigSequence):
 	def __init__(self, default, auto_jump=False):
 		ConfigSequence.__init__(self, seperator=".", limits=ip_limits, default=default)
@@ -1506,6 +1520,8 @@ class ConfigIP(ConfigSequence):
 
 
 mac_limits = [(1, 255), (1, 255), (1, 255), (1, 255), (1, 255), (1, 255)]
+
+
 class ConfigMAC(ConfigSequence):
 	def __init__(self, default):
 		ConfigSequence.__init__(self, seperator=":", limits=mac_limits, default=default)
@@ -2179,10 +2195,10 @@ class Config(ConfigSubsection):
 	def unpickle(self, lines, base_file=True):
 		tree = {}
 		configbase = tree.setdefault("config", {})
-		for l in lines:
-			if not l or l[0] == "#":
+		for line in lines:
+			if not line or line[0] == "#":
 				continue
-			result = l.split("=", 1)
+			result = line.split("=", 1)
 			if len(result) != 2:
 				continue
 			(name, val) = result

@@ -6,6 +6,7 @@ from Components.Element import cached
 from enigma import eServiceCenter, eServiceReference, iServiceInformation
 from xml.etree.cElementTree import parse
 
+
 class ExtendedServiceInfo(Converter, object):
 	SERVICENAME = 0
 	SERVICENUMBER = 1
@@ -57,11 +58,11 @@ class ExtendedServiceInfo(Converter, object):
 		elif self.type == self.PROVIDER:
 			text = info.getInfoString(iServiceInformation.sProvider)
 		elif self.type == self.FROMCONFIG:
-			if config.plugins.ExtendedServiceInfo.showServiceNumber.value == True and number != '':
+			if config.plugins.ExtendedServiceInfo.showServiceNumber.value and number != '':
 				text = '%s. %s' % (number, name)
 			else:
 				text = name
-			if config.plugins.ExtendedServiceInfo.showOrbitalPosition.value == True and orbital != '':
+			if config.plugins.ExtendedServiceInfo.showOrbitalPosition.value and orbital != '':
 				if config.plugins.ExtendedServiceInfo.orbitalPositionType.value == 'name':
 					text = '%s (%s)' % (text, satName)
 				else:

@@ -9,6 +9,7 @@ from enigma import getBoxType, getBoxBrand
 from Tools.Directories import fileExists
 from boxbranding import getMachineBuild
 
+
 def getBoxProcType():
 	procmodeltype = "unknown"
 	try:
@@ -17,6 +18,7 @@ def getBoxProcType():
 	except IOError:
 		print("[StbHardware] getBoxProcType failed!")
 	return procmodeltype
+
 
 def getBoxProc():
 	procmodel = "unknown"
@@ -43,6 +45,7 @@ def getBoxProc():
 		print("[StbHardware] getBoxProc failed!")
 	return procmodel
 
+
 def getHWSerial():
 	hwserial = "unknown"
 	try:
@@ -58,6 +61,7 @@ def getHWSerial():
 		print("[StbHardware] getHWSerial failed!")
 	return hwserial
 
+
 def getBoxRCType():
 	boxrctype = "unknown"
 	try:
@@ -66,6 +70,7 @@ def getBoxRCType():
 	except IOError:
 		print("[StbHardware] getBoxRCType failed!")
 	return boxrctype
+
 
 def getFPVersion():
 	ret = "unknown"
@@ -86,22 +91,24 @@ def getFPVersion():
 		print("[StbHardware] getFPVersion failed!")
 	return ret
 
+
 def setFPWakeuptime(wutime):
 	try:
 		open("/proc/stb/fp/wakeup_time", "w").write(str(wutime))
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ioctl(fp.fileno(), 6, pack('L', wutime)) # set wake up
+			ioctl(fp.fileno(), 6, pack('L', wutime))  # set wake up
 		except IOError:
 			print("[StbHardware] setFPWakeupTime failed!")
+
 
 def setRTCoffset(forsleep=None):
 	import time
 	if time.localtime().tm_isdst == 0:
-		forsleep = 7200+time.timezone
+		forsleep = 7200 + time.timezone
 	else:
-		forsleep = 3600-time.timezone
+		forsleep = 3600 - time.timezone
 
 	t_local = time.localtime(int(time.time()))
 
@@ -112,6 +119,7 @@ def setRTCoffset(forsleep=None):
 	except IOError:
 		print("[StbHardware] setRTCoffset failed!")
 
+
 def setRTCtime(wutime):
 	if path.exists("/proc/stb/fp/rtc_offset"):
 		setRTCoffset()
@@ -120,9 +128,10 @@ def setRTCtime(wutime):
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ioctl(fp.fileno(), 0x101, pack('L', wutime)) # set wake up
+			ioctl(fp.fileno(), 0x101, pack('L', wutime))  # set wake up
 		except IOError:
 			print("[StbHardware] setRTCtime failed!")
+
 
 def getFPWakeuptime():
 	ret = 0
@@ -131,14 +140,16 @@ def getFPWakeuptime():
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
-			ret = unpack('L', ioctl(fp.fileno(), 5, '    '))[0] # get wakeuptime
+			ret = unpack('L', ioctl(fp.fileno(), 5, '    '))[0]  # get wakeuptime
 		except IOError:
 			print("[StbHardware] getFPWakeupTime failed!")
 	return ret
 
+
 wasTimerWakeup = None
 
-def getFPWasTimerWakeup(check = False):
+
+def getFPWasTimerWakeup(check=False):
 	global wasTimerWakeup
 	isError = False
 	if wasTimerWakeup is not None:
@@ -149,7 +160,7 @@ def getFPWasTimerWakeup(check = False):
 	try:
 		wasTimerWakeup = int(open("/proc/stb/fp/was_timer_wakeup", "r").read()) and True or False
 		open("/tmp/was_timer_wakeup.txt", "w").write(str(wasTimerWakeup))
-	except:
+	except (IOError, OSError) as err:
 		try:
 			fp = open("/dev/dbox/fp0")
 			wasTimerWakeup = unpack('B', ioctl(fp.fileno(), 9, ' '))[0] and True or False
@@ -163,12 +174,13 @@ def getFPWasTimerWakeup(check = False):
 		return wasTimerWakeup, isError
 	return wasTimerWakeup
 
+
 def clearFPWasTimerWakeup():
 	try:
 		open("/proc/stb/fp/was_timer_wakeup", "w").write('0')
-	except:
+	except (IOError, OSError) as err:
 		try:
 			fp = open("/dev/dbox/fp0")
 			ioctl(fp.fileno(), 10)
-		except IOError:
+		except (IOError, OSError) as err:
 			print("clearFPWasTimerWakeup failed!")

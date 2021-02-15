@@ -16,17 +16,18 @@ from os import system, listdir, rename, path, mkdir
 from time import sleep
 import six
 
+
 class CronTimers(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		if path.exists('/usr/scripts') and not path.exists('/usr/script'):
 			rename('/usr/scripts', '/usr/script')
 		if not path.exists('/usr/script'):
-			mkdir('/usr/script', 0755)
+			mkdir('/usr/script', 0o755)
 		screentitle = _("Cron manager")
 		title = screentitle
 		Screen.setTitle(self, title)
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self['lab1'] = Label(_("Autostart:"))
 		self['labactive'] = Label(_(_("Active")))
 		self['labdisabled'] = Label(_(_("Disabled")))
@@ -48,7 +49,7 @@ class CronTimers(Screen):
 		self.list = []
 		self['list'] = List(self.list)
 		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"], {'ok': self.info, 'back': self.UninstallCheck, 'red': self.delcron, 'green': self.addtocron, 'yellow': self.CrondStart, 'blue': self.autostart})
-		if not self.selectionChanged in self["list"].onSelectionChanged:
+		if self.selectionChanged not in self["list"].onSelectionChanged:
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = 'cronie'
 		self.onLayoutFinish.append(self.InstallCheck)
@@ -76,11 +77,11 @@ class CronTimers(Screen):
 		self.close()
 
 	def doInstall(self, callback, pkgname):
-		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input = False)
+		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input=False)
 		self.message.setTitle(_('Installing service'))
 		self.Console.ePopen('/usr/bin/opkg install ' + pkgname, callback)
 
-	def installComplete(self,result = None, retval = None, extra_args = None):
+	def installComplete(self, result=None, retval=None, extra_args=None):
 		self.message.close()
 		self.updateList()
 
@@ -103,11 +104,11 @@ class CronTimers(Screen):
 			self.close()
 
 	def doRemove(self, callback, pkgname):
-		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input = False)
+		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input=False)
 		self.message.setTitle(_('Removing service'))
 		self.Console.ePopen('/usr/bin/opkg remove ' + pkgname + ' --force-remove --autoremove', callback)
 
-	def removeComplete(self, result = None, retval = None, extra_args = None):
+	def removeComplete(self, result=None, retval=None, extra_args=None):
 		self.message.close()
 		self.close()
 
@@ -121,9 +122,9 @@ class CronTimers(Screen):
 				name = str(self["list"].getCurrent()[0])
 			else:
 				name = ""
-		except:
+		except Exception:
 			name = ""
-		desc = _("Current status:") + ' ' +self.summary_running
+		desc = _("Current status:") + ' ' + self.summary_running
 		for cb in self.onChangedEntry:
 			cb(name, desc)
 
@@ -133,7 +134,7 @@ class CronTimers(Screen):
 		elif self.my_crond_run:
 			self.Console.ePopen('/etc/init.d/crond stop', self.StartStopCallback)
 
-	def StartStopCallback(self, result = None, retval = None, extra_args = None):
+	def StartStopCallback(self, result=None, retval=None, extra_args=None):
 		sleep(3)
 		self.updateList()
 
@@ -148,7 +149,7 @@ class CronTimers(Screen):
 	def addtocron(self):
 		self.session.openWithCallback(self.updateList, CronTimersConfig)
 
-	def updateList(self, result = None, retval = None, extra_args = None):
+	def updateList(self, result=None, retval=None, extra_args=None):
 		import process
 		p = process.ProcessList()
 		crond_process = str(p.named('crond')).strip('[]')
@@ -187,32 +188,32 @@ class CronTimers(Screen):
 					if parts[1] == '*':
 						try:
 							line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-						except:
+						except Exception:
 							try:
 								line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-							except:
+							except Exception:
 								try:
 									line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-								except:
+								except Exception:
 									try:
 										line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-									except:
+									except Exception:
 										line2 = 'H: 00:' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
 					elif parts[2] == '*' and parts[4] == '*':
 						try:
 							line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-						except:
+						except Exception:
 							try:
 								line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-							except:
+							except Exception:
 								try:
 									line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-								except:
+								except Exception:
 									try:
 										line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-									except:
+									except Exception:
 										line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
@@ -220,16 +221,16 @@ class CronTimers(Screen):
 						if parts[4] == "*":
 							try:
 								line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-							except:
+							except Exception:
 								try:
 									line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-								except:
+								except Exception:
 									try:
 										line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-									except:
+									except Exception:
 										try:
 											line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-										except:
+										except Exception:
 											line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						header = 'W:  '
 						day = ""
@@ -251,16 +252,16 @@ class CronTimers(Screen):
 						if day:
 							try:
 								line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8] + parts[9]
-							except:
+							except Exception:
 								try:
 									line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7] + parts[8]
-								except:
+								except Exception:
 									try:
 										line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6] + parts[7]
-									except:
+									except Exception:
 										try:
 											line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5] + parts[6]
-										except:
+										except Exception:
 											line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t' + parts[5]
 						res = (line2, line)
 						self.list.append(res)
@@ -282,7 +283,7 @@ class CronTimers(Screen):
 			mysel = self['list'].getCurrent()
 			if mysel:
 				myline = mysel[1]
-				open('/etc/cron/crontabs/root.tmp', 'w').writelines([l for l in open('/etc/cron/crontabs/root').readlines() if myline not in l])
+				open('/etc/cron/crontabs/root.tmp', 'w').writelines([x for x in open('/etc/cron/crontabs/root').readlines() if myline not in x])
 				rename('/etc/cron/crontabs/root.tmp', '/etc/cron/crontabs/root')
 				rc = Console().ePopen('crontab /etc/cron/crontabs/root -c /etc/cron/crontabs')
 				self.updateList()
@@ -293,27 +294,29 @@ class CronTimers(Screen):
 			myline = mysel[1]
 			self.session.open(MessageBox, _(myline), MessageBox.TYPE_INFO)
 
+
 config.crontimers = ConfigSubsection()
-config.crontimers.commandtype = NoSave(ConfigSelection(choices = [ ('custom', _("Custom")), ('predefined', _("Predefined")) ]))
+config.crontimers.commandtype = NoSave(ConfigSelection(choices=[('custom', _("Custom")), ('predefined', _("Predefined"))]))
 config.crontimers.cmdtime = NoSave(ConfigClock(default=0))
 config.crontimers.cmdtime.value, mytmpt = ([0, 0], [0, 0])
 config.crontimers.user_command = NoSave(ConfigText(fixed_size=False))
-config.crontimers.runwhen = NoSave(ConfigSelection(default='Daily', choices = [('Hourly', _("Hourly")), ('Daily', _("Daily")), ('Weekly', _("Weekly")), ('Monthly', _("Monthly"))]))
-config.crontimers.dayofweek = NoSave(ConfigSelection(default='Monday', choices = [('Monday', _("Monday")), ('Tuesday', _("Tuesday")), ('Wednesday', _("Wednesday")), ('Thursday', _("Thursday")), ('Friday', _("Friday")), ('Saturday', _("Saturday")), ('Sunday', _("Sunday"))]))
+config.crontimers.runwhen = NoSave(ConfigSelection(default='Daily', choices=[('Hourly', _("Hourly")), ('Daily', _("Daily")), ('Weekly', _("Weekly")), ('Monthly', _("Monthly"))]))
+config.crontimers.dayofweek = NoSave(ConfigSelection(default='Monday', choices=[('Monday', _("Monday")), ('Tuesday', _("Tuesday")), ('Wednesday', _("Wednesday")), ('Thursday', _("Thursday")), ('Friday', _("Friday")), ('Saturday', _("Saturday")), ('Sunday', _("Sunday"))]))
 config.crontimers.dayofmonth = NoSave(ConfigInteger(default=1, limits=(1, 31)))
+
 
 class CronTimersConfig(Screen, ConfigListScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		Screen.setTitle(self, _("Cron Manager"))
 		self.skinName = "Setup"
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
 		self['key_red'] = Label(_("Close"))
 		self['key_green'] = Label(_("Save"))
 		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"],
-		{
+									{
 			'red': self.close,
 			'green': self.checkentry,
 			'back': self.close,
@@ -336,7 +339,7 @@ class CronTimersConfig(Screen, ConfigListScreen):
 				if pkg.find('.sh') >= 0:
 					predefinedlist.append((description, pkg))
 			predefinedlist.sort()
-		config.crontimers.predefined_command = NoSave(ConfigSelection(choices = predefinedlist))
+		config.crontimers.predefined_command = NoSave(ConfigSelection(choices=predefinedlist))
 		self.editListEntry = None
 
 		self.list = []

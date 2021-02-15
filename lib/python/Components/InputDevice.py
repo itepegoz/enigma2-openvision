@@ -20,29 +20,31 @@ model = getBoxType()
 
 # include/uapi/asm-generic/ioctl.h
 # asm-generic/ioctl.h for HAVE_OLDE2_API
-IOC_NRBITS = 8L
-IOC_TYPEBITS = 8L
+IOC_NRBITS = 8
+IOC_TYPEBITS = 8
 
 if SystemInfo["OLDE2API"]:
-	IOC_SIZEBITS = 13L
-	IOC_DIRBITS = 3L
+	IOC_SIZEBITS = 13
+	IOC_DIRBITS = 3
 else:
-	IOC_SIZEBITS = 13L if "mips" in platform.machine() else 14L
-	IOC_DIRBITS = 3L if "mips" in platform.machine() else 2L
+	IOC_SIZEBITS = 13 if "mips" in platform.machine() else 14
+	IOC_DIRBITS = 3 if "mips" in platform.machine() else 2
 
-IOC_NRSHIFT = 0L
-IOC_TYPESHIFT = IOC_NRSHIFT+IOC_NRBITS
-IOC_SIZESHIFT = IOC_TYPESHIFT+IOC_TYPEBITS
-IOC_DIRSHIFT = IOC_SIZESHIFT+IOC_SIZEBITS
+IOC_NRSHIFT = 0
+IOC_TYPESHIFT = IOC_NRSHIFT + IOC_NRBITS
+IOC_SIZESHIFT = IOC_TYPESHIFT + IOC_TYPEBITS
+IOC_DIRSHIFT = IOC_SIZESHIFT + IOC_SIZEBITS
 
-IOC_READ = 2L
+IOC_READ = 2
+
 
 def EVIOCGNAME(length):
-	return (IOC_READ<<IOC_DIRSHIFT)|(length<<IOC_SIZESHIFT)|(0x45<<IOC_TYPESHIFT)|(0x06<<IOC_NRSHIFT)
+	return (IOC_READ << IOC_DIRSHIFT) | (length << IOC_SIZESHIFT) | (0x45 << IOC_TYPESHIFT) | (0x06 << IOC_NRSHIFT)
 
 
 class inputDevices:
 	BLACKLIST = ("dreambox front panel", "cec_input")
+
 	def __init__(self):
 		self.Devices = {}
 		self.currentDevice = ""
@@ -53,7 +55,7 @@ class inputDevices:
 
 		for evdev in devices:
 			try:
-				buffer = "\0"*512
+				buffer = "\0" * 512
 				self.fd = os.open("/dev/input/" + evdev, os.O_RDWR | os.O_NONBLOCK)
 				self.name = ioctl(self.fd, EVIOCGNAME(256), buffer)
 				self.name = self.name[:self.name.find("\0")]
@@ -67,10 +69,9 @@ class inputDevices:
 					self.name = "dreambox advanced remote control (native)"
 				if self.name in self.BLACKLIST:
 					continue
-				self.Devices[evdev] = {'name': self.name, 'type': self.getInputDeviceType(self.name),'enabled': False, 'configuredName': None }
+				self.Devices[evdev] = {'name': self.name, 'type': self.getInputDeviceType(self.name), 'enabled': False, 'configuredName': None}
 				if model.startswith("et"):
 					self.setDefaults(evdev)
-
 
 	def getInputDeviceType(self, name):
 		if "remote control" in str(name).lower():
@@ -93,7 +94,7 @@ class inputDevices:
 		return sorted(self.Devices.iterkeys())
 
 	def setDeviceAttribute(self, device, attribute, value):
-		#print("[InputDevice] setting for device", device, "attribute", attribute, " to value", value)
+		# print("[InputDevice] setting for device", device, "attribute", attribute, " to value", value)
 		if device in self.Devices:
 			self.Devices[device][attribute] = value
 
@@ -105,21 +106,21 @@ class inputDevices:
 
 	def setEnabled(self, device, value):
 		oldval = self.getDeviceAttribute(device, 'enabled')
-		#print("[InputDevice] setEnabled for device %s to %s from %s" % (device,value,oldval))
+		# print("[InputDevice] setEnabled for device %s to %s from %s" % (device,value,oldval))
 		self.setDeviceAttribute(device, 'enabled', value)
 		if oldval is True and value is False:
 			self.setDefaults(device)
 
 	def setName(self, device, value):
-		#print("[InputDevice] setName for device %s to %s" % (device,value))
+		# print("[InputDevice] setName for device %s to %s" % (device,value))
 		self.setDeviceAttribute(device, 'configuredName', value)
 
-	#struct input_event {
-	#	struct timeval time;    -> ignored
-	#	__u16 type;             -> EV_REP (0x14)
-	#	__u16 code;             -> REP_DELAY (0x00) or REP_PERIOD (0x01)
-	#	__s32 value;            -> DEFAULTS: 700(REP_DELAY) or 100(REP_PERIOD)
-	#}; -> size = 16
+	# struct input_event {
+	# 	struct timeval time;    -> ignored
+	# 	__u16 type;             -> EV_REP (0x14)
+	# 	__u16 code;             -> REP_DELAY (0x00) or REP_PERIOD (0x01)
+	# 	__s32 value;            -> DEFAULTS: 700(REP_DELAY) or 100(REP_PERIOD)
+	# }; -> size = 16
 
 	def setDefaults(self, device):
 		print("[InputDevice] setDefaults for device %s" % device)
@@ -131,7 +132,7 @@ class inputDevices:
 		os.write(fd, event_delay)
 		os.close(fd)
 
-	def setRepeat(self, device, value): #REP_PERIOD
+	def setRepeat(self, device, value):  # REP_PERIOD
 		if self.getDeviceAttribute(device, 'enabled'):
 			print("[InputDevice] setRepeat for device %s to %d ms" % (device, value))
 			event = struct.pack('LLHHi', 0, 0, 0x14, 0x01, int(value))
@@ -139,7 +140,7 @@ class inputDevices:
 			os.write(fd, event)
 			os.close(fd)
 
-	def setDelay(self, device, value): #REP_DELAY
+	def setDelay(self, device, value):  # REP_DELAY
 		if self.getDeviceAttribute(device, 'enabled'):
 			print("[InputDevice] setDelay for device %s to %d ms" % (device, value))
 			event = struct.pack('LLHHi', 0, 0, 0x14, 0x00, int(value))
@@ -158,7 +159,7 @@ class InitInputDevices:
 		config.inputDevices = ConfigSubsection()
 		for device in sorted(iInputDevices.Devices.iterkeys()):
 			self.currentDevice = device
-			#print("[InitInputDevices] creating config entry for device: %s -> %s  " % (self.currentDevice, iInputDevices.Devices[device]["name"]))
+			# print("[InitInputDevices] creating config entry for device: %s -> %s  " % (self.currentDevice, iInputDevices.Devices[device]["name"]))
 			self.setupConfigEntries(self.currentDevice)
 			self.remapRemoteControl(self.currentDevice)
 			self.currentDevice = ""
@@ -212,8 +213,8 @@ class InitInputDevices:
 			cmd = "config.inputDevices." + device + ".repeat = ConfigSlider(default=400, increment = 10, limits=(0, 500))"
 		elif model == "azboxhd":
 			cmd = "config.inputDevices." + device + ".repeat = ConfigSlider(default=150, increment = 10, limits=(0, 500))"
-		else:		
-			cmd = "config.inputDevices." + device + ".repeat = ConfigSlider(default=100, increment = 10, limits=(0, 500))"	
+		else:
+			cmd = "config.inputDevices." + device + ".repeat = ConfigSlider(default=100, increment = 10, limits=(0, 500))"
 		exec(cmd)
 		cmd = "config.inputDevices." + device + ".repeat.addNotifier(self.inputDevicesRepeatChanged,config.inputDevices." + device + ".repeat)"
 		exec(cmd)
@@ -279,12 +280,14 @@ class InitInputDevices:
 			print("[InputDevice] RC remap error: Unexpected error opening remote control file '%s'! (%s)" % (filename, err))
 		return domRemote
 
+
 iInputDevices = inputDevices()
 
 
 config.plugins.remotecontroltype = ConfigSubsection()
-config.plugins.remotecontroltype.rctype = ConfigInteger(default = int(getRCType()))
-config.plugins.remotecontroltype.multirc = ConfigYesNo(default = False)
+config.plugins.remotecontroltype.rctype = ConfigInteger(default=int(getRCType()))
+config.plugins.remotecontroltype.multirc = ConfigYesNo(default=False)
+
 
 class RcTypeControl():
 	def __init__(self):
@@ -307,5 +310,6 @@ class RcTypeControl():
 		if self.isSupported:
 			rc = open('/proc/stb/ir/rc/type', 'r').read().strip()
 		return int(rc)
+
 
 iRcTypeControl = RcTypeControl()

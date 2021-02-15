@@ -3,6 +3,7 @@
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
+
 class ValueRange(Converter, object):
 	def __init__(self, arg):
 		Converter.__init__(self, arg)
@@ -12,7 +13,7 @@ class ValueRange(Converter, object):
 	def getBoolean(self):
 		try:
 			sourcevalue = int(self.source.value)
-		except:
+		except BaseException:
 			sourcevalue = self.source.value
 		if self.lower <= self.upper:
 			return self.lower <= sourcevalue <= self.upper

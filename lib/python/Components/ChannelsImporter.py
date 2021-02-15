@@ -3,15 +3,19 @@
 from __future__ import print_function
 from Components.config import config
 
-#for scheduler
+# for scheduler
 from time import mktime, strftime, time, localtime
 from enigma import eTimer
 
-#for downloader
-import os, re, urllib2
+# for downloader
+import os
+import re
+import urllib2
 from enigma import eServiceReference, eDVBDB
 
 autoClientModeTimer = None
+
+
 def autostart():
 	global autoClientModeTimer
 	now = int(time())
@@ -19,15 +23,17 @@ def autostart():
 	if autoClientModeTimer is None:
 		autoClientModeTimer = AutoClientModeTimer()
 
+
 class AutoClientModeTimer:
 	instance = None
+
 	def __init__(self):
 		self.clientmodetimer = eTimer()
 		self.clientmodetimer.callback.append(self.ClientModeonTimer)
 		self.clientmodeactivityTimer = eTimer()
 		self.clientmodeactivityTimer.timeout.get().append(self.clientmodedatedelay)
 		now = int(time())
-		self.doautostartscan() # import at boot time
+		self.doautostartscan()  # import at boot time
 
 		global ClientModeTime
 		if config.clientmode.enableSchedule.value:
@@ -57,34 +63,34 @@ class AutoClientModeTimer:
 		backupclock = config.clientmode.scheduletime.value
 		nowt = time()
 		now = localtime(nowt)
-		if config.clientmode.scheduleRepeatInterval.value.isdigit(): # contains wait time in minutes
+		if config.clientmode.scheduleRepeatInterval.value.isdigit():  # contains wait time in minutes
 			repeatIntervalMinutes = int(config.clientmode.scheduleRepeatInterval.value)
 			return int(mktime((now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min + repeatIntervalMinutes, 0, now.tm_wday, now.tm_yday, now.tm_isdst)))
 		return int(mktime((now.tm_year, now.tm_mon, now.tm_mday, backupclock[0], backupclock[1], 0, now.tm_wday, now.tm_yday, now.tm_isdst)))
 
-	def clientmodedate(self, atLeast = 0):
+	def clientmodedate(self, atLeast=0):
 		self.clientmodetimer.stop()
 		global ClientModeTime
 		ClientModeTime = self.getClientModeTime()
 		now = int(time())
 		if ClientModeTime > 0:
 			if ClientModeTime < now + atLeast:
-				if config.clientmode.scheduleRepeatInterval.value.isdigit(): # contains wait time in minutes
+				if config.clientmode.scheduleRepeatInterval.value.isdigit():  # contains wait time in minutes
 					ClientModeTime = now + (60 * int(config.clientmode.scheduleRepeatInterval.value))
-					while (int(ClientModeTime)-30) < now:
+					while (int(ClientModeTime) - 30) < now:
 						ClientModeTime += 60 * int(config.clientmode.scheduleRepeatInterval.value)
 				elif config.clientmode.scheduleRepeatInterval.value == "daily":
-					ClientModeTime += 24*3600
-					while (int(ClientModeTime)-30) < now:
-						ClientModeTime += 24*3600
+					ClientModeTime += 24 * 3600
+					while (int(ClientModeTime) - 30) < now:
+						ClientModeTime += 24 * 3600
 				elif config.clientmode.scheduleRepeatInterval.value == "weekly":
-					ClientModeTime += 7*24*3600
-					while (int(ClientModeTime)-30) < now:
-						ClientModeTime += 7*24*3600
+					ClientModeTime += 7 * 24 * 3600
+					while (int(ClientModeTime) - 30) < now:
+						ClientModeTime += 7 * 24 * 3600
 				elif config.clientmode.scheduleRepeatInterval.value == "monthly":
-					ClientModeTime += 30*24*3600
-					while (int(ClientModeTime)-30) < now:
-						ClientModeTime += 30*24*3600
+					ClientModeTime += 30 * 24 * 3600
+					while (int(ClientModeTime) - 30) < now:
+						ClientModeTime += 30 * 24 * 3600
 			next = ClientModeTime - now
 			self.clientmodetimer.startLongTimer(next)
 		else:
@@ -135,9 +141,11 @@ class AutoClientModeTimer:
 		else:
 			clientmodetext = ""
 
+
 class ChannelsImporter():
 	DIR_ENIGMA2 = '/etc/enigma2/'
 	DIR_TMP = '/tmp/'
+
 	def __init__(self):
 		self.fetchRemoteBouquets()
 
@@ -173,7 +181,7 @@ class ChannelsImporter():
 		file.close()
 		if len(lines) > 0:
 			for line in lines:
-				result = re.match("^.*FROM BOUQUET \"(.+)\" ORDER BY.*$", line) or re.match("[#]SERVICE[:] (?:[0-9a-f]+[:])+([^:]+[.](?:tv|radio))$", line, re.IGNORECASE)
+				result = re.match("^.*FROM BOUQUET \"(.+)\" ORDER BY.*$", line) or re.match("[  #]SERVICE[:] (?:[0-9a-f]+[:])+([^:]+[.](?:tv|radio))$", line, re.IGNORECASE)
 				if result is None:
 					continue
 				bouquetFilenameList.append(result.group(1))
@@ -293,12 +301,12 @@ class ChannelsImporter():
 				try:
 					lines = open(self.DIR_TMP + filename).readlines()
 					for line in lines:
-						if '#SERVICE' in line and int(line.split()[1].split(":")[1]) & eServiceReference.mustDescent:
-							result = re.match("^.*FROM BOUQUET \"(.+)\" ORDER BY.*$", line) or re.match("[#]SERVICE[:] (?:[0-9a-f]+[:])+([^:]+[.](?:tv|radio))$", line, re.IGNORECASE)
+						if '  #SERVICE' in line and int(line.split()[1].split(":")[1]) & eServiceReference.mustDescent:
+							result = re.match("^.*FROM BOUQUET \"(.+)\" ORDER BY.*$", line) or re.match("[  #]SERVICE[:] (?:[0-9a-f]+[:])+([^:]+[.](?:tv|radio))$", line, re.IGNORECASE)
 							if result is None:
 								continue
 							self.alternatives.append(result.group(1))
-				except:
+				except Exception:
 					pass
 
 	def removeFiles(self, targetdir, target):
@@ -351,5 +359,5 @@ class ChannelsImporter():
 			print('[ChannelsImporter] saveEPGonRemoteReceiver ERROR:', err.reason[0])
 		except urllib2 as err:
 			print('[ChannelsImporter] saveEPGonRemoteReceiver ERROR:', err)
-		except:
+		except Exception:
 			print('[ChannelsImporter] saveEPGonRemoteReceiver undefined error')

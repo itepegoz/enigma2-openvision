@@ -20,123 +20,125 @@ from Components.Label import Label
 import os
 import six
 
+
 class hotkey:
 	functions = None
 	hotkeys = [(_("Red") + " " + _("long"), "red_long", ""),
-		(_("Green") + " " + _("long"), "green_long", ""),
-		(_("Yellow") + " " + _("long"), "yellow_long", "Plugins/Extensions/GraphMultiEPG/1"),
-		(_("Blue") + " " + _("long"), "blue_long", "SoftcamSetup"),
-		("F1", "f1", ""),
-		("F1" + " " + _("long"), "f1_long", ""),
-		("F2", "f2", ""),
-		("F2" + " " + _("long"), "f2_long", ""),
-		("F3", "f3", ""),
-		("F3" + " " + _("long"), "f3_long", ""),
-		("PIP", "f6", ""),
-		("PIP" + " " + _("long"), "f6_long", ""),
-		(_("Red"), "red", ""),
-		(_("Green"), "green", ""),
-		(_("Yellow"), "yellow", ""),
-		(_("Blue"), "blue", ""),
-		("Rec", "rec", ""),
-		("Rec" + " " + _("long"), "rec_long", "Infobar/instantRecord"),
-		("Radio", "radio", ""),
-		("Radio" + " " + _("long"), "radio_long", ""),
-		("TV", "showTv", ""),
-		("TV" + " " + _("long"), "showTv_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or ""),
-		("TV2", "toggleTvRadio", ""),
-		("TV2" + " " + _("long"), "toggleTvRadio_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or ""),
-		("Teletext", "text", ""),
-		("Help", "displayHelp", ""),
-		("Help" + " " + _("long"), "displayHelp_long", ""),
-		("Subtitle", "subtitle", ""),
-		("Subtitle"+ " " + _("long"), "subtitle_long", ""),
-		("Menu", "mainMenu", ""),
-		("Info (EPG)", "info", "Infobar/openEventView"),
-		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
-		("List/Fav/PVR", "list", ""),
-		("List/Fav/PVR" + " " + _("long"), "list_long", "Plugins/Extensions/Kodi/1"),
-		("List/File", "file", ""),
-		("List/File" + " " + _("long"), "file_long", ""),
-		("Back/Recall", "back", ""),
-		("Back/Recall" + " " + _("long"), "back_long", ""),
-		("End", "end", ""),
-		("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
-		("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins"),
-		("Left", "cross_left", ""),
-		("Right", "cross_right", ""),
-		("Up", "cross_up", ""),
-		("Down", "cross_down", ""),
-		("Ok", "ok", ""),
-		("Channel up", "channelup", ""),
-		("Channel down", "channeldown", ""),
-		("Page up", "pageUp", ""),
-		("Page up"	+ " " + _("long"), "pageUp_long", ""),
-		("Page down", "pageDown", ""),
-		("Page down" + " " + _("long"), "pageDown_long", ""),
-		("Next", "next", ""),
-		("Previous", "previous", ""),
-		("Audio", "audio", ""),
-		("Play", "play", ""),
-		("Playpause", "playpause", ""),
-		("Stop", "stop", ""),
-		("Pause", "pause", ""),
-		("Rewind", "rewind", ""),
-		("Fastforward", "fastforward", ""),
-		("Skip back", "skip_back", ""),
-		("Skip forward", "skip_forward", ""),
-		("Activate PiP", "activatePiP", ""),
-		("Activate PiP long", "activatePiP_long", ""),
-		("Timer", "timer", ""),
-		("Timer" + " " + _("long"), "timer_long", ""),
-		("Playlist", "playlist", ""),
-		("Timeshift", "timeshift", ""),
-		("Search", "search", ""),
-		("Search" + " " + _("long"), "search_long", ""),
-		("Slow", "slow", ""),
-		("Mark/Portal/Playlist", "mark", ""),
-		("Mark/Portal/Playlist" + " " + _("long"), "mark_long", ""),
-		("Sleep", "sleep", ""),
-		("Sleep" + " " + _("long"), "sleep_long", ""),
-		("Context", "contextmenu", ""),
-		("Context" + " " + _("long"), "contextmenu_long", ""),
-		("Video Mode", "vmode", ""),
-		("Video Mode" + " " + _("long"), "vmode_long", ""),
-		("Home", "home", ""),
-		("Power", "power", "Module/Screens.Standby/Standby"),
-		("Power" + " " + _("long"), "power_long", "Menu/shutdown"),
-		("HDMIin", "HDMIin", "Infobar/HDMIIn"),
-		("HDMIin" + " " + _("long"), "HDMIin_long", ""),
-		("Media", "media", ""),
-		("Media" + " " + _("long"), "media_long", ""),
-		("Open", "open", ""),
-		("Open" + " " + _("long"), "open_long", ""),
-		("Option", "option", ""),
-		("Option" + " " + _("long"), "option_long", ""),
-		("Favorites", "favorites", "Infobar/openFavouritesList"),
-		("Favorites" + " " + _("long"), "favorites_long", ""),
-		("Mouse", "mouse", ""),
-		("Mouse" + " " + _("long"), "mouse_long", ""),
-		("Directory", "directory", ""),
-		("Directory" + " " + _("long"), "directory_long", ""),
-		("Sat", "sat", ""),
-		("Sat" + " " + _("long"), "sat_long", ""),
-		("Prov", "prov", ""),
-		("Prov" + " " + _("long"), "prov_long", ""),
-		("LAN", "lan", ""),
-		("LAN" + " " + _("long"), "lan_long", ""),
-		("PC", "pc", ""),
-		("PC" + " " + _("long"), "pc_long", ""),
-		("Homepage", "homepage", ""),
-		("Homepage" + " " + _("long"), "homepage_long", ""),
-		("EjectCD", "ejectcd", ""),
-		("EjectCD" + " " + _("long"), "ejectcd_long", ""),
-		("VOD", "vod", ""),
-		("VOD" + " " + _("long"), "vod_long", ""),
-		("WWW Portal", "www", ""),
-		("WWW Portal" + " " + _("long"), "www_long", ""),
-		("ZOOM", "zoom", ""),
-		("ZOOM" + " " + _("long"), "zoom_long", "")]
+			   (_("Green") + " " + _("long"), "green_long", ""),
+			   (_("Yellow") + " " + _("long"), "yellow_long", "Plugins/Extensions/GraphMultiEPG/1"),
+			   (_("Blue") + " " + _("long"), "blue_long", "SoftcamSetup"),
+			   ("F1", "f1", ""),
+			   ("F1" + " " + _("long"), "f1_long", ""),
+			   ("F2", "f2", ""),
+			   ("F2" + " " + _("long"), "f2_long", ""),
+			   ("F3", "f3", ""),
+			   ("F3" + " " + _("long"), "f3_long", ""),
+			   ("PIP", "f6", ""),
+			   ("PIP" + " " + _("long"), "f6_long", ""),
+			   (_("Red"), "red", ""),
+			   (_("Green"), "green", ""),
+			   (_("Yellow"), "yellow", ""),
+			   (_("Blue"), "blue", ""),
+			   ("Rec", "rec", ""),
+			   ("Rec" + " " + _("long"), "rec_long", "Infobar/instantRecord"),
+			   ("Radio", "radio", ""),
+			   ("Radio" + " " + _("long"), "radio_long", ""),
+			   ("TV", "showTv", ""),
+			   ("TV" + " " + _("long"), "showTv_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or ""),
+			   ("TV2", "toggleTvRadio", ""),
+			   ("TV2" + " " + _("long"), "toggleTvRadio_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or ""),
+			   ("Teletext", "text", ""),
+			   ("Help", "displayHelp", ""),
+			   ("Help" + " " + _("long"), "displayHelp_long", ""),
+			   ("Subtitle", "subtitle", ""),
+			   ("Subtitle" + " " + _("long"), "subtitle_long", ""),
+			   ("Menu", "mainMenu", ""),
+			   ("Info (EPG)", "info", "Infobar/openEventView"),
+			   ("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+			   ("List/Fav/PVR", "list", ""),
+			   ("List/Fav/PVR" + " " + _("long"), "list_long", "Plugins/Extensions/Kodi/1"),
+			   ("List/File", "file", ""),
+			   ("List/File" + " " + _("long"), "file_long", ""),
+			   ("Back/Recall", "back", ""),
+			   ("Back/Recall" + " " + _("long"), "back_long", ""),
+			   ("End", "end", ""),
+			   ("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
+			   ("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins"),
+			   ("Left", "cross_left", ""),
+			   ("Right", "cross_right", ""),
+			   ("Up", "cross_up", ""),
+			   ("Down", "cross_down", ""),
+			   ("Ok", "ok", ""),
+			   ("Channel up", "channelup", ""),
+			   ("Channel down", "channeldown", ""),
+			   ("Page up", "pageUp", ""),
+			   ("Page up" + " " + _("long"), "pageUp_long", ""),
+			   ("Page down", "pageDown", ""),
+			   ("Page down" + " " + _("long"), "pageDown_long", ""),
+			   ("Next", "next", ""),
+			   ("Previous", "previous", ""),
+			   ("Audio", "audio", ""),
+			   ("Play", "play", ""),
+			   ("Playpause", "playpause", ""),
+			   ("Stop", "stop", ""),
+			   ("Pause", "pause", ""),
+			   ("Rewind", "rewind", ""),
+			   ("Fastforward", "fastforward", ""),
+			   ("Skip back", "skip_back", ""),
+			   ("Skip forward", "skip_forward", ""),
+			   ("Activate PiP", "activatePiP", ""),
+			   ("Activate PiP long", "activatePiP_long", ""),
+			   ("Timer", "timer", ""),
+			   ("Timer" + " " + _("long"), "timer_long", ""),
+			   ("Playlist", "playlist", ""),
+			   ("Timeshift", "timeshift", ""),
+			   ("Search", "search", ""),
+			   ("Search" + " " + _("long"), "search_long", ""),
+			   ("Slow", "slow", ""),
+			   ("Mark/Portal/Playlist", "mark", ""),
+			   ("Mark/Portal/Playlist" + " " + _("long"), "mark_long", ""),
+			   ("Sleep", "sleep", ""),
+			   ("Sleep" + " " + _("long"), "sleep_long", ""),
+			   ("Context", "contextmenu", ""),
+			   ("Context" + " " + _("long"), "contextmenu_long", ""),
+			   ("Video Mode", "vmode", ""),
+			   ("Video Mode" + " " + _("long"), "vmode_long", ""),
+			   ("Home", "home", ""),
+			   ("Power", "power", "Module/Screens.Standby/Standby"),
+			   ("Power" + " " + _("long"), "power_long", "Menu/shutdown"),
+			   ("HDMIin", "HDMIin", "Infobar/HDMIIn"),
+			   ("HDMIin" + " " + _("long"), "HDMIin_long", ""),
+			   ("Media", "media", ""),
+			   ("Media" + " " + _("long"), "media_long", ""),
+			   ("Open", "open", ""),
+			   ("Open" + " " + _("long"), "open_long", ""),
+			   ("Option", "option", ""),
+			   ("Option" + " " + _("long"), "option_long", ""),
+			   ("Favorites", "favorites", "Infobar/openFavouritesList"),
+			   ("Favorites" + " " + _("long"), "favorites_long", ""),
+			   ("Mouse", "mouse", ""),
+			   ("Mouse" + " " + _("long"), "mouse_long", ""),
+			   ("Directory", "directory", ""),
+			   ("Directory" + " " + _("long"), "directory_long", ""),
+			   ("Sat", "sat", ""),
+			   ("Sat" + " " + _("long"), "sat_long", ""),
+			   ("Prov", "prov", ""),
+			   ("Prov" + " " + _("long"), "prov_long", ""),
+			   ("LAN", "lan", ""),
+			   ("LAN" + " " + _("long"), "lan_long", ""),
+			   ("PC", "pc", ""),
+			   ("PC" + " " + _("long"), "pc_long", ""),
+			   ("Homepage", "homepage", ""),
+			   ("Homepage" + " " + _("long"), "homepage_long", ""),
+			   ("EjectCD", "ejectcd", ""),
+			   ("EjectCD" + " " + _("long"), "ejectcd_long", ""),
+			   ("VOD", "vod", ""),
+			   ("VOD" + " " + _("long"), "vod_long", ""),
+			   ("WWW Portal", "www", ""),
+			   ("WWW Portal" + " " + _("long"), "www_long", ""),
+			   ("ZOOM", "zoom", ""),
+			   ("ZOOM" + " " + _("long"), "zoom_long", "")]
+
 
 def getHotkeyFunctions():
 	hotkey.functions = []
@@ -274,13 +276,16 @@ def getHotkeyFunctions():
 			x = x[:-3]
 			hotkey.functions.append((_("Shellscript") + " " + x, "Shellscript/" + x, "Shellscripts"))
 
+
 config.misc.hotkey = ConfigSubsection()
 config.misc.hotkey.additional_keys = ConfigYesNo(default=False)
 for x in hotkey.hotkeys:
 	exec("config.misc.hotkey.%s = ConfigText(default='%s')" % x[1:])
 
+
 class HotkeySetup(Screen):
 	ALLOW_SUSPEND = False
+
 	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
 		self.session = session
@@ -293,7 +298,7 @@ class HotkeySetup(Screen):
 		self["list"] = ChoiceList(list=self.list)
 		self["choosen"] = ChoiceList(list=[])
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "MenuActions"],
-		{
+									{
 			"ok": self.keyOk,
 			"cancel": self.close,
 			"red": self.close,
@@ -304,7 +309,7 @@ class HotkeySetup(Screen):
 			"menu": boundFunction(self.close, True),
 		}, -1)
 		self["NumberActions"] = NumberActionMap(["NumberActions"],
-		{
+												{
 			"0": self.keyNumberGlobal
 		})
 		self["HotkeyButtonActions"] = hotkeyActionMap(["HotkeyActions"], dict((x[1], self.hotkeyGlobal) for x in hotkey.hotkeys))
@@ -373,6 +378,7 @@ class HotkeySetup(Screen):
 			self["choosen"].setList(selected)
 		self["description"].setText(_("Press or select button and then press 'OK' for attach next function or edit attached.") if len(selected) else _("Press or select button and then press 'OK' for attach function."))
 
+
 class HotkeySetupSelect(Screen):
 	def __init__(self, session, key, args=None):
 		Screen.__init__(self, session)
@@ -407,7 +413,7 @@ class HotkeySetupSelect(Screen):
 		self["choosen"] = ChoiceList(list=self.selected, selection=0)
 		self["list"] = ChoiceList(list=self.getFunctionList(), selection=0)
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "KeyboardInputActions", "MenuActions"],
-		{
+									{
 			"ok": self.keyOk,
 			"cancel": self.cancel,
 			"red": self.cancel,
@@ -526,7 +532,7 @@ class HotkeySetupSelect(Screen):
 	def zaptoCallback(self, *args):
 		if args:
 			currentSelected = self["list"].l.getCurrentSelection()[:]
-			currentSelected[1]=currentSelected[1][:-1] + (currentSelected[0][0] + " " + ServiceReference(args[0]).getServiceName(),)
+			currentSelected[1] = currentSelected[1][:-1] + (currentSelected[0][0] + " " + ServiceReference(args[0]).getServiceName(),)
 			self.selected.append([(currentSelected[0][0], currentSelected[0][1] + "/" + args[0].toString()), currentSelected[1]])
 
 	def keyLeft(self):
@@ -574,6 +580,7 @@ class HotkeySetupSelect(Screen):
 	def cancelCallback(self, answer):
 		answer and self.close(None)
 
+
 class hotkeyActionMap(ActionMap):
 	def action(self, contexts, action):
 		if action in tuple(x[1] for x in hotkey.hotkeys) and action in self.actions:
@@ -583,6 +590,7 @@ class hotkeyActionMap(ActionMap):
 			return 1
 		else:
 			return ActionMap.action(self, contexts, action)
+
 
 class helpableHotkeyActionMap(HelpableActionMap):
 	def action(self, contexts, action):
@@ -594,12 +602,13 @@ class helpableHotkeyActionMap(HelpableActionMap):
 		else:
 			return ActionMap.action(self, contexts, action)
 
+
 class InfoBarHotkey():
 	def __init__(self):
 		if not hotkey.functions:
 			getHotkeyFunctions()
 		self["HotkeyButtonActions"] = helpableHotkeyActionMap(self, ["HotkeyActions"],
-			dict((x[1], (self.hotkeyGlobal, boundFunction(self.getHelpText, x[1]))) for x in hotkey.hotkeys), -10)
+															  dict((x[1], (self.hotkeyGlobal, boundFunction(self.getHelpText, x[1]))) for x in hotkey.hotkeys), -10)
 
 	def getKeyFunctions(self, key):
 		if key in ("play", "playpause", "Stop", "stop", "pause", "rewind", "next", "previous", "fastforward", "skip_back", "skip_forward") and (self.__class__.__name__ == "MoviePlayer" or hasattr(self, "timeshiftActivated") and self.timeshiftActivated()):
@@ -680,7 +689,7 @@ class InfoBarHotkey():
 			elif selected[0] == "Module":
 				try:
 					exec("from %s import %s" % (selected[1], selected[2]))
-					exec("self.session.open(%s)" %	",".join(selected[2:]))
+					exec("self.session.open(%s)" % ",".join(selected[2:]))
 				except Exception as e:
 					print("[Hotkey] error during executing module %s, screen %s, %s" % (selected[1], selected[2], e))
 					import traceback
@@ -696,7 +705,7 @@ class InfoBarHotkey():
 					self.servicelist.history = []
 					self.pipShown() and self.showPiP()
 				self.servicelist.servicelist.setCurrent(eServiceReference("/".join(selected[1:])))
-				self.servicelist.zap(enable_pipzap = True)
+				self.servicelist.zap(enable_pipzap=True)
 				if hasattr(self, "lastservice"):
 					self.lastservice = eServiceReference("/".join(selected[1:]))
 					self.close()

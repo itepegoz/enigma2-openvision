@@ -3,6 +3,7 @@
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
+
 class TextToUpper(Converter, object):
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -10,6 +11,6 @@ class TextToUpper(Converter, object):
 
 	@cached
 	def getText(self):
-		return  self.source.text.upper()
+		return self.source.text.upper()
 
 	text = property(getText)

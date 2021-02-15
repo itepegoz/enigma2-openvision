@@ -5,6 +5,7 @@ from enigma import iServiceInformation, iPlayableService, iPlayableServicePtr, e
 from ServiceReference import resolveAlternate
 from Components.Element import cached
 
+
 class ServiceName(Converter, object):
 	NAME = 0
 	PROVIDER = 1
@@ -32,7 +33,7 @@ class ServiceName(Converter, object):
 		if isinstance(service, iPlayableServicePtr):
 			info = service and service.info()
 			ref = None
-		else: # reference
+		else:  # reference
 			info = service and self.source.info
 			ref = service
 		if not info:

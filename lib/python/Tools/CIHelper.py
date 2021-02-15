@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from xml.etree.cElementTree import parse
-from enigma import eDVBCIInterfaces, eDVBCI_UI, eEnv, eServiceCenter, eServiceReference, getBestPlayableServiceReference, iRecordableService 
+from enigma import eDVBCIInterfaces, eDVBCI_UI, eEnv, eServiceCenter, eServiceReference, getBestPlayableServiceReference, iRecordableService
 from Components.SystemInfo import SystemInfo
 from Components.config import config
 import NavigationInstance
 import os
+
 
 class CIHelper:
 
@@ -21,9 +22,10 @@ class CIHelper:
 		NUM_CI = SystemInfo["CommonInterface"]
 		if NUM_CI and NUM_CI > 0:
 			self.CI_ASSIGNMENT_LIST = []
+
 			def getValue(definitions, default):
 				Len = len(definitions)
-				return Len > 0 and definitions[Len-1].text or default
+				return Len > 0 and definitions[Len - 1].text or default
 
 			for ci in range(NUM_CI):
 				filename = eEnv.resolve("${sysconfdir}/enigma2/ci") + str(ci) + ".xml"
@@ -64,18 +66,18 @@ class CIHelper:
 
 						if read_slot is not False and (read_services or read_providers or usingcaid):
 							self.CI_ASSIGNMENT_LIST.append((int(read_slot), (read_services, read_providers, usingcaid)))
-				except:
+				except Exception:
 					print("[CIHelper] CI_ASSIGNMENT %d ERROR parsing xml..." % ci)
 					try:
 						os.remove(filename)
-					except:
+					except Exception:
 						print("[CIHelper] CI_ASSIGNMENT %d ERROR remove damaged xml..." % ci)
 			if self.CI_ASSIGNMENT_LIST:
 				for item in self.CI_ASSIGNMENT_LIST:
 					try:
 						eDVBCIInterfaces.getInstance().setDescrambleRules(item[0], item[1])
 						print("[CIHelper] CI_ASSIGNMENT %d activate with following settings" % item[0])
-					except:
+					except Exception:
 						print("[CIHelper] CI_ASSIGNMENT %d ERROR setting DescrambleRules" % item[0])
 
 	def ciRecordEvent(self, service, event):
@@ -111,7 +113,7 @@ class CIHelper:
 				refstr = '1:7:0:0:0:0:0:0:0:0:(provider == "%s") && (type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 31) || (type == 134) || (type == 195) ORDER BY name:%s' % (x, x)
 				myref = eServiceReference(refstr)
 				servicelist = serviceHandler.list(myref)
-				if not servicelist is None:
+				if servicelist is not None:
 					while True:
 						service = servicelist.getNext()
 						if not service.valid():
@@ -119,7 +121,7 @@ class CIHelper:
 						provider_services_refs.append(service.toString())
 		return provider_services_refs
 
-	def ServiceIsAssigned(self, ref, timer=None): 
+	def ServiceIsAssigned(self, ref, timer=None):
 		if self.CI_ASSIGNMENT_SERVICES_LIST is not None:
 			if self.CI_RECORDS_LIST is None and NavigationInstance.instance and hasattr(NavigationInstance.instance, "RecordTimer") and hasattr(NavigationInstance.instance, "record_event"):
 				NavigationInstance.instance.record_event.append(self.ciRecordEvent)
@@ -188,7 +190,9 @@ class CIHelper:
 				return 0
 		return 1
 
+
 cihelper = CIHelper()
+
 
 def isPlayable(service):
 	ret = cihelper.isPlayable(service)

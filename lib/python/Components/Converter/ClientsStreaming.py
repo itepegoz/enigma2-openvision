@@ -8,6 +8,7 @@ from enigma import eStreamServer
 from ServiceReference import ServiceReference
 import socket
 
+
 class ClientsStreaming(Converter, Poll, object):
 	UNKNOWN = -1
 	REF = 0
@@ -84,8 +85,8 @@ class ClientsStreaming(Converter, Poll, object):
 			if self.type == self.INFO_RESOLVE or self.type == self.INFO_RESOLVE_SHORT:
 				try:
 					raw = socket.gethostbyaddr(ip)
-					ip  = raw[0]
-				except:
+					ip = raw[0]
+				except BaseException:
 					pass
 
 				if self.type == self.INFO_RESOLVE_SHORT:

@@ -5,13 +5,14 @@ from Components.Element import cached
 from enigma import iRecordableService
 from Components.SystemInfo import SystemInfo
 
+
 class RecordState(Source):
 	def __init__(self, session):
 		Source.__init__(self)
 		self.records_running = 0
 		self.session = session
 		session.nav.record_event.append(self.gotRecordEvent)
-		self.gotRecordEvent(None, None) # get initial state
+		self.gotRecordEvent(None, None)  # get initial state
 
 	def gotRecordEvent(self, service, event):
 		prev_records = self.records_running

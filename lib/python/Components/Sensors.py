@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from Components.FanControl import fancontrol
 
+
 class Sensors:
 	# (type, name, unit, directory)
 	TYPE_TEMPERATURE = 0
@@ -13,7 +14,7 @@ class Sensors:
 		self.sensors_list = []
 		self.addSensors()
 
-	def getSensorsCount(self, type = None):
+	def getSensorsCount(self, type=None):
 		if type is None:
 			return len(self.sensors_list)
 		count = 0
@@ -23,7 +24,7 @@ class Sensors:
 		return count
 
 	# returns a list of sensorids of type "type"
-	def getSensorsList(self, type = None):
+	def getSensorsList(self, type=None):
 		if type is None:
 			return range(len(self.sensors_list))
 		list = []
@@ -31,7 +32,6 @@ class Sensors:
 			if self.sensors_list[sensorid][0] == type:
 				list.append(sensorid)
 		return list
-
 
 	def getSensorType(self, sensorid):
 		return self.sensors_list[sensorid][0]
@@ -62,5 +62,6 @@ class Sensors:
 		for fanid in range(fancontrol.getFanCount()):
 			if fancontrol.hasRPMSensor(fanid):
 				self.sensors_list.append((self.TYPE_FAN_RPM, _("Fan %d") % (fanid + 1), "rpm", fanid))
+
 
 sensors = Sensors()

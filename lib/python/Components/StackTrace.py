@@ -8,6 +8,7 @@ from traceback import extract_stack
 from time import sleep
 from Components.config import config
 
+
 class StackTracePrinter(Thread):
 	@classmethod
 	def getInstance(self):
@@ -29,7 +30,7 @@ class StackTracePrinter(Thread):
 			self.start()
 
 	def run(self):
-		while (self.__running == True):
+		while (self.__running is True):
 			if (os.path.isfile("/tmp/doPythonStackTrace")):
 				os.remove("/tmp/doPythonStackTrace")
 				if config.crash.pystackonspinner.value:

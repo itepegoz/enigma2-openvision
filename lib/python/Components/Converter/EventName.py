@@ -9,6 +9,7 @@ from Components.config import config
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
 from time import localtime, mktime, strftime
 
+
 class ETSIClassifications(dict):
 	def shortRating(self, age):
 		if age == 0:
@@ -52,14 +53,14 @@ class AusClassifications(dict):
 	}
 	IMAGES = {
 		"": "ratings/blank.png",
-		"P": "ratings/AUS-P.png",
-		"C": "ratings/AUS-C.png",
-		"G": "ratings/AUS-G.png",
-		"PG": "ratings/AUS-PG.png",
-		"M": "ratings/AUS-M.png",
-		"MA": "ratings/AUS-MA.png",
-		"AV": "ratings/AUS-AV.png",
-		"R": "ratings/AUS-R.png"
+			"P": "ratings/AUS-P.png",
+			"C": "ratings/AUS-C.png",
+			"G": "ratings/AUS-G.png",
+			"PG": "ratings/AUS-PG.png",
+			"M": "ratings/AUS-M.png",
+			"MA": "ratings/AUS-MA.png",
+			"AV": "ratings/AUS-AV.png",
+			"R": "ratings/AUS-R.png"
 	}
 
 	def __init__(self):
@@ -295,7 +296,7 @@ class EventName(Converter, object):
 							return self.trimText(self.list[2][1])
 						elif self.type == self.THIRD_DESCRIPTION and (self.list[2][2] or self.list[2][3]):
 							return self.formatDescription(self.list[2][2], self.list[2][3])
-			except:
+			except BaseException:
 				# Failed to return any EPG data.
 				if self.type == self.NAME_NEXT:
 					return pgettext("now/next: 'next' event label", "Next") + ": " + self.trimText(event.getEventName())

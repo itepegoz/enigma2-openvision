@@ -5,6 +5,7 @@ from enigma import eLabel, eTimer
 from Components.VariableText import VariableText
 from Components.config import config
 
+
 class EmptyEpg(VariableText, Renderer):
 
 	def __init__(self):
@@ -14,12 +15,12 @@ class EmptyEpg(VariableText, Renderer):
 		self.fillTimer = eTimer()
 		try:
 			self.fillTimer.timeout.get().append(self.__fillText)
-		except:
+		except BaseException:
 			self.fillTimer_conn = self.fillTimer.timeout.connect(self.__fillText)
 		self.backText = ""
 
 	def applySkin(self, desktop, parent):
-		attribs = [ ]
+		attribs = []
 		for (attrib, value) in self.skinAttributes:
 			if attrib == "size":
 				self.sizeX = int(value.strip().split(",")[0])
@@ -54,8 +55,10 @@ class EmptyEpg(VariableText, Renderer):
 				if self.backText != self.text:
 					self.backText = self.text
 					ena = True
-					try: ena = config.plugins.setupGlass16.par30.value
-					except: pass
+					try:
+						ena = config.plugins.setupGlass16.par30.value
+					except BaseException:
+						pass
 					if ena:
 						self.text = "_"
 						self.endPoint = len(self.backText)

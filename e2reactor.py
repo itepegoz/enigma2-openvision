@@ -10,12 +10,14 @@ Maintainer: U{Felix Domke<mailto:tmbinc@elitedvb.net>}
 """
 
 # System imports
-import select, errno, sys
+import select
+import errno
+import sys
 
 # Twisted imports
 from twisted.python import log, failure
 from twisted.internet import main, posixbase, error
-#from twisted.internet.pollreactor import PollReactor, poller
+# from twisted.internet.pollreactor import PollReactor, poller
 
 from enigma import getApplication
 
@@ -26,25 +28,28 @@ selectables = {}
 
 POLL_DISCONNECTED = (select.POLLHUP | select.POLLERR | select.POLLNVAL)
 
+
 class E2SharedPoll:
 	def __init__(self):
-		self.dict = { }
+		self.dict = {}
 		self.eApp = getApplication()
 
-	def register(self, fd, eventmask = select.POLLIN | select.POLLERR | select.POLLOUT):
+	def register(self, fd, eventmask=select.POLLIN | select.POLLERR | select.POLLOUT):
 		self.dict[fd] = eventmask
 
 	def unregister(self, fd):
 		del self.dict[fd]
 
-	def poll(self, timeout = None):
+	def poll(self, timeout=None):
 		try:
 			r = self.eApp.poll(timeout, self.dict)
 		except KeyboardInterrupt:
 			return None
 		return r
 
+
 poller = E2SharedPoll()
+
 
 class PollReactor(posixbase.PosixReactorBase):
 	"""A reactor that uses poll(2)."""
@@ -67,7 +72,6 @@ class PollReactor(posixbase.PosixReactorBase):
 			if fd in selectables:
 				del selectables[fd]
 
-
 		poller.eApp.interruptPoll()
 
 	def _dictRemove(self, selectable, mdict):
@@ -77,7 +81,7 @@ class PollReactor(posixbase.PosixReactorBase):
 			# make sure the fd is actually real.  In some situations we can get
 			# -1 here.
 			mdict[fd]
-		except:
+		except Exception:
 			# the hard way: necessary because fileno() may disappear at any
 			# moment, thanks to python's underlying sockets impl
 			for fd, fdes in selectables.items():
@@ -97,7 +101,7 @@ class PollReactor(posixbase.PosixReactorBase):
 		fd = reader.fileno()
 		if fd not in reads:
 			selectables[fd] = reader
-			reads[fd] =  1
+			reads[fd] = 1
 			self._updateRegistration(fd)
 
 	def addWriter(self, writer, writes=writes, selectables=selectables):
@@ -106,7 +110,7 @@ class PollReactor(posixbase.PosixReactorBase):
 		fd = writer.fileno()
 		if fd not in writes:
 			selectables[fd] = writer
-			writes[fd] =  1
+			writes[fd] = 1
 			self._updateRegistration(fd)
 
 	def removeReader(self, reader, reads=reads):
@@ -136,31 +140,31 @@ class PollReactor(posixbase.PosixReactorBase):
 		return result
 
 	def doPoll(self, timeout,
-			reads=reads,
-			writes=writes,
-			selectables=selectables,
-			select=select,
-			log=log,
-			POLLIN=select.POLLIN,
-			POLLOUT=select.POLLOUT):
+			   reads=reads,
+			   writes=writes,
+			   selectables=selectables,
+			   select=select,
+			   log=log,
+			   POLLIN=select.POLLIN,
+			   POLLOUT=select.POLLOUT):
 		"""Poll the poller for new events."""
 
 		if timeout is not None:
-			timeout = int(timeout * 1000) # convert seconds to milliseconds
+			timeout = int(timeout * 1000)  # convert seconds to milliseconds
 
 		try:
-			l = poller.poll(timeout)
-			if l is None:
+			pol = poller.poll(timeout)
+			if pol is None:
 				if self.running:
 					self.stop()
-				l = [ ]
+				pol = []
 		except select.error as e:
 			if e[0] == errno.EINTR:
 				return
 			else:
 				raise
 		_drdw = self._doReadOrWrite
-		for fd, event in l:
+		for fd, event in pol:
 			try:
 				selectable = selectables[fd]
 			except KeyError:
@@ -172,10 +176,10 @@ class PollReactor(posixbase.PosixReactorBase):
 	doIteration = doPoll
 
 	def _doReadOrWrite(self, selectable, fd, event, POLLIN, POLLOUT, log,
-		faildict={
-			error.ConnectionDone: failure.Failure(error.ConnectionDone()),
-			error.ConnectionLost: failure.Failure(error.ConnectionLost())
-		}):
+					   faildict={
+						   error.ConnectionDone: failure.Failure(error.ConnectionDone()),
+						   error.ConnectionLost: failure.Failure(error.ConnectionLost())
+					   }):
 		why = None
 		inRead = False
 		if event & POLL_DISCONNECTED and not (event & POLLIN):
@@ -197,7 +201,7 @@ class PollReactor(posixbase.PosixReactorBase):
 					why = sys.exc_info()[1]
 				else:
 					why = None
-			except:
+			except Exception:
 				log.deferr()
 				why = sys.exc_info()[1]
 		if why:
@@ -210,10 +214,12 @@ class PollReactor(posixbase.PosixReactorBase):
 		poller.eApp.interruptPoll()
 		return posixbase.PosixReactorBase.callLater(self, *args, **kwargs)
 
+
 def install():
 	"""Install the poll() reactor."""
 
 	p = PollReactor()
 	main.installReactor(p)
+
 
 __all__ = ["PollReactor", "install"]

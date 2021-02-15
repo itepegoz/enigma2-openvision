@@ -4,6 +4,7 @@ from Components.Converter.Converter import Converter
 from Components.Element import cached
 from Components.Converter.Poll import Poll
 
+
 class VtiTempFan(Poll, Converter, object):
 	TEMPINFO = 1
 	FANINFO = 2
@@ -41,7 +42,7 @@ class VtiTempFan(Poll, Converter, object):
 			unit = open("/proc/stb/sensors/temp0/unit", "rb").readline().strip()
 			tempinfo = 'TEMP: ' + str(temp) + ' \xc2\xb0' + str(unit)
 			return tempinfo
-		except:
+		except BaseException:
 			pass
 
 	def fanfile(self):
@@ -50,7 +51,7 @@ class VtiTempFan(Poll, Converter, object):
 			fan = open("/proc/stb/fp/fan_speed", "rb").readline().strip()
 			faninfo = 'FAN: ' + str(fan)
 			return faninfo
-		except:
+		except BaseException:
 			pass
 
 	def changed(self, what):

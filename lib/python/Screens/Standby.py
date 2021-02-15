@@ -40,6 +40,7 @@ QUIT_IMAGE_RESTORE = 43
 QUIT_UPGRADE_FPANEL = 44
 QUIT_WOL = 45
 
+
 def isInfoBarInstance():
 	global infoBarInstance
 	if infoBarInstance is None:
@@ -47,6 +48,7 @@ def isInfoBarInstance():
 		if InfoBar.instance:
 			infoBarInstance = InfoBar.instance
 	return infoBarInstance
+
 
 def checkTimeshiftRunning():
 	infobar_instance = isInfoBarInstance()
@@ -65,8 +67,8 @@ class StandbyScreen(Screen):
 		if os.path.exists("/usr/script/standby_enter.sh"):
 			Console().ePopen("/usr/script/standby_enter.sh")
 
-		self["actions"] = ActionMap( [ "StandbyActions" ],
-		{
+		self["actions"] = ActionMap(["StandbyActions"],
+									{
 			"power": self.Power,
 			"discrete_on": self.Power
 		}, -1)
@@ -98,7 +100,7 @@ class StandbyScreen(Screen):
 				self.paused_action = hasattr(self.paused_service, "seekstate") and hasattr(self.paused_service, "SEEK_STATE_PLAY") and self.paused_service.seekstate == self.paused_service.SEEK_STATE_PLAY
 				self.paused_action and self.paused_service.pauseService()
 		if not self.paused_service:
-			self.timeHandler =  eDVBLocalTimeHandler.getInstance()
+			self.timeHandler = eDVBLocalTimeHandler.getInstance()
 			if self.timeHandler.ready():
 				if self.session.nav.getCurrentlyPlayingServiceOrGroup():
 					self.stopService()
@@ -119,17 +121,17 @@ class StandbyScreen(Screen):
 		if SystemInfo["HiSilicon"]:
 			try:
 				open("/proc/stb/hdmi/output", "w").write("off")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		if SystemInfo["AmlogicFamily"]:
 			try:
 				open("/sys/class/leds/led-sys/brightness", "w").write("0")
-			except:
+			except (IOError, OSError) as err:
 				pass
 			try:
 				open("/sys/class/cec/cmd", "w").write("0f 36")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
@@ -193,17 +195,17 @@ class StandbyScreen(Screen):
 		if SystemInfo["HiSilicon"]:
 			try:
 				open("/proc/stb/hdmi/output", "w").write("on")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 		if SystemInfo["AmlogicFamily"]:
 			try:
 				open("/sys/class/leds/led-sys/brightness", "w").write("1")
-			except:
+			except (IOError, OSError) as err:
 				pass
 			try:
 				open("/sys/class/cec/cmd", "w").write("10 04")
-			except:
+			except (IOError, OSError) as err:
 				pass
 
 	def setMute(self):
@@ -224,15 +226,15 @@ class StandbyScreen(Screen):
 	def standbyTimeout(self):
 		if config.usage.standby_to_shutdown_timer_blocktime.value:
 			curtime = localtime(time())
-			if curtime.tm_year > 1970: #check if the current time is valid
+			if curtime.tm_year > 1970:  # check if the current time is valid
 				curtime = (curtime.tm_hour, curtime.tm_min, curtime.tm_sec)
 				begintime = tuple(config.usage.standby_to_shutdown_timer_blocktime_begin.value)
 				endtime = tuple(config.usage.standby_to_shutdown_timer_blocktime_end.value)
 				if begintime <= endtime and (curtime >= begintime and curtime < endtime) or begintime > endtime and (curtime >= begintime or curtime < endtime):
-					duration = (endtime[0]*3600 + endtime[1]*60) - (curtime[0]*3600 + curtime[1]*60 + curtime[2])
+					duration = (endtime[0] * 3600 + endtime[1] * 60) - (curtime[0] * 3600 + curtime[1] * 60 + curtime[2])
 					if duration:
 						if duration < 0:
-							duration += 24*3600
+							duration += 24 * 3600
 						self.standbyTimeoutTimer.startLongTimer(duration)
 						return
 		if self.session.screen["TunerInfo"].tuner_use_mask or mediafilesInUse(self.session):
@@ -245,6 +247,7 @@ class StandbyScreen(Screen):
 
 	def createSummary(self):
 		return StandbySummary
+
 
 class Standby(StandbyScreen):
 	def __init__(self, session, StandbyCounterIncrease=True):
@@ -268,6 +271,7 @@ class Standby(StandbyScreen):
 	def goStandby(self):
 		Notifications.AddNotification(StandbyScreen, self.StandbyCounterIncrease)
 
+
 class StandbySummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
@@ -279,6 +283,7 @@ class StandbySummary(Screen):
 			<convert type="ConditionalShowHide">Blink</convert>
 		</widget>
 	</screen>"""
+
 
 class QuitMainloopScreen(Screen):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN):
@@ -304,7 +309,9 @@ class QuitMainloopScreen(Screen):
 		}.get(retvalue)
 		self["text"] = Label(text)
 
+
 inTryQuitMainloop = False
+
 
 def getReasons(session, retvalue=QUIT_SHUTDOWN):
 	recordings = session.nav.getRecordings()
@@ -318,7 +325,7 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 	if jobs:
 		if jobs == 1:
 			job = job_manager.getPendingJobs()[0]
-			reasons.append("%s: %s (%d%%)" % (job.getStatustext(), job.name, int(100*job.progress/float(job.end))))
+			reasons.append("%s: %s (%d%%)" % (job.getStatustext(), job.name, int(100 * job.progress / float(job.end))))
 		else:
 			reasons.append((ngettext("%d job is running in the background!", "%d jobs are running in the background!", jobs) % jobs))
 	if checkTimeshiftRunning():
@@ -328,6 +335,7 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 	if not reasons and mediafilesInUse(session) and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_UPGRADE_FP, QUIT_UPGRADE_PROGRAM, QUIT_UPGRADE_FPANEL):
 		reasons.append(_("A file from media is in use!"))
 	return "\n".join(reasons)
+
 
 class TryQuitMainloop(MessageBox):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN, timeout=-1, default_yes=False, check_reasons=True):
@@ -363,13 +371,13 @@ class TryQuitMainloop(MessageBox):
 	def getRecordEvent(self, recservice, event):
 		if event == iRecordableService.evEnd:
 			recordings = self.session.nav.getRecordings()
-			if not recordings: # no more recordings exist
+			if not recordings:  # no more recordings exist
 				rec_time = self.session.nav.RecordTimer.getNextRecordingTime()
 				if rec_time > 0 and (rec_time - time()) < 360:
-					self.initTimeout(360) # wait for next starting timer
+					self.initTimeout(360)  # wait for next starting timer
 					self.startTimer()
 				else:
-					self.close(True) # immediate shutdown
+					self.close(True)  # immediate shutdown
 		elif event == iRecordableService.evStart:
 			self.stopTimer()
 
@@ -398,12 +406,12 @@ class TryQuitMainloop(MessageBox):
 				print("[Standby] LCDminiTV off")
 				try:
 					open("/proc/stb/lcd/mode", "w").write(0)
-				except:
+				except (IOError, OSError) as err:
 					pass
 			if getBoxType() == "vusolo4k":
 				try:
 					open("/proc/stb/fp/oled_brightness", "w").write("0")
-				except:
+				except (IOError, OSError) as err:
 					pass
 			self.quitMainloop()
 		else:

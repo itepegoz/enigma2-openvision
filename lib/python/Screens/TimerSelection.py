@@ -4,6 +4,7 @@ from Screens.Screen import Screen
 from Components.TimerList import TimerList
 from Components.ActionMap import ActionMap
 
+
 class TimerSelection(Screen):
 	def __init__(self, session, list):
 		Screen.__init__(self, session)
@@ -14,10 +15,10 @@ class TimerSelection(Screen):
 		self["timerlist"] = TimerList(self.list)
 
 		self["actions"] = ActionMap(["OkCancelActions"],
-			{
-				"ok": self.selected,
-				"cancel": self.leave,
-			}, -1)
+									{
+			"ok": self.selected,
+			"cancel": self.leave,
+		}, -1)
 
 	def leave(self):
 		self.close(None)

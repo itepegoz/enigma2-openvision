@@ -9,10 +9,11 @@ from InfoBarGenerics import InfoBarShowHide, InfoBarMenu, InfoBarInstantRecord, 
 from enigma import eServiceReference
 from Components.ServiceEventTracker import InfoBarBase
 
-class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
-		InfoBarInstantRecord, InfoBarSeek, InfoBarTimeshift, \
-		InfoBarTimeshiftState, InfoBarExtensions, InfoBarSubtitleSupport, \
-		InfoBarAudioSelection, Screen):
+
+class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu,
+						  InfoBarInstantRecord, InfoBarSeek, InfoBarTimeshift,
+						  InfoBarTimeshiftState, InfoBarExtensions, InfoBarSubtitleSupport,
+						  InfoBarAudioSelection, Screen):
 	def __init__(self, session, subservices):
 		Screen.__init__(self, session)
 		self.setTitle(_("Subservices"))
@@ -26,25 +27,25 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
 		self.__lastservice = self.currentlyPlayingSubservice = self.getSubserviceIndex(self.session.nav.getCurrentlyPlayingServiceReference())
 		self["CurrentSubserviceNumber"] = Label("")
 		self.currentSubserviceNumberLabel = self["CurrentSubserviceNumber"]
-		self["actions"] = NumberActionMap( [ "InfobarSubserviceQuickzapActions", "NumberActions", "DirectionActions", "ColorActions" ],
-			{
-				"up": self.showSelection,
-				"down": self.showSelection,
-				"right": self.nextSubservice,
-				"left": self.previousSubservice,
-				"green": self.showSelection,
-				"exit": self.quitQuestion,
-				"1": self.keyNumberGlobal,
-				"2": self.keyNumberGlobal,
-				"3": self.keyNumberGlobal,
-				"4": self.keyNumberGlobal,
-				"5": self.keyNumberGlobal,
-				"6": self.keyNumberGlobal,
-				"7": self.keyNumberGlobal,
-				"8": self.keyNumberGlobal,
-				"9": self.keyNumberGlobal,
-				"0": self.keyNumberGlobal
-			}, 0)
+		self["actions"] = NumberActionMap(["InfobarSubserviceQuickzapActions", "NumberActions", "DirectionActions", "ColorActions"],
+										  {
+			"up": self.showSelection,
+			"down": self.showSelection,
+			"right": self.nextSubservice,
+			"left": self.previousSubservice,
+			"green": self.showSelection,
+			"exit": self.quitQuestion,
+			"1": self.keyNumberGlobal,
+			"2": self.keyNumberGlobal,
+			"3": self.keyNumberGlobal,
+			"4": self.keyNumberGlobal,
+			"5": self.keyNumberGlobal,
+			"6": self.keyNumberGlobal,
+			"7": self.keyNumberGlobal,
+			"8": self.keyNumberGlobal,
+			"9": self.keyNumberGlobal,
+			"0": self.keyNumberGlobal
+		}, 0)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 		self.onClose.append(self.__onClose)
 
@@ -97,7 +98,7 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
 	def playSubservice(self, number=0):
 		try:
 			newservice = eServiceReference(self.subservices[number][1])
-		except:
+		except Exception:
 			newservice = None
 		if newservice and newservice.valid():
 			self.__lastservice = self.currentlyPlayingSubservice

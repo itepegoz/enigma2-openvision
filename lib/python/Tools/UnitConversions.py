@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+
 class UnitMultipliers:
 	Si = (
 		("", 10 ** 0),
@@ -39,18 +40,19 @@ class UnitMultipliers:
 	)
 
 	Jedec = (
-		("", 1024 ** 0),
-		("K", 1024 ** 1),
-		("M", 1024 ** 2),
-		("G", 1024 ** 3),
-		("T", 1024 ** 4),
-		("P", 1024 ** 5),
-		("E", 1024 ** 6),
-		("Z", 1024 ** 7),
-		("Y", 1024 ** 8),
+			("", 1024 ** 0),
+			("K", 1024 ** 1),
+			("M", 1024 ** 2),
+			("G", 1024 ** 3),
+			("T", 1024 ** 4),
+			("P", 1024 ** 5),
+			("E", 1024 ** 6),
+			("Z", 1024 ** 7),
+			("Y", 1024 ** 8),
 	)
 
 	Default = Si
+
 
 class UnitScaler:
 	def __init__(self, scaleTable=UnitMultipliers.Default, firstScaleIndex=1, maxNumLen=4, decimals=0):
@@ -78,6 +80,7 @@ class UnitScaler:
 
 	def __call__(self, num):
 		return self.scale(num)
+
 
 if __name__ == "__main__":
 	import sys

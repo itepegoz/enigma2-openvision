@@ -43,14 +43,14 @@ class VisionCamInfo(Poll, Converter, object):
 					if "echo" in line:
 						nameemu.append(line)
 				camdlist = "%s" % nameemu[1].split('"')[1]
-			except:
+			except BaseException:
 				pass
 			try:
 				for line in open("/etc/init.d/cardserver"):
 					if "echo" in line:
 						nameser.append(line)
 				serlist = "%s" % nameser[1].split('"')[1]
-			except:
+			except BaseException:
 				pass
 			if serlist is not None and camdlist is not None:
 				return ("%s %s" % (serlist, camdlist))
@@ -68,7 +68,7 @@ class VisionCamInfo(Poll, Converter, object):
 				for current in serlist.readlines():
 					cardserver = current
 				serlist.close()
-			except:
+			except BaseException:
 				pass
 		else:
 			cardserver = " "
@@ -79,7 +79,7 @@ class VisionCamInfo(Poll, Converter, object):
 				for current in camdlist.readlines():
 					emu = current
 				camdlist.close()
-			except:
+			except BaseException:
 				pass
 		else:
 			emu = " "

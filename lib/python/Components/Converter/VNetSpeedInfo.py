@@ -5,6 +5,7 @@ from Components.Converter.Converter import Converter
 from Components.Element import cached
 from Components.Converter.Poll import Poll
 
+
 class VNetSpeedInfo(Poll, Converter, object):
 	RCL = 0
 	TML = 1
@@ -34,7 +35,7 @@ class VNetSpeedInfo(Poll, Converter, object):
 	DRO_RCW = 25
 	DRO_TMW = 26
 
-	def __init__(self, type, update_interval = 1000):
+	def __init__(self, type, update_interval=1000):
 		Poll.__init__(self)
 		self.poll_interval = 1500
 		self.poll_enabled = True

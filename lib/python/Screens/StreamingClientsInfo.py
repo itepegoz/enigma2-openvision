@@ -12,8 +12,9 @@ from ServiceReference import ServiceReference
 import socket
 try:
 	from Plugins.Extensions.OpenWebif.controllers.stream import streamList
-except:
+except ImportError:
 	streamList = []
+
 
 class StreamingClientsInfo(Screen):
 	def __init__(self, session):
@@ -27,7 +28,7 @@ class StreamingClientsInfo(Screen):
 		self["info"] = Label()
 		self.updateClients()
 		self["actions"] = ActionMap(["ColorActions", "SetupActions"],
-		{
+									{
 			"cancel": self.close,
 			"ok": self.stopCurrentStream,
 			"red": self.close,
@@ -51,7 +52,7 @@ class StreamingClientsInfo(Screen):
 				try:
 					raw = socket.gethostbyaddr(ip)
 					ip = raw[0]
-				except:
+				except Exception:
 					pass
 				info = ("%s %-8s %s") % (strtype, ip, service_name)
 				self.clients.append((info, (x[0], x[1])))
@@ -78,7 +79,7 @@ class StreamingClientsInfo(Screen):
 		if self.clients:
 			client = self["menu"].l.getCurrentSelection()
 			if client:
-				self.session.openWithCallback(self.stopCurrentStreamCallback, MessageBox, client[0] +" \n\n" + _("Stop current stream") + "?", MessageBox.TYPE_YESNO)
+				self.session.openWithCallback(self.stopCurrentStreamCallback, MessageBox, client[0] + " \n\n" + _("Stop current stream") + "?", MessageBox.TYPE_YESNO)
 
 	def stopCurrentStreamCallback(self, answer):
 		if answer:
@@ -87,7 +88,7 @@ class StreamingClientsInfo(Screen):
 				for x in self.streamServer.getConnectedClients():
 					if client[1][0] == x[0] and client[1][1] == x[1]:
 						if not self.streamServer.stopStreamClient(client[1][0], client[1][1]):
-							self.session.open(MessageBox,  client[0] +" \n\n" + _("Error stop stream!"), MessageBox.TYPE_WARNING)
+							self.session.open(MessageBox, client[0] + " \n\n" + _("Error stop stream!"), MessageBox.TYPE_WARNING)
 				self.updateClients()
 
 	def stopAllStreams(self):

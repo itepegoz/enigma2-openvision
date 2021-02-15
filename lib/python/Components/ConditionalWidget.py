@@ -3,8 +3,9 @@
 from Components.GUIComponent import GUIComponent
 from enigma import eTimer
 
+
 class ConditionalWidget(GUIComponent):
-	def __init__(self, withTimer = True):
+	def __init__(self, withTimer=True):
 		GUIComponent.__init__(self)
 
 		self.setConnect(None)
@@ -30,9 +31,10 @@ class ConditionalWidget(GUIComponent):
 		if self.conditionalFunction is not None:
 			try:
 				self.activateCondition(self.conditionalFunction())
-			except:
+			except Exception:
 				self.conditionalFunction = None
 				self.activateCondition(False)
+
 
 class BlinkingWidget(GUIComponent):
 	def __init__(self):
@@ -59,6 +61,7 @@ class BlinkingWidget(GUIComponent):
 			self.hide()
 		self.timer.stop()
 
+
 class BlinkingWidgetConditional(BlinkingWidget, ConditionalWidget):
 	def __init__(self):
 		BlinkingWidget.__init__(self)
@@ -66,8 +69,8 @@ class BlinkingWidgetConditional(BlinkingWidget, ConditionalWidget):
 
 	def activateCondition(self, condition):
 		if condition:
-			if not self.blinking: # we are already blinking
+			if not self.blinking:  # we are already blinking
 				self.startBlinking()
 		else:
-			if self.blinking: # we are blinking
+			if self.blinking:  # we are blinking
 				self.stopBlinking()

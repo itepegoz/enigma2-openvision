@@ -15,14 +15,16 @@ brand = getBoxBrand()
 model = getBoxType()
 platform = getMachineBuild()
 
-POLLTIME = 5 # seconds
+POLLTIME = 5  # seconds
+
 
 def SymbolsCheck(session, **kwargs):
-		global symbolspoller, POLLTIME
-		if SystemInfo["VFDSymbol"]:
-			POLLTIME = 1
-		symbolspoller = SymbolsCheckPoller(session)
-		symbolspoller.start()
+	global symbolspoller, POLLTIME
+	if SystemInfo["VFDSymbol"]:
+		POLLTIME = 1
+	symbolspoller = SymbolsCheckPoller(session)
+	symbolspoller.start()
+
 
 class SymbolsCheckPoller:
 	def __init__(self, session):
@@ -31,10 +33,9 @@ class SymbolsCheckPoller:
 		self.led = "0"
 		self.timer = eTimer()
 		self.onClose = []
-		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
-			{
-				iPlayableService.evUpdatedInfo: self.__evUpdatedInfo,
-			})
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
+			iPlayableService.evUpdatedInfo: self.__evUpdatedInfo,
+		})
 
 	def __onClose(self):
 		pass
@@ -179,7 +180,6 @@ class SymbolsCheckPoller:
 				open("/proc/stb/lcd/symbol_record_1", "w").write("0")
 				open("/proc/stb/lcd/symbol_record_2", "w").write("0")
 
-
 	def Subtitle(self):
 		if not fileExists("/proc/stb/lcd/symbol_smartcard") and not fileExists("/proc/stb/lcd/symbol_subtitle"):
 			return
@@ -314,7 +314,7 @@ class SymbolsCheckPoller:
 			idx = 0
 			while idx < n:
 				i = audio.getTrackInfo(idx)
-				description = i.getDescription();
+				description = i.getDescription()
 				if "AC3" in description or "AC-3" in description or "DTS" in description:
 					open("/proc/stb/lcd/symbol_dolby_audio", "w").write("1")
 					return

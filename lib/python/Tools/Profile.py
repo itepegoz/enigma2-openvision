@@ -26,13 +26,14 @@ try:
 		t = float(t)
 		total_time = t
 		profile_data[id] = t
-except:
+except (IOError, OSError) as err:
 	print("[Profile] no profile data available")
 
 try:
 	profile_file = open(resolveFilename(SCOPE_CONFIG, "profile"), "w")
 except IOError:
 	print("[Profile] WARNING: couldn't open profile file!")
+
 
 def profile(id):
 	now = time.time() - profile_start
@@ -60,6 +61,7 @@ def profile(id):
 					open("/proc/progress", "w").write("%d \n" % perc)
 			except IOError:
 				pass
+
 
 def profile_final():
 	global profile_file

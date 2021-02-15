@@ -7,6 +7,7 @@ from xml.etree.ElementTree import ElementTree
 from Components.RcModel import rc_model
 from boxbranding import getRCIDNum
 
+
 class Rc:
 	def __init__(self):
 		self["rc"] = MultiPixmap()
@@ -31,7 +32,7 @@ class Rc:
 
 	def readPositions(self):
 		target = rc_model.getRcPositions()
-		tree = ElementTree(file = target)
+		tree = ElementTree(file=target)
 		rcs = tree.getroot()
 		self.rcs = {}
 		for rc in rcs:

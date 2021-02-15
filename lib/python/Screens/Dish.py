@@ -14,9 +14,10 @@ from Components.Sources.FrontendStatus import FrontendStatus
 INVALID_POSITION = 9999
 config.misc.lastrotorposition = ConfigInteger(INVALID_POSITION)
 
+
 class Dish(Screen):
 	STATE_HIDDEN = 0
-	STATE_SHOWN  = 1
+	STATE_SHOWN = 1
 	skin = """
 		<screen name="Dish" flags="wfNoBorder" position="86,100" size="130,220" title="Dish" zPosition="1" backgroundColor="#11396D" >
 			<widget name="Dishpixmap" position="0,0"  size="130,160" zPosition="-1" pixmap="icons/dish.png" transparent="1" alphatest="on" />
@@ -66,10 +67,10 @@ class Dish(Screen):
 		self.onHide.append(self.__onHide)
 
 		self.__event_tracker = ServiceEventTracker(screen=self,
-			eventmap= {
-				iPlayableService.evStart: self.__serviceStarted,
-				iPlayableService.evTunedIn: self.__serviceTunedIn,
-			})
+												   eventmap={
+													   iPlayableService.evStart: self.__serviceStarted,
+													   iPlayableService.evTunedIn: self.__serviceTunedIn,
+												   })
 
 	def updateRotorSatList(self):
 		self.available_sat = []
@@ -96,7 +97,7 @@ class Dish(Screen):
 		if self.total_time:
 			self.turn_time -= 1
 			self["turnTime"].setText(self.FormatTurnTime(self.turn_time))
-			self.close_timeout -=1
+			self.close_timeout -= 1
 			if self.close_timeout < 0:
 				print("[Dish] timeout!")
 				self.__toHide()
@@ -108,7 +109,7 @@ class Dish(Screen):
 		self.rotor_pos = self.cur_orbpos
 		self.total_time = self.getTurnTime(prev_rotor_pos, self.rotor_pos, self.cur_polar)
 		self.turn_time = self.total_time
-		self.close_timeout = round(self.total_time * 1.25) # aded 25%
+		self.close_timeout = round(self.total_time * 1.25)  # aded 25%
 
 		self["posFrom"].setText(self.OrbToStr(prev_rotor_pos))
 		self["posGoto"].setText(self.OrbToStr(self.rotor_pos))
@@ -144,7 +145,7 @@ class Dish(Screen):
 			cur_orbpos = data.get("orbital_position", INVALID_POSITION)
 			if cur_orbpos in self.available_sat:
 				self.cur_orbpos = cur_orbpos
-				self.cur_polar  = data.get("polarization", 0)
+				self.cur_polar = data.get("polarization", 0)
 				self.rotorTimer.start(500, False)
 
 	def __toHide(self):
@@ -190,7 +191,7 @@ class Dish(Screen):
 				mrt = 3600 - mrt
 			if mrt % 10:
 				mrt += 10
-			mrt = round((mrt * 1000 / self.getTurningSpeed(pol) ) / 10000) + 3
+			mrt = round((mrt * 1000 / self.getTurningSpeed(pol)) / 10000) + 3
 		return mrt
 
 	def isSatRotorMode(self):
@@ -210,7 +211,7 @@ class Dish(Screen):
 			if nimConfig.configMode.value == "simple":
 				if "positioner" in nimConfig.diseqcMode.value:
 					nim = config.Nims[tuner]
-					if pol in (1, 3): # vertical
+					if pol in (1, 3):  # vertical
 						return nim.turningspeedV.float
 					return nim.turningspeedH.float
 			elif nimConfig.configMode.value == "advanced":
@@ -222,7 +223,7 @@ class Dish(Screen):
 						currLnb = lnbnum and nimConfig.advanced.lnb[lnbnum]
 						diseqcmode = currLnb and currLnb.diseqcMode.value or ""
 						if diseqcmode == "1_2":
-							if pol in (1, 3): # vertical
+							if pol in (1, 3):  # vertical
 								return currLnb.turningspeedV.float
 							return currLnb.turningspeedH.float
 		if pol in (1, 3):
@@ -240,7 +241,7 @@ class Dish(Screen):
 	def getTunerName(self):
 		nr = self.getCurrentTuner()
 		if nr is not None:
-			return _("Tuner") + " " + chr(nr+65)
+			return _("Tuner") + " " + chr(nr + 65)
 		return ""
 
 	def OrbToStr(self, orbpos):
@@ -253,11 +254,12 @@ class Dish(Screen):
 
 	def FormatTurnTime(self, time):
 		t = abs(time)
-		return "%s%02d:%02d" % (time < 0 and "- " or "", t/60%60, t%60)
+		return "%s%02d:%02d" % (time < 0 and "- " or "", t / 60 % 60, t % 60)
+
 
 class Dishpip(Dish, Screen):
 	STATE_HIDDEN = 0
-	STATE_SHOWN  = 1
+	STATE_SHOWN = 1
 	skin = """
 		<screen name="Dishpip" flags="wfNoBorder" position="86,100" size="130,220" title="DishPiP" zPosition="1" backgroundColor="#11396D" >
 			<widget source="Dishpixmap" render="Pixmap" pixmap="icons/dish.png" zPosition="-1" position="0,0" size="130,160" alphatest="on">
@@ -274,6 +276,7 @@ class Dishpip(Dish, Screen):
 				<convert type="FrontendInfo">SNR</convert>
 			</widget>
 		</screen>"""
+
 	def __init__(self, session):
 		self.skin = Dishpip.skin
 		Screen.__init__(self, session)
@@ -287,7 +290,7 @@ class Dishpip(Dish, Screen):
 		self["turnSpeed"] = Label("")
 		self.updateRotorSatList()
 		self.frontend = None
-		self["Frontend"] = FrontendStatus(service_source = lambda: self.frontend, update_interval=1000)
+		self["Frontend"] = FrontendStatus(service_source=lambda: self.frontend, update_interval=1000)
 		self.rotorTimer = eTimer()
 		self.rotorTimer.timeout.get().append(self.updateRotorMovingState)
 		self.turnTimer = eTimer()
@@ -329,12 +332,12 @@ class Dishpip(Dish, Screen):
 		if self.total_time:
 			self.turn_time -= 1
 			self["turnTime"].setText(self.FormatTurnTime(self.turn_time))
-			self.close_timeout -=1
+			self.close_timeout -= 1
 			if self.close_timeout <= 3:
 				self.__toHide()
-			#elif not self.getRotorMovingState():
-			#	self.turnTimer.stop()
-			#	self.timeoutTimer.start(10000, True)
+			# elif not self.getRotorMovingState():
+			# 	self.turnTimer.stop()
+			# 	self.timeoutTimer.start(10000, True)
 		else:
 			if not self.getRotorMovingState():
 				self.turnTimer.stop()
@@ -354,7 +357,7 @@ class Dishpip(Dish, Screen):
 			cur_orbpos = data.get("orbital_position", INVALID_POSITION)
 			if cur_orbpos in self.available_sat:
 				self.cur_orbpos = cur_orbpos
-				self.cur_polar  = data.get("polarization", 0)
+				self.cur_polar = data.get("polarization", 0)
 				self.moving_timeout = 3
 				if not self.rotorTimer.isActive():
 					self.rotorTimer.start(500, True)
@@ -365,7 +368,7 @@ class Dishpip(Dish, Screen):
 		self.rotor_pos = self.cur_orbpos
 		self.total_time = self.getTurnTime(prev_rotor_pos, self.rotor_pos, self.cur_polar)
 		self.turn_time = self.total_time
-		self.close_timeout = round(self.total_time * 1.25) # aded 25%
+		self.close_timeout = round(self.total_time * 1.25)  # aded 25%
 		self["posFrom"].setText(self.OrbToStr(prev_rotor_pos))
 		self["posGoto"].setText(self.OrbToStr(self.rotor_pos))
 		self["tunerName"].setText(self.getTunerName())

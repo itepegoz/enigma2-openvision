@@ -29,13 +29,16 @@ else:
 
 loadSkin('/usr/share/enigma2/VirtualKeyBoard_Icons/vkskin.xml')
 
+
 def getDesktopSize():
-    s = getDesktop(0).size()
-    return (s.width(), s.height())
+	s = getDesktop(0).size()
+	return (s.width(), s.height())
+
 
 def isHD():
-    desktopSize = getDesktopSize()
-    return desktopSize[0] == 1280
+	desktopSize = getDesktopSize()
+	return desktopSize[0] == 1280
+
 
 VKB_DONE_ICON = 0
 VKB_ENTER_ICON = 1
@@ -531,7 +534,7 @@ class VirtualKeyBoard(Screen, HelpableScreen):
 		]
 		self.thai = [
 			[
-				[u"", u"", u"\u0E45", u"\u0E20", u"\u0E16", u"\u0E38", u"\u0E36", u"\u0E04", u"\u0E15", u"\u0E08", u"\u0E02", u"\u0E0A", u"", u"BACKSPACEICON"],
+					[u"", u"", u"\u0E45", u"\u0E20", u"\u0E16", u"\u0E38", u"\u0E36", u"\u0E04", u"\u0E15", u"\u0E08", u"\u0E02", u"\u0E0A", u"", u"BACKSPACEICON"],
 				[u"FIRSTICON", u"\u0E46", u"\u0E44", u"\u0E33", u"\u0E1E", u"\u0E30", u"\u0E31", u"\u0E35", u"\u0E23", u"\u0E19", u"\u0E22", u"\u0E1A", u"\u0E25", u""],
 				[u"LASTICON", u"\u0E1F", u"\u0E2B", u"\u0E01", u"\u0E14", u"\u0E40", u"\u0E49", u"\u0E48", u"\u0E32", u"\u0E2A", u"\u0E27", u"\u0E07", u"\u0E03", self.green],
 				[u"CAPSLOCKICON", u"CAPSLOCKICON", u"\u0E1C", u"\u0E1B", u"\u0E41", u"\u0E2D", u"\u0E34", u"\u0E37", u"\u0E17", u"\u0E21", u"\u0E43", u"\u0E1D", u"CAPSLOCKICON", u"CAPSLOCKICON"],

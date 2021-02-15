@@ -17,6 +17,7 @@ from Components.Sources.Boolean import Boolean
 from Components.Pixmap import Pixmap
 from enigma import ePoint
 
+
 class ClientModeScreen(ConfigListScreen, Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -27,10 +28,10 @@ class ClientModeScreen(ConfigListScreen, Screen):
 		self.initial_state = config.clientmode.enabled.value
 		self.onChangedEntry = []
 		self.session = session
-		ConfigListScreen.__init__(self, [], session = session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, [], session=session, on_change=self.changedEntry)
 
 		self["actions"] = ActionMap(["SetupActions", "MenuActions", "ColorActions"],
-		{
+									{
 			"ok": self.keyGo,
 			"menu": self.keyCancel,
 			"cancel": self.keyCancel,
@@ -49,7 +50,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 
 		self.createSetup()
 
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
@@ -79,7 +80,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 	def selectionChanged(self):
 		self["description"].setText(self.getCurrentDescription())
 
-	def run(self): # for start wizard
+	def run(self):  # for start wizard
 		self.saveconfig()
 
 	def keyGo(self):
@@ -96,7 +97,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 
 	def saveconfig(self):
 		nim_config_list = []
-		if self.initial_state != config.clientmode.enabled.value and self.initial_state == False:  # switching to client mode
+		if self.initial_state != config.clientmode.enabled.value and self.initial_state is False:  # switching to client mode
 			# save normal mode config so it can be reinsated when returning to normal mode
 			nim_config_list = []
 			for x in config.Nims:
@@ -109,7 +110,7 @@ class ClientModeScreen(ConfigListScreen, Screen):
 		if config.clientmode.enabled.value:
 			config.usage.remote_fallback_enabled.value = True
 			config.usage.remote_fallback.value = "http://%s:%d" % (self.getRemoteAddress(), config.clientmode.serverStreamingPort.value)
-		elif self.initial_state != config.clientmode.enabled.value: # switching back to normal mode
+		elif self.initial_state != config.clientmode.enabled.value:  # switching back to normal mode
 			# load nim config from config.clientmode.nimcache
 			import json
 			nim_config_list = json.loads(config.clientmode.nim_cache.value)

@@ -12,12 +12,13 @@ from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS, SCOPE_
 from Components.config import config, getConfigListEntry
 from Components.ConfigList import ConfigListScreen
 
+
 class FileBrowser(Screen, HelpableScreen):
 
 	def __init__(self, session, scope, configRef):
 		Screen.__init__(self, session)
 		# for the skin: first try FileBrowser_DVDBurn, then FileBrowser, this allows individual skinning
-		self.skinName = ["FileBrowser_DVDBurn", "FileBrowser" ]
+		self.skinName = ["FileBrowser_DVDBurn", "FileBrowser"]
 
 		HelpableScreen.__init__(self)
 		self.scope = scope
@@ -26,37 +27,37 @@ class FileBrowser(Screen, HelpableScreen):
 		currDir = "/"
 		if self.scope == "project":
 			currDir = self.getDir()
-			pattern = "(?i)^.*\.(ddvdp\.xml)"
+			pattern = "(?i)^.*\\.(ddvdp\\.xml)"
 		elif self.scope == "menutemplate":
 			currDir = self.getDir()
-			pattern = "(?i)^.*\.(ddvdm\.xml)"
+			pattern = "(?i)^.*\\.(ddvdm\\.xml)"
 		if self.scope == "menubg":
 			currDir = self.getDir(configRef.getValue())
-			pattern = "(?i)^.*\.(jpeg|jpg|jpe|png|bmp)"
+			pattern = "(?i)^.*\\.(jpeg|jpg|jpe|png|bmp)"
 		elif self.scope == "menuaudio":
 			currDir = self.getDir(configRef.getValue())
-			pattern = "(?i)^.*\.(mp2|m2a|ac3)"
+			pattern = "(?i)^.*\\.(mp2|m2a|ac3)"
 		elif self.scope == "vmgm":
 			currDir = self.getDir(configRef.getValue())
-			pattern = "(?i)^.*\.(mpg|mpeg)"
+			pattern = "(?i)^.*\\.(mpg|mpeg)"
 		elif self.scope == "font_face":
 			currDir = self.getDir(configRef.getValue(), resolveFilename(SCOPE_FONTS))
-			pattern = "(?i)^.*\.(ttf)"
+			pattern = "(?i)^.*\\.(ttf)"
 		elif self.scope == "isopath":
 			currDir = configRef.getValue()
 		elif self.scope == "image":
 			currDir = resolveFilename(SCOPE_HDD)
-			pattern = "(?i)^.*\.(iso)"
+			pattern = "(?i)^.*\\.(iso)"
 
 		self.filelist = FileList(currDir, matchingPattern=pattern)
 		self["filelist"] = self.filelist
 
 		self["FilelistActions"] = ActionMap(["SetupActions"],
-			{
-				"save": self.ok,
-				"ok": self.ok,
-				"cancel": self.exit
-			})
+											{
+			"save": self.ok,
+			"ok": self.ok,
+			"cancel": self.exit
+		})
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))
 		self.onLayoutFinish.append(self.layoutFinished)
@@ -67,14 +68,14 @@ class FileBrowser(Screen, HelpableScreen):
 	def getDir(self, currentVal=None, defaultDir=None):
 		if currentVal:
 			return (currentVal.rstrip("/").rsplit("/", 1))[0]
-		return defaultDir or (resolveFilename(SCOPE_PLUGINS)+"Extensions/DVDBurn/")
+		return defaultDir or (resolveFilename(SCOPE_PLUGINS) + "Extensions/DVDBurn/")
 
 	def ok(self):
 		if self.filelist.canDescent():
 			self.filelist.descent()
 			if self.scope == "image":
 				path = self["filelist"].getCurrentDirectory() or ""
-				if fileExists(path+"VIDEO_TS"):
+				if fileExists(path + "VIDEO_TS"):
 					self.close(path, self.scope, self.configRef)
 		else:
 			ret = self["filelist"].getCurrentDirectory() + '/' + self["filelist"].getFilename()
@@ -84,6 +85,7 @@ class FileBrowser(Screen, HelpableScreen):
 		if self.scope == "isopath":
 			self.close(self["filelist"].getCurrentDirectory(), self.scope, self.configRef)
 		self.close(None, False, None)
+
 
 class ProjectSettings(Screen, ConfigListScreen):
 	skin = """
@@ -101,19 +103,19 @@ class ProjectSettings(Screen, ConfigListScreen):
 			<widget source="info" render="Label" position="10,360" size="550,80" font="Regular;18" halign="center" valign="center" />
 		</screen>"""
 
-	def __init__(self, session, project = None):
+	def __init__(self, session, project=None):
 		Screen.__init__(self, session)
 		self.project = project
 
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))
 		self["key_yellow"] = StaticText(_("Load"))
-		if config.usage.setup_level.index >= 2: # expert+
+		if config.usage.setup_level.index >= 2:  # expert+
 			self["key_blue"] = StaticText(_("Save"))
 		else:
 			self["key_blue"] = StaticText()
 
-		if config.usage.setup_level.index >= 2: # expert+
+		if config.usage.setup_level.index >= 2:  # expert+
 			infotext = _("Available format variables") + ":\n$i=" + _("Track") + ", $t=" + _("Title") + ", $d=" + _("Description") + ", $l=" + _("length") + ", $c=" + _("chapters") + ",\n" + _("Record") + " $T=" + _("Begin time") + ", $Y=" + _("Year") + ", $M=" + _("month") + ", $D=" + _("day") + ",\n$A=" + _("audio tracks") + ", $C=" + _("Channel") + ", $f=" + _("filename")
 		else:
 			infotext = ""
@@ -125,7 +127,7 @@ class ProjectSettings(Screen, ConfigListScreen):
 		self.initConfigList()
 
 		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
-		{
+										 {
 			"green": self.exit,
 			"red": self.cancel,
 			"blue": self.saveProject,
@@ -153,20 +155,20 @@ class ProjectSettings(Screen, ConfigListScreen):
 		if output == "iso":
 			self.list.append(getConfigListEntry(_("ISO path"), self.settings.isopath))
 		if authormode.startswith("menu"):
-			self.list.append(getConfigListEntry(_("Menu")+' '+_("template file"), self.settings.menutemplate))
-			if config.usage.setup_level.index >= 2: # expert+
-				self.list.append(getConfigListEntry(_("Menu")+' '+_("Title"), self.project.menutemplate.settings.titleformat))
-				self.list.append(getConfigListEntry(_("Menu")+' '+_("Subtitles"), self.project.menutemplate.settings.subtitleformat))
-				self.list.append(getConfigListEntry(_("Menu")+' '+_("background image"), self.project.menutemplate.settings.menubg))
-				self.list.append(getConfigListEntry(_("Menu")+' '+_("Language selection"), self.project.menutemplate.settings.menulang))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("headline")+' '+_("color"), self.settings.color_headline))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("text")+' '+_("color"), self.settings.color_button))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("highlighted button")+' '+_("color"), self.settings.color_highlight))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("font face"), self.settings.font_face))
-			#self.list.append(getConfigListEntry(_("Font size")+' ('+_("headline")+', '+_("Title")+', '+_("Subtitles")+')', self.settings.font_size))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("spaces (top, between rows, left)"), self.settings.space))
-			#self.list.append(getConfigListEntry(_("Menu")+' '+_("Audio"), self.settings.menuaudio))
-		if config.usage.setup_level.index >= 2: # expert+
+			self.list.append(getConfigListEntry(_("Menu") + ' ' + _("template file"), self.settings.menutemplate))
+			if config.usage.setup_level.index >= 2:  # expert+
+				self.list.append(getConfigListEntry(_("Menu") + ' ' + _("Title"), self.project.menutemplate.settings.titleformat))
+				self.list.append(getConfigListEntry(_("Menu") + ' ' + _("Subtitles"), self.project.menutemplate.settings.subtitleformat))
+				self.list.append(getConfigListEntry(_("Menu") + ' ' + _("background image"), self.project.menutemplate.settings.menubg))
+				self.list.append(getConfigListEntry(_("Menu") + ' ' + _("Language selection"), self.project.menutemplate.settings.menulang))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("headline")+' '+_("color"), self.settings.color_headline))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("text")+' '+_("color"), self.settings.color_button))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("highlighted button")+' '+_("color"), self.settings.color_highlight))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("font face"), self.settings.font_face))
+			# self.list.append(getConfigListEntry(_("Font size")+' ('+_("headline")+', '+_("Title")+', '+_("Subtitles")+')', self.settings.font_size))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("spaces (top, between rows, left)"), self.settings.space))
+			# self.list.append(getConfigListEntry(_("Menu")+' '+_("Audio"), self.settings.menuaudio))
+		if config.usage.setup_level.index >= 2:  # expert+
 			if authormode != "data_ts":
 				self.list.append(getConfigListEntry(_("Titleset mode"), self.settings.titlesetmode))
 				if self.settings.titlesetmode.getValue() == "single" or authormode == "just_linked":
@@ -184,13 +186,13 @@ class ProjectSettings(Screen, ConfigListScreen):
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
 		key = self.keydict[self["config"].getCurrent()[1]]
-		if key == "authormode" or key == "output" or key=="titlesetmode":
+		if key == "authormode" or key == "output" or key == "titlesetmode":
 			self.initConfigList()
 
 	def keyRight(self):
 		ConfigListScreen.keyRight(self)
 		key = self.keydict[self["config"].getCurrent()[1]]
-		if key == "authormode" or key == "output" or key=="titlesetmode":
+		if key == "authormode" or key == "output" or key == "titlesetmode":
 			self.initConfigList()
 
 	def exit(self):
@@ -214,15 +216,15 @@ class ProjectSettings(Screen, ConfigListScreen):
 		self.session.openWithCallback(self.FileBrowserClosed, FileBrowser, "project", self.settings)
 
 	def saveProject(self):
-		if config.usage.setup_level.index >= 2: # expert+
+		if config.usage.setup_level.index >= 2:  # expert+
 			self.applySettings()
-			ret = self.project.saveProject(resolveFilename(SCOPE_PLUGINS)+"Extensions/DVDBurn/")
+			ret = self.project.saveProject(resolveFilename(SCOPE_PLUGINS) + "Extensions/DVDBurn/")
 			if ret.startswith:
-				text = _("Save")+' '+_('OK')+':\n'+ret
-				self.session.open(MessageBox, text, type = MessageBox.TYPE_INFO)
+				text = _("Save") + ' ' + _('OK') + ':\n' + ret
+				self.session.open(MessageBox, text, type=MessageBox.TYPE_INFO)
 			else:
-				text = _("Save")+' '+_('Error')
-				self.session.open(MessageBox, text, type = MessageBox.TYPE_ERROR)
+				text = _("Save") + ' ' + _('Error')
+				self.session.open(MessageBox, text, type=MessageBox.TYPE_ERROR)
 
 	def FileBrowserClosed(self, path, scope, configRef):
 		if scope == "menutemplate":
@@ -236,7 +238,7 @@ class ProjectSettings(Screen, ConfigListScreen):
 			self.path = path
 			print("[DVDBurn] len(self.titles)", len(self.project.titles))
 			if len(self.project.titles):
-				self.session.openWithCallback(self.askLoadCB, MessageBox, text = _("Your current collection will get lost!") + "\n" + _("Do you want to restore your settings?"), type = MessageBox.TYPE_YESNO)
+				self.session.openWithCallback(self.askLoadCB, MessageBox, text=_("Your current collection will get lost!") + "\n" + _("Do you want to restore your settings?"), type=MessageBox.TYPE_YESNO)
 			else:
 				self.askLoadCB(True)
 		elif scope:

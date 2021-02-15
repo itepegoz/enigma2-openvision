@@ -7,7 +7,7 @@ from Screens.WizardLanguage import WizardLanguage
 from Screens.Rc import Rc
 try:
 	from Plugins.SystemPlugins.OSDPositionSetup.overscanwizard import OverscanWizard
-except:
+except ImportError:
 	OverscanWizard = None
 from boxbranding import getImageVersion
 from Components.Pixmap import Pixmap
@@ -20,15 +20,16 @@ from Screens.LanguageSelection import LanguageWizard
 from enigma import eConsoleAppContainer, eTimer, eActionMap
 import os
 
-config.misc.firstrun = ConfigBoolean(default = True)
-config.misc.languageselected = ConfigBoolean(default = True)
-config.misc.do_overscanwizard = ConfigBoolean(default = OverscanWizard)
-config.misc.check_developimage = ConfigBoolean(default = False)
+config.misc.firstrun = ConfigBoolean(default=True)
+config.misc.languageselected = ConfigBoolean(default=True)
+config.misc.do_overscanwizard = ConfigBoolean(default=OverscanWizard)
+config.misc.check_developimage = ConfigBoolean(default=False)
+
 
 class StartWizard(WizardLanguage, Rc):
-	def __init__(self, session, silent = True, showSteps = False, neededTag = None):
+	def __init__(self, session, silent=True, showSteps=False, neededTag=None):
 		self.xmlfile = ["startwizard.xml"]
-		WizardLanguage.__init__(self, session, showSteps = False)
+		WizardLanguage.__init__(self, session, showSteps=False)
 		Rc.__init__(self)
 		self["wizard"] = Pixmap()
 		self["lab1"] = StaticText(_("OpenVision"))
@@ -42,6 +43,7 @@ class StartWizard(WizardLanguage, Rc):
 		config.misc.firstrun.value = 0
 		config.misc.firstrun.save()
 		configfile.save()
+
 
 def setLanguageFromBackup(backupfile):
 	try:
@@ -57,14 +59,16 @@ def setLanguageFromBackup(backupfile):
 							language.activateLanguage(languageToSelect)
 							break
 		tar.close()
-	except:
+	except Exception:
 		pass
+
 
 def checkForAvailableAutoBackup():
 	for backupfile in ["/media/%s/backup/Vision-AutoBackup.tar.gz" % media for media in os.listdir("/media/") if os.path.isdir(os.path.join("/media/", media))]:
 		if os.path.isfile(backupfile):
 			setLanguageFromBackup(backupfile)
 			return True
+
 
 class AutoRestoreWizard(MessageBox):
 	def __init__(self, session):
@@ -76,12 +80,14 @@ class AutoRestoreWizard(MessageBox):
 		else:
 			MessageBox.close(self)
 
+
 def checkForDevelopImage():
 	if getImageVersion() == 'develop':
 		return config.misc.check_developimage.value
 	elif not config.misc.check_developimage.value:
 		config.misc.check_developimage.value = True
 		config.misc.check_developimage.save()
+
 
 class DevelopWizard(MessageBox):
 	def __init__(self, session):
@@ -92,6 +98,7 @@ class DevelopWizard(MessageBox):
 			config.misc.check_developimage.value = False
 			config.misc.check_developimage.save()
 		MessageBox.close(self)
+
 
 class AutoInstallWizard(Screen):
 	skin = """<screen name="AutoInstall" position="fill" flags="wfNoBorder">
@@ -104,6 +111,7 @@ class AutoInstallWizard(Screen):
 		<eLabel position="top" size="*,2"/>
 		<widget name="AboutScrollLabel" font="Fixed;20" position="fill"/>
 	</screen>"""
+
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self["progress"] = ProgressBar()
@@ -136,7 +144,7 @@ class AutoInstallWizard(Screen):
 		self.abort()
 
 	def run_console(self):
-		self["progress"].setValue(100 * (self.number_of_packages - len(self.packages))/self.number_of_packages)
+		self["progress"].setValue(100 * (self.number_of_packages - len(self.packages)) / self.number_of_packages)
 		try:
 			open("/proc/progress", "w").write(str(self["progress"].value))
 		except IOError:
@@ -182,6 +190,7 @@ class AutoInstallWizard(Screen):
 		self.logfile.close()
 		os.remove("/etc/.doAutoinstall")
 		self.close(3)
+
 
 if not os.path.isfile("/etc/installed"):
 	from Components.Console import Console

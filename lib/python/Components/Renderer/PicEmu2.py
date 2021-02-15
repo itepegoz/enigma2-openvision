@@ -11,6 +11,7 @@ from Components.Element import cached
 from Components.Converter.Poll import Poll
 import os
 
+
 class PicEmu2(Renderer, Poll):
 	__module__ = __name__
 	if os.path.exists("/usr/lib64"):
@@ -59,14 +60,14 @@ class PicEmu2(Renderer, Poll):
 					if "echo" in line:
 						nameemu.append(line)
 				camdlist = "%s" % nameemu[1].split('"')[1]
-			except:
+			except BaseException:
 				pass
 			try:
 				for line in open("/etc/init.d/cardserver"):
 					if "echo" in line:
 						nameser.append(line)
 				serlist = "%s" % nameser[1].split('"')[1]
-			except:
+			except BaseException:
 				pass
 			if serlist is not None and camdlist is not None:
 				return ("%s %s" % (serlist, camdlist))
@@ -82,7 +83,7 @@ class PicEmu2(Renderer, Poll):
 				for current in serlist.readlines():
 					cardserver = current
 				serlist.close()
-			except:
+			except BaseException:
 				pass
 		else:
 			cardserver = " "
@@ -93,7 +94,7 @@ class PicEmu2(Renderer, Poll):
 				for current in camdlist.readlines():
 					emu = current
 				camdlist.close()
-			except:
+			except BaseException:
 				pass
 		else:
 			emu = " "
@@ -125,13 +126,13 @@ class PicEmu2(Renderer, Poll):
 									if fileExists("/tmp/ecm.info"):
 										try:
 											content = open("/tmp/ecm.info", "r").read()
-										except:
+										except BaseException:
 											content = ""
 										contentInfo = content.split("\n")
 										for line in contentInfo:
 											if ("address" in line):
 												sname = "cccam"
-							except:
+							except BaseException:
 								print("")
 
 						if caids:

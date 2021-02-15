@@ -6,6 +6,7 @@ from Screens.MessageBox import MessageBox
 from Components.AVSwitch import AVSwitch
 from Tools import Notifications
 
+
 class Scart(Screen):
 	def __init__(self, session, start_visible=True):
 		Screen.__init__(self, session)
@@ -30,7 +31,7 @@ class Scart(Screen):
 			self.avswitch.setInput("SCART")
 			if not self.session.in_exec:
 				self.notificationVisible = True
-				Notifications.AddNotificationWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour scart connection. Press OK to return."), MessageBox.TYPE_ERROR, msgBoxID = "scart_msgbox")
+				Notifications.AddNotificationWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour scart connection. Press OK to return."), MessageBox.TYPE_ERROR, msgBoxID="scart_msgbox")
 			else:
 				self.msgBox = self.session.openWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour scart connection. Press OK to return."), MessageBox.TYPE_ERROR)
 
@@ -41,7 +42,7 @@ class Scart(Screen):
 	def switchToTV(self, *val):
 		if self.msgVisible:
 			if self.msgBox:
-				self.msgBox.close() # ... MsgBoxClosed -> switchToTV again..
+				self.msgBox.close()  # ... MsgBoxClosed -> switchToTV again..
 				return
 			self.avswitch.setInput("ENCODER")
 			self.msgVisible = False
@@ -52,5 +53,5 @@ class Scart(Screen):
 				try:
 					if notification[1].msgBoxID == "scart_msgbox":
 						notification[1].close()
-				except:
+				except Exception:
 					print("[Scart] other notification is open. try another one.")

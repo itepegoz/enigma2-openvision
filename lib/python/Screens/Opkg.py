@@ -9,8 +9,9 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from enigma import eTimer
 
+
 class Opkg(Screen):
-	def __init__(self, session, cmdList = []):
+	def __init__(self, session, cmdList=[]):
 		Screen.__init__(self, session)
 
 		self.cmdList = cmdList
@@ -33,7 +34,7 @@ class Opkg(Screen):
 		self.activity = 0
 		self.activityTimer = eTimer()
 		self.activityTimer.callback.append(self.doActivityTimer)
-		#self.activityTimer.start(100, False)
+		# self.activityTimer.start(100, False)
 
 		self.opkg = OpkgComponent()
 		self.opkg.addCallback(self.opkgCallback)
@@ -42,7 +43,7 @@ class Opkg(Screen):
 		self.runNextCmd()
 
 		self["actions"] = ActionMap(["WizardActions"],
-		{
+									{
 			"ok": self.exit,
 			"back": self.exit
 		}, -1)
@@ -63,7 +64,7 @@ class Opkg(Screen):
 		else:
 			cmd = self.cmdList[self.runningCmd]
 			self.slider.setValue(self.runningCmd)
-			self.opkg.startCmd(cmd[0], args = cmd[1])
+			self.opkg.startCmd(cmd[0], args=cmd[1])
 			self.startActivityTimer()
 
 	def doActivityTimer(self):
@@ -89,19 +90,19 @@ class Opkg(Screen):
 				self.slider.setValue(self.sliderPackages[param])
 			self.package.setText(param)
 			self.status.setText(_("Updating"))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_INSTALL:
 			self.package.setText(param)
 			self.status.setText(_("Installing"))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_REMOVE:
 			self.package.setText(param)
 			self.status.setText(_("Removing"))
-			if not param in self.processed_packages:
+			if param not in self.processed_packages:
 				self.processed_packages.append(param)
 				self.packages += 1
 		elif event == OpkgComponent.EVENT_CONFIGURING:

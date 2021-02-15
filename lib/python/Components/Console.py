@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import enigma, os
+import enigma
+import os
 import six
+
 
 class ConsoleItem:
 	def __init__(self, containers, cmd, callback, extra_args):
@@ -22,7 +24,7 @@ class ConsoleItem:
 			self.appResults = []
 			self.container.dataAvail.append(self.dataAvailCB)
 		self.container.appClosed.append(self.finishedCB)
-		if isinstance(cmd, str): # until .execute supports a better api
+		if isinstance(cmd, str):  # until .execute supports a better api
 			cmd = [cmd]
 		retval = self.container.execute(*cmd)
 		if retval:
@@ -30,10 +32,12 @@ class ConsoleItem:
 		if callback is None:
 			try:
 				os.waitpid(self.container.getPID(), 0)
-			except:
+			except (IOError, OSError) as err:
 				pass
+
 	def dataAvailCB(self, data):
 		self.appResults.append(data)
+
 	def finishedCB(self, retval):
 		print("[Console] finished:", self.name)
 		del self.containers[self.name]
@@ -47,6 +51,7 @@ class ConsoleItem:
 			else:
 				data = b''.join(self.appResults)
 			callback(data, retval, self.extra_args)
+
 
 class Console(object):
 	def __init__(self):

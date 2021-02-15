@@ -10,6 +10,7 @@ from Screens.MessageBox import MessageBox
 from Screens.InputBox import PinInput
 from Tools.BoundFunction import boundFunction
 
+
 class ProtectedScreen:
 	def __init__(self):
 		if self.isProtected() and config.ParentalControl.servicepin[0].value:
@@ -27,22 +28,23 @@ class ProtectedScreen:
 	def closeProtectedScreen(self, result=None):
 		self.close(None)
 
+
 class ParentalControlSetup(Screen, ConfigListScreen, ProtectedScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		ProtectedScreen.__init__(self)
 		# for the skin: first try ParentalControlSetup, then Setup, this allows individual skinning
-		self.skinName = ["ParentalControlSetup", "Setup" ]
+		self.skinName = ["ParentalControlSetup", "Setup"]
 		self.setup_title = _("Parental control setup")
 		self.setTitle(self.setup_title)
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
 		self.createSetup(initial=True)
 
 		self["actions"] = NumberActionMap(["SetupActions", "MenuActions"],
-		{
+										  {
 			"cancel": self.keyCancel,
 			"save": self.keySave,
 			"ok": self.keyOK,
@@ -91,7 +93,7 @@ class ParentalControlSetup(Screen, ConfigListScreen, ProtectedScreen):
 				self.list.append(getConfigListEntry(_("Protect movie list"), config.ParentalControl.config_sections.movie_list))
 				self.list.append(getConfigListEntry(_("Protect context menus"), config.ParentalControl.config_sections.context_menus))
 				if config.usage.menu_sort_mode.value == "user":
-						self.list.append(getConfigListEntry(_("Protect menu sort"), config.ParentalControl.config_sections.menu_sort))
+					self.list.append(getConfigListEntry(_("Protect menu sort"), config.ParentalControl.config_sections.menu_sort))
 		else:
 			self.changePin = getConfigListEntry(_("Enable parental protection"), config.ParentalControl.servicepinactive)
 			self.list.append(self.changePin)
@@ -169,7 +171,7 @@ class ParentalControlSetup(Screen, ConfigListScreen, ProtectedScreen):
 	def oldPinEntered(self, answer):
 		if answer:
 			self.session.openWithCallback(self.newPinEntered, PinInput, title=_("Please enter the new PIN code"), windowTitle=_("Enter pin code"))
-		elif answer == False:
+		elif answer is False:
 			self.session.open(MessageBox, _("The pin code you entered is wrong."), MessageBox.TYPE_ERROR, timeout=5)
 
 	def newPinEntered(self, answer):

@@ -6,13 +6,13 @@ from Components.Element import cached
 
 
 class CpuUsage(Converter, object):
-	CPU_ALL   = -2
+	CPU_ALL = -2
 	CPU_TOTAL = -1
 
 	def __init__(self, type):
 		Converter.__init__(self, type)
 
-		self.percentlist = [ ]
+		self.percentlist = []
 		self.pfmt = "%3d%%"
 		if not type or type == "Total":
 			self.type = self.CPU_TOTAL
@@ -29,11 +29,12 @@ class CpuUsage(Converter, object):
 				pos = 0
 				while True:
 					pos = self.sfmt.find("$", pos)
-					if pos == -1: break
-					if pos < len(self.sfmt)-1 and \
-						self.sfmt[pos+1].isdigit() and \
-						int(self.sfmt[pos+1]) > cpus:
-						self.sfmt = self.sfmt.replace("$" + self.sfmt[pos+1], "n/a")
+					if pos == -1:
+						break
+					if pos < len(self.sfmt) - 1 and \
+							self.sfmt[pos + 1].isdigit() and \
+							int(self.sfmt[pos + 1]) > cpus:
+						self.sfmt = self.sfmt.replace("$" + self.sfmt[pos + 1], "n/a")
 					pos += 1
 
 	def doSuspend(self, suspended):
@@ -52,8 +53,8 @@ class CpuUsage(Converter, object):
 		if not self.percentlist:
 			self.percentlist = [0] * 3
 		for i in range(len(self.percentlist)):
-			res = res.replace("$" + str(i), self.pfmt%(self.percentlist[i]))
-		res = res.replace("$?", "%d" % (len(self.percentlist)-1))
+			res = res.replace("$" + str(i), self.pfmt % (self.percentlist[i]))
+		res = res.replace("$?", "%d" % (len(self.percentlist) - 1))
 		return res
 
 	@cached
@@ -77,7 +78,7 @@ class CpuUsageMonitor(Poll, object):
 
 	def __init__(self):
 		Poll.__init__(self)
-		self.__callbacks = [ ]
+		self.__callbacks = []
 		self.__curr_info = self.getCpusInfo()
 		self.poll_interval = 500
 
@@ -101,18 +102,18 @@ class CpuUsageMonitor(Poll, object):
 					# append [cpu, total, busy]
 					res.append([tmp[0], total, busy])
 			fd.close()
-		except:
+		except BaseException:
 			pass
 		return res
 
 	def poll(self):
 		prev_info, self.__curr_info = self.__curr_info, self.getCpusInfo()
 		if len(self.__callbacks):
-			info = [ ]
+			info = []
 			for i in range(len(self.__curr_info)):
 				# xxx% = (cur_xxx - prev_xxx) / (cur_total - prev_total) * 100
 				try:
-					p = 100 * ( self.__curr_info[i][2] - prev_info[i][2] ) / ( self.__curr_info[i][1] - prev_info[i][1] )
+					p = 100 * (self.__curr_info[i][2] - prev_info[i][2]) / (self.__curr_info[i][1] - prev_info[i][1])
 				except ZeroDivisionError:
 					p = 0
 				info.append(p)
@@ -120,7 +121,7 @@ class CpuUsageMonitor(Poll, object):
 				f(info)
 
 	def connectCallback(self, func):
-		if not func in self.__callbacks:
+		if func not in self.__callbacks:
 			self.__callbacks.append(func)
 		if not self.poll_enabled:
 			self.poll()

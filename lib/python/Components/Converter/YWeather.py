@@ -9,7 +9,7 @@ import time
 import os
 try:
 	import urllib2
-except:
+except BaseException:
 	import urllib
 import socket
 import six
@@ -18,6 +18,7 @@ if six.PY2:
 	pyunichr = unichr
 else:
 	pyunichr = chr
+
 
 class YWeather(Poll, Converter, object):
 	weather_city = '2251945'
@@ -163,20 +164,20 @@ class YWeather(Poll, Converter, object):
 				f.close
 			print('[YWeather] fetchXML XML file retrieved and saved.')
 			return True
-		except:
+		except BaseException:
 			print('[YWeather] fetchXML XML file retrieved and but could not be saved.')
 			return
 
 	@cached
 	def getText(self):
-		xweather = {'ycity':"N/A", 'ycountry':"N/A", 'ydirection':"N/A", 'yspeed':"N/A", 'yhumidity':"N/A",
-				'yvisibility':"N/A", 'ypressure':"N/A", 'ytext':"N/A", 'ytemp':"N/A", 'ypicon':"3200",
-				'yday2':"N/A", 'yday3':"N/A", 'yday4':"N/A", 'yday5':"N/A",
-				'ypiconday2':"3200", 'ypiconday3':"3200", 'ypiconday4':"3200", 'ypiconday5':"3200",
-				'ydate2':"N/A", 'ydate3':"N/A", 'ydate4':"N/A", 'ydate5':"N/A",
-				'ytextday2':"N/A", 'ytextday3':"N/A", 'ytextday4':"N/A", 'ytextday5':"N/A",
-				'ytemphighday2':"N/A", 'ytemphighday3':"N/A", 'ytemphighday4':"N/A", 'ytemphighday5':"N/A",
-				'ytemplowday2':"N/A", 'ytemplowday3':"N/A", 'ytemplowday4':"N/A", 'ytemplowday5':"N/A"}
+		xweather = {'ycity': "N/A", 'ycountry': "N/A", 'ydirection': "N/A", 'yspeed': "N/A", 'yhumidity': "N/A",
+					'yvisibility': "N/A", 'ypressure': "N/A", 'ytext': "N/A", 'ytemp': "N/A", 'ypicon': "3200",
+					'yday2': "N/A", 'yday3': "N/A", 'yday4': "N/A", 'yday5': "N/A",
+					'ypiconday2': "3200", 'ypiconday3': "3200", 'ypiconday4': "3200", 'ypiconday5': "3200",
+					'ydate2': "N/A", 'ydate3': "N/A", 'ydate4': "N/A", 'ydate5': "N/A",
+					'ytextday2': "N/A", 'ytextday3': "N/A", 'ytextday4': "N/A", 'ytextday5': "N/A",
+					'ytemphighday2': "N/A", 'ytemphighday3': "N/A", 'ytemphighday4': "N/A", 'ytemphighday5': "N/A",
+					'ytemplowday2': "N/A", 'ytemplowday3': "N/A", 'ytemplowday4': "N/A", 'ytemplowday5': "N/A"}
 		direct = 0
 		info = ""
 		XML_location = "/tmp/yweather.xml"
@@ -184,7 +185,7 @@ class YWeather(Poll, Converter, object):
 			self.weather_city = open(resolveFilename(SCOPE_PLUGINS, "Extensions/iSkin/Weather/Config/Location_id")).read()
 		elif fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/YahooWeather/Config/Location_id")):
 			self.weather_city = open(resolveFilename(SCOPE_PLUGINS, "Extensions/YahooWeather/Config/Location_id")).read()
-		if fileExists(XML_location) and (int((time.time() - os.stat(XML_location).st_mtime)/60) >= self.time_update):
+		if fileExists(XML_location) and (int((time.time() - os.stat(XML_location).st_mtime) / 60) >= self.time_update):
 			os.remove(XML_location)
 		XML_URL = "https://query.yahooapis.com/v1/public/yql?q=select%%20*%%20from%%20weather.forecast%%20where%%20woeid=%ss%%20AND%%20u=%%22c%%22" % self.weather_city
 		if not fileExists(XML_location) and self.fetchXML(XML_URL, XML_location) != True:
@@ -194,7 +195,7 @@ class YWeather(Poll, Converter, object):
 			return 'N/A'
 		wday = 1
 		for line in open(XML_location):
-			#print("[YWeather][gText] line:", line)
+			# print("[YWeather][gText] line:", line)
 			if line.find("<yweather:location") > -1:
 				xweather['ycity'] = line.split('city')[1].split('"')[1]
 				xweather['ycountry'] = line.split('country')[1].split('"')[1]
@@ -211,36 +212,36 @@ class YWeather(Poll, Converter, object):
 				xweather['ytemp'] = line.split('temp')[1].split('"')[1]
 			elif line.find('yweather:forecast') > -1:
 				if wday == 2:
-					xweather['yday2'] =  line.split('day')[1].split('"')[1]
-					xweather['ydate2'] =  line.split('date')[1].split('"')[1]
+					xweather['yday2'] = line.split('day')[1].split('"')[1]
+					xweather['ydate2'] = line.split('date')[1].split('"')[1]
 					xweather['ytextday2'] = line.split('text')[1].split('"')[1]
-					xweather['ypiconday2'] =  line.split('code')[1].split('"')[1]
+					xweather['ypiconday2'] = line.split('code')[1].split('"')[1]
 					xweather['ytemphighday2'] = line.split('high')[1].split('"')[1]
 					xweather['ytemplowday2'] = line.split('low')[1].split('"')[1]
 				elif wday == 3:
-					xweather['yday3'] =  line.split('day')[1].split('"')[1]
-					xweather['ydate3'] =  line.split('date')[1].split('"')[1]
+					xweather['yday3'] = line.split('day')[1].split('"')[1]
+					xweather['ydate3'] = line.split('date')[1].split('"')[1]
 					xweather['ytextday3'] = line.split('text')[1].split('"')[1]
-					xweather['ypiconday3'] =  line.split('code')[1].split('"')[1]
+					xweather['ypiconday3'] = line.split('code')[1].split('"')[1]
 					xweather['ytemphighday3'] = line.split('high')[1].split('"')[1]
 					xweather['ytemplowday3'] = line.split('low')[1].split('"')[1]
 				elif wday == 4:
-					xweather['yday4'] =  line.split('day')[1].split('"')[1]
-					xweather['ydate4'] =  line.split('date')[1].split('"')[1]
+					xweather['yday4'] = line.split('day')[1].split('"')[1]
+					xweather['ydate4'] = line.split('date')[1].split('"')[1]
 					xweather['ytextday4'] = line.split('text')[1].split('"')[1]
-					xweather['ypiconday4'] =  line.split('code')[1].split('"')[1]
+					xweather['ypiconday4'] = line.split('code')[1].split('"')[1]
 					xweather['ytemphighday4'] = line.split('high')[1].split('"')[1]
 					xweather['ytemplowday4'] = line.split('low')[1].split('"')[1]
 				elif wday == 5:
-					xweather['yday5'] =  line.split('day')[1].split('"')[1]
-					xweather['ydate5'] =  line.split('date')[1].split('"')[1]
+					xweather['yday5'] = line.split('day')[1].split('"')[1]
+					xweather['ydate5'] = line.split('date')[1].split('"')[1]
 					xweather['ytextday5'] = line.split('text')[1].split('"')[1]
-					xweather['ypiconday5'] =  line.split('code')[1].split('"')[1]
+					xweather['ypiconday5'] = line.split('code')[1].split('"')[1]
 					xweather['ytemphighday5'] = line.split('high')[1].split('"')[1]
 					xweather['ytemplowday5'] = line.split('low')[1].split('"')[1]
 				wday = wday + 1
 
-		#print("[YWeather][gText] xweather:", xweather)
+		# print("[YWeather][gText] xweather:", xweather)
 
 		if self.type == self.city:
 			info = xweather['ycity']
@@ -447,7 +448,7 @@ class YWeather(Poll, Converter, object):
 				info = "N/A"
 		elif self.type == self.date5:
 			info = xweather['ydate5']
-		#print("[YWeather][gText] info:", info)
+		# print("[YWeather][gText] info:", info)
 		return info
 
 	text = property(getText)

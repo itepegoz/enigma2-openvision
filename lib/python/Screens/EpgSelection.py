@@ -34,6 +34,7 @@ import six
 
 mepg_config_initialized = False
 
+
 class EPGSelection(Screen):
 	EMPTY = 0
 	ADD_TIMER = 1
@@ -45,7 +46,7 @@ class EPGSelection(Screen):
 		Screen.__init__(self, session)
 		self.bouquetChangeCB = bouquetChangeCB
 		self.serviceChangeCB = serviceChangeCB
-		self.ask_time = -1 #now
+		self.ask_time = -1  # now
 		self["key_red"] = StaticText("")
 		self.closeRecursive = False
 		self.saved_title = None
@@ -59,7 +60,7 @@ class EPGSelection(Screen):
 			self["key_yellow"] = StaticText()
 			self["key_blue"] = StaticText()
 			self["key_red"] = StaticText()
-			self.currentService=service
+			self.currentService = service
 			self.eventid = eventid
 			self.zapFunc = None
 		elif isinstance(service, eServiceReference) or isinstance(service, str):
@@ -67,7 +68,7 @@ class EPGSelection(Screen):
 			self.type = EPG_TYPE_SINGLE
 			self["key_yellow"] = StaticText()
 			self["key_blue"] = StaticText(_("Select Channel"))
-			self.currentService=ServiceReference(service)
+			self.currentService = ServiceReference(service)
 			self.zapFunc = zapFunc
 			self.sort_type = 0
 			self.setSortDescription()
@@ -100,28 +101,28 @@ class EPGSelection(Screen):
 			self["key_green"] = Button(_("Add timer"))
 		self.key_green_choice = self.ADD_TIMER
 		self.key_red_choice = self.EMPTY
-		self["list"] = EPGList(type = self.type, selChangedCB = self.onSelectionChanged, timer = session.nav.RecordTimer)
+		self["list"] = EPGList(type=self.type, selChangedCB=self.onSelectionChanged, timer=session.nav.RecordTimer)
 
 		self["actions"] = ActionMap(["EPGSelectActions", "OkCancelActions"],
-			{
-				"cancel": self.closeScreen,
-				"ok": self.eventSelected,
-				"timerAdd": self.timerAdd,
-				"yellow": self.yellowButtonPressed,
-				"blue": self.blueButtonPressed,
-				"info": self.infoKeyPressed,
-				"menu": self.furtherOptions,
-				"nextBouquet": self.nextBouquet, # just used in multi epg yet
-				"prevBouquet": self.prevBouquet, # just used in multi epg yet
-				"nextService": self.nextService, # just used in single epg yet
-				"prevService": self.prevService, # just used in single epg yet
-				"preview": self.eventPreview,
-			})
+									{
+			"cancel": self.closeScreen,
+			"ok": self.eventSelected,
+			"timerAdd": self.timerAdd,
+			"yellow": self.yellowButtonPressed,
+			"blue": self.blueButtonPressed,
+			"info": self.infoKeyPressed,
+			"menu": self.furtherOptions,
+			"nextBouquet": self.nextBouquet,  # just used in multi epg yet
+			"prevBouquet": self.prevBouquet,  # just used in multi epg yet
+			"nextService": self.nextService,  # just used in single epg yet
+			"prevService": self.prevService,  # just used in single epg yet
+			"preview": self.eventPreview,
+		})
 
 		self['colouractions'] = HelpableActionMap(self, ["ColorActions"],
-			{
-				"red": (self.GoToTmbd, _("Search event in TMBD"))
-			})
+												  {
+			"red": (self.GoToTmbd, _("Search event in TMBD"))
+		})
 
 		self.isTMBD = fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/TMBD/plugin.pyo")) or fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/TMBD/plugin.py"))
 		if self.isTMBD:
@@ -132,13 +133,13 @@ class EPGSelection(Screen):
 			self.select = False
 		try:
 			from Plugins.Extensions.YTTrailer.plugin import baseEPGSelection__init__
-			description=_("Search yt-trailer for event")
+			description = _("Search yt-trailer for event")
 		except ImportError as ie:
 			pass
 		else:
 			if baseEPGSelection__init__ is not None:
 				self["trailerActions"] = ActionMap(["InfobarActions", "InfobarTeletextActions"],
-				{
+												   {
 					"showTv": self.showTrailer,
 					"showRadio": self.showTrailerList,
 					"startTeletext": self.showConfig
@@ -159,9 +160,9 @@ class EPGSelection(Screen):
 	def runTMBD(self):
 		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/TMBD/plugin.pyo")) or fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/TMBD/plugin.py")):
 			from Plugins.Extensions.TMBD.plugin import TMBD
-			description=_("TMBD Details")
-			description=_("TMBD details for event")
-			description=_("Query details from the Internet Movie Database")
+			description = _("TMBD Details")
+			description = _("TMBD details for event")
+			description = _("Query details from the Internet Movie Database")
 			cur = self["list"].getCurrent()
 			if cur[0] is not None:
 				name2 = cur[0].getEventName() or ''
@@ -170,7 +171,7 @@ class EPGSelection(Screen):
 				eventname = eventname.replace('', '')
 				try:
 					tmbdsearch = config.plugins.tmbd.profile.value
-				except:
+				except Exception:
 					tmbdsearch = None
 				if tmbdsearch is not None:
 					if config.plugins.tmbd.profile.value == "0":
@@ -179,14 +180,14 @@ class EPGSelection(Screen):
 						try:
 							from Plugins.Extensions.TMBD.plugin import KinoRu
 							self.session.open(KinoRu, eventname, False)
-						except:
+						except Exception:
 							pass
 				else:
 					self.session.open(TMBD, eventname, False)
 
 	def doInstall(self, val):
 		if val:
-			self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input = False)
+			self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input=False)
 			self.message.setTitle(_('Installing TMBD'))
 			self.Console.ePopen('opkg update && opkg install enigma2-plugin-extensions-tmbd', self.installComplete)
 		else:
@@ -224,9 +225,9 @@ class EPGSelection(Screen):
 		if self.type == EPG_TYPE_MULTI:
 			global mepg_config_initialized
 			if not mepg_config_initialized:
-				config.misc.prev_mepg_time=ConfigClock(default = time())
+				config.misc.prev_mepg_time = ConfigClock(default=time())
 				mepg_config_initialized = True
-			self.session.openWithCallback(self.onDateTimeInputClosed, TimeDateInput, config.misc.prev_mepg_time )
+			self.session.openWithCallback(self.onDateTimeInputClosed, TimeDateInput, config.misc.prev_mepg_time)
 
 	def furtherOptions(self):
 		menu = []
@@ -234,11 +235,11 @@ class EPGSelection(Screen):
 		event = self["list"].getCurrent()[0]
 		if event:
 			if six.PY2:
-				menu = [(p.name, boundFunction(self.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTINFO) \
-					if 'selectedevent' in p.__call__.func_code.co_varnames]
+				menu = [(p.name, boundFunction(self.runPlugin, p)) for p in plugins.getPlugins(where=PluginDescriptor.WHERE_EVENTINFO)
+						if 'selectedevent' in p.__call__.func_code.co_varnames]
 			else:
-				menu = [(p.name, boundFunction(self.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTINFO) \
-					if 'selectedevent' in p.__call__.__code__.co_varnames]
+				menu = [(p.name, boundFunction(self.runPlugin, p)) for p in plugins.getPlugins(where=PluginDescriptor.WHERE_EVENTINFO)
+						if 'selectedevent' in p.__call__.__code__.co_varnames]
 			if menu:
 				text += ": %s" % event.getEventName()
 		if self.type == EPG_TYPE_MULTI:
@@ -262,12 +263,12 @@ class EPGSelection(Screen):
 	def onDateTimeInputClosed(self, ret):
 		if len(ret) > 1:
 			if ret[0]:
-				self.ask_time=ret[1]
+				self.ask_time = ret[1]
 				self["list"].fillMultiEPG(self.services, ret[1])
 
 	def closeScreen(self):
 		if self.zapFunc:
-			self.zapFunc(None, zapback = True)
+			self.zapFunc(None, zapback=True)
 		self.close(self.closeRecursive)
 
 	def infoKeyPressed(self):
@@ -291,31 +292,31 @@ class EPGSelection(Screen):
 		self.currentService = service
 		self.onCreate()
 
-	#just used in multipeg
+	# just used in multipeg
 	def onCreate(self):
-		l = self["list"]
-		l.recalcEntrySize()
+		entry = self["list"]
+		entry.recalcEntrySize()
 		if self.type == EPG_TYPE_MULTI:
-			l.fillMultiEPG(self.services, self.ask_time)
-			l.moveToService(Screens.InfoBar.InfoBar.instance and Screens.InfoBar.InfoBar.instance.servicelist.getCurrentSelection() or self.session.nav.getCurrentlyPlayingServiceOrGroup())
+			entry.fillMultiEPG(self.services, self.ask_time)
+			entry.moveToService(Screens.InfoBar.InfoBar.instance and Screens.InfoBar.InfoBar.instance.servicelist.getCurrentSelection() or self.session.nav.getCurrentlyPlayingServiceOrGroup())
 		elif self.type == EPG_TYPE_SINGLE:
 			service = self.currentService
 			self["Service"].newService(service.ref)
 			if not self.saved_title:
 				self.saved_title = self.instance.getTitle()
 			self.setTitle(self.saved_title + ' - ' + service.getServiceName())
-			l.fillSingleEPG(service)
+			entry.fillSingleEPG(service)
 		else:
-			l.fillSimilarList(self.currentService, self.eventid)
+			entry.fillSimilarList(self.currentService, self.eventid)
 
 	def eventViewCallback(self, setEvent, setService, val):
-		l = self["list"]
-		old = l.getCurrent()
+		entry = self["list"]
+		old = entry.getCurrent()
 		if val == -1:
 			self.moveUp()
 		elif val == +1:
 			self.moveDown()
-		cur = l.getCurrent()
+		cur = entry.getCurrent()
 		if self.type == EPG_TYPE_MULTI and cur[0] is None and cur[1].ref != old[1].ref:
 			self.eventViewCallback(setEvent, setService, val)
 		else:
@@ -338,7 +339,7 @@ class EPGSelection(Screen):
 		if count == 0:
 			ref = lst.getCurrent()[1]
 			if ref is not None:
-				self.zapFunc(ref.ref, preview = prev)
+				self.zapFunc(ref.ref, preview=prev)
 
 	def eventPreview(self):
 		if self.zapFunc:
@@ -479,6 +480,7 @@ class EPGSelection(Screen):
 				menu.append((_("Options disable timer"), "disablerepeatrunning"))
 				buttons.append("yellow")
 			menu.append((_("Timer Overview"), "timereditlist"))
+
 			def timerAction(choice):
 				if choice is not None:
 					if choice[1] == "delete":
@@ -495,7 +497,7 @@ class EPGSelection(Screen):
 						self.disableTimer(timer, prev_state, repeat=True)
 			self.session.openWithCallback(timerAction, ChoiceBox, title=title_text + _("Select action for timer '%s'.") % timer.name, list=menu, keys=buttons)
 		else:
-			newEntry = RecordTimerEntry(serviceref, checkOldTimers = True, dirname = preferredTimerPath(), *parseEvent(event))
+			newEntry = RecordTimerEntry(serviceref, checkOldTimers=True, dirname=preferredTimerPath(), *parseEvent(event))
 			newEntry.justplay = config.recording.timer_default_type.value == "zap"
 			newEntry.always_zap = config.recording.timer_default_type.value == "zap+record"
 			self.session.openWithCallback(self.finishedAdd, TimerEntry, newEntry)
@@ -507,6 +509,7 @@ class EPGSelection(Screen):
 				def removeEditTimer():
 					entry.service_ref, entry.begin, entry.end, entry.external = entry.service_ref_prev, entry.begin_prev, entry.end_prev, entry.external_prev
 					self.removeTimer(entry)
+
 				def moveEditTimerError():
 					entry.external = entry.external_prev
 					self.onSelectionChanged()
@@ -639,7 +642,7 @@ class EPGSelection(Screen):
 				self.applyButtonState(2)
 			else:
 				self.applyButtonState(1)
-			days = [ _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun") ]
+			days = [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun")]
 			datestr = ""
 			if event is not None:
 				now = time()

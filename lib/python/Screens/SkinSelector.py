@@ -21,6 +21,7 @@ from Screens.Standby import TryQuitMainloop, QUIT_RESTART
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_LCDSKIN, SCOPE_SKIN
 import six
 
+
 class SkinSelector(Screen, HelpableScreen):
 	skin = ["""
 	<screen name="SkinSelector" position="center,center" size="%d,%d">
@@ -41,17 +42,17 @@ class SkinSelector(Screen, HelpableScreen):
 		<widget source="key_red" render="Label" position="%d,e-%d" size="%d,%d" backgroundColor="key_red" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center" />
 		<widget source="key_green" render="Label" position="%d,e-%d" size="%d,%d" backgroundColor="key_green" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center" />
 	</screen>""",
-		670, 570,
-		10, 356, 200,
-		230, 650, 240,
-		10, 350, 30,
-		370, 260, 30,
-		25,
-		30,
-		85, 650, 25, 20,
-		10, 50, 140, 40, 20,
-		160, 50, 140, 40, 20
-	]
+			670, 570,
+			10, 356, 200,
+			230, 650, 240,
+			10, 350, 30,
+			370, 260, 30,
+			25,
+			30,
+			85, 650, 25, 20,
+			10, 50, 140, 40, 20,
+			160, 50, 140, 40, 20
+			]
 
 	def __init__(self, session, screenTitle=_("GUI Skin")):
 		Screen.__init__(self, session, mandatoryWidgets=["description", "skins"])
@@ -123,12 +124,12 @@ class SkinSelector(Screen, HelpableScreen):
 								}
 								mm = mmap.mmap(fd.fileno(), 0, prot=mmap.PROT_READ)
 								if six.PY2:
-									skinheight = re.search("\<?resolution.*?\syres\s*=\s*\"(\d+)\"", mm).group(1)
+									skinheight = re.search("\\<?resolution.*?\\syres\\s*=\\s*\"(\\d+)\"", mm).group(1)
 								else:
-									skinheight = re.search(b"\<?resolution.*?\syres\s*=\s*\"(\d+)\"", mm).group(1)
+									skinheight = re.search(b"\\<?resolution.*?\\syres\\s*=\\s*\"(\\d+)\"", mm).group(1)
 								resolution = skinheight and resolutions.get(skinheight, None)
 								mm.close()
-						except:
+						except Exception:
 							pass
 						print("[SkinSelector] Resolution of skin '%s': '%s'." % (skinPath, "Unknown" if resolution is None else resolution))
 						# Code can be added here to reject unsupported resolutions.
@@ -151,7 +152,7 @@ class SkinSelector(Screen, HelpableScreen):
 					list.append("%s (%s)" % (list[0], list[1]) if list[1] else list[0])
 					if list[1]:
 						list[1] = "<%s>" % list[1]
-					#0=SortKey, 1=Label, 2=Flag, 3=Directory, 4=Skin, 5=Resolution, 6=Preview, 7=Label + Flag
+					# 0=SortKey, 1=Label, 2=Flag, 3=Directory, 4=Skin, 5=Resolution, 6=Preview, 7=Label + Flag
 					skinList.append(tuple([list[0].upper()] + list))
 		skinList.sort()
 		self["skins"].setList(skinList)
@@ -237,6 +238,7 @@ class SkinSelector(Screen, HelpableScreen):
 			current = current.replace("_", " ")
 		return current
 
+
 class LcdSkinSelector(SkinSelector):
 	def __init__(self, session, screenTitle=_("Display Skin")):
 		SkinSelector.__init__(self, session, screenTitle=screenTitle)
@@ -245,6 +247,7 @@ class LcdSkinSelector(SkinSelector):
 		self.config = config.skin.display_skin
 		self.current = currentDisplaySkin
 		self.xmlList = ["skin_display.xml", "skin_display_picon.xml"]
+
 
 class SkinSelectorSummary(Screen):
 	def __init__(self, session, parent):

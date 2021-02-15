@@ -5,6 +5,7 @@ from Components.Converter.Converter import Converter
 from enigma import iServiceInformation, iPlayableService
 from Components.Element import cached
 
+
 class ServiceInfo2(Poll, Converter, object):
 
 	xAPID = 0
@@ -27,26 +28,26 @@ class ServiceInfo2(Poll, Converter, object):
 		Converter.__init__(self, type)
 		Poll.__init__(self)
 		self.type, self.interesting_events = {
-				"xAPID": (self.xAPID, (iPlayableService.evUpdatedInfo,)),
-				"xVPID": (self.xVPID, (iPlayableService.evUpdatedInfo,)),
-				"xSID": (self.xSID, (iPlayableService.evUpdatedInfo,)),
-				"xONID": (self.xONID, (iPlayableService.evUpdatedInfo,)),
-				"xTSID": (self.xTSID, (iPlayableService.evUpdatedInfo,)),
-				"sCAIDs": (self.sCAIDs, (iPlayableService.evUpdatedInfo,)),
-				"yAll": (self.yAll, (iPlayableService.evUpdatedInfo,)),
-				"xAll": (self.xAll, (iPlayableService.evUpdatedInfo,)),
-				"xVTYPE": (self.xVTYPE, (iPlayableService.evUpdatedInfo,)),
-				"xATYPE": (self.xATYPE, (iPlayableService.evUpdatedInfo,)),
-				"xALLTYPE": (self.xALLTYPE, (iPlayableService.evUpdatedInfo,)),
-				"VideoHeight": (self.VideoHeight, (iPlayableService.evUpdatedInfo,)),
-				"VideoWidth": (self.VideoWidth, (iPlayableService.evUpdatedInfo,)),
-				"Framerate": (self.Framerate, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo,)),
-				"Provider": (self.Provider, (iPlayableService.evUpdatedInfo,)),
-			}[type]
+			"xAPID": (self.xAPID, (iPlayableService.evUpdatedInfo,)),
+			"xVPID": (self.xVPID, (iPlayableService.evUpdatedInfo,)),
+			"xSID": (self.xSID, (iPlayableService.evUpdatedInfo,)),
+			"xONID": (self.xONID, (iPlayableService.evUpdatedInfo,)),
+			"xTSID": (self.xTSID, (iPlayableService.evUpdatedInfo,)),
+			"sCAIDs": (self.sCAIDs, (iPlayableService.evUpdatedInfo,)),
+			"yAll": (self.yAll, (iPlayableService.evUpdatedInfo,)),
+			"xAll": (self.xAll, (iPlayableService.evUpdatedInfo,)),
+			"xVTYPE": (self.xVTYPE, (iPlayableService.evUpdatedInfo,)),
+			"xATYPE": (self.xATYPE, (iPlayableService.evUpdatedInfo,)),
+			"xALLTYPE": (self.xALLTYPE, (iPlayableService.evUpdatedInfo,)),
+			"VideoHeight": (self.VideoHeight, (iPlayableService.evUpdatedInfo,)),
+			"VideoWidth": (self.VideoWidth, (iPlayableService.evUpdatedInfo,)),
+			"Framerate": (self.Framerate, (iPlayableService.evVideoSizeChanged, iPlayableService.evUpdatedInfo,)),
+			"Provider": (self.Provider, (iPlayableService.evUpdatedInfo,)),
+		}[type]
 		self.poll_interval = 1000
 		self.poll_enabled = True
 
-	def getServiceInfoString(self, info, what, convert = lambda x: "%d" % x):
+	def getServiceInfoString(self, info, what, convert=lambda x: "%d" % x):
 		v = info.getInfo(what)
 		if v == -1:
 			return "N/A"
@@ -59,14 +60,13 @@ class ServiceInfo2(Poll, Converter, object):
 		if v == -3:
 			t_objs = info.getInfoObject(what)
 			if t_objs and (len(t_objs) > 0):
-				ret_val=""
+				ret_val = ""
 				for t_obj in t_objs:
 					ret_val += "%.4X " % t_obj
 				return ret_val[:-1]
 			else:
 				return ""
 		return convert(v)
-
 
 	@cached
 	def getText(self):
@@ -82,13 +82,13 @@ class ServiceInfo2(Poll, Converter, object):
 			audio = service.audioTracks()
 			try:
 				return "%s%s" % (("MPEG2/", "MPEG4/", "MPEG1/", "MPEG4-II/", "VC1/", "VC1-SM/", "")[info.getInfo(iServiceInformation.sVideoType)], str(audio.getTrackInfo(audio.getCurrentTrack()).getDescription()))
-			except:
+			except BaseException:
 				return ""
 		elif self.type == self.xATYPE:
 			audio = service.audioTracks()
 			try:
 				return str(audio.getTrackInfo(audio.getCurrentTrack()).getDescription())
-			except:
+			except BaseException:
 				return ""
 		elif self.type == self.xVPID:
 			return "%0.4X" % int(self.getServiceInfoString(info, iServiceInformation.sVideoPID))
@@ -103,18 +103,18 @@ class ServiceInfo2(Poll, Converter, object):
 		elif self.type == self.yAll:
 			try:
 				return "SID: %0.4X  VPID: %0.4X  APID: %0.4X  TSID: %0.4X  ONID: %0.4X" % (int(self.getServiceInfoString(info, iServiceInformation.sSID)), int(self.getServiceInfoString(info, iServiceInformation.sVideoPID)), int(self.getServiceInfoString(info, iServiceInformation.sAudioPID)), int(self.getServiceInfoString(info, iServiceInformation.sTSID)), int(self.getServiceInfoString(info, iServiceInformation.sONID)))
-			except:
+			except BaseException:
 				try:
 					return "SID: %0.4X  APID: %0.4X  TSID: %0.4X  ONID: %0.4X" % (int(self.getServiceInfoString(info, iServiceInformation.sSID)), int(self.getServiceInfoString(info, iServiceInformation.sAudioPID)), int(self.getServiceInfoString(info, iServiceInformation.sTSID)), int(self.getServiceInfoString(info, iServiceInformation.sONID)))
-				except:
+				except BaseException:
 					return " "
 		elif self.type == self.xAll:
 			try:
 				return "SID: %0.4X  VPID: %0.4X APID: %0.4X" % (int(self.getServiceInfoString(info, iServiceInformation.sSID)), int(self.getServiceInfoString(info, iServiceInformation.sVideoPID)), int(self.getServiceInfoString(info, iServiceInformation.sAudioPID)))
-			except:
+			except BaseException:
 				try:
 					return "SID: %0.4X  APID: %0.4X" % (int(self.getServiceInfoString(info, iServiceInformation.sSID)), int(self.getServiceInfoString(info, iServiceInformation.sAudioPID)))
-				except:
+				except BaseException:
 					return " "
 		elif self.type == self.VideoHeight:
 			yres = info.getInfo(iServiceInformation.sVideoHeight)
@@ -128,7 +128,7 @@ class ServiceInfo2(Poll, Converter, object):
 				return " "
 			return str(xres)
 		elif self.type == self.Framerate:
-			return self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x+500)/1000))
+			return self.getServiceInfoString(info, iServiceInformation.sFrameRate, lambda x: "%d" % ((x + 500) / 1000))
 		elif self.type == self.Provider:
 			return self.getServiceInfoString(info, iServiceInformation.sProvider).upper()
 		return ""

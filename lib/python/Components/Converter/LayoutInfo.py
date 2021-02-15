@@ -6,12 +6,13 @@ from Components.Converter.Poll import Poll
 from os import popen, statvfs
 
 SIZE_UNITS = ['B',
- 'KB',
- 'MB',
- 'GB',
- 'TB',
- 'PB',
- 'EB']
+			  'KB',
+			  'MB',
+			  'GB',
+			  'TB',
+			  'PB',
+			  'EB']
+
 
 class LayoutInfo(Poll, Converter):
 	HDDTEMP = 0
@@ -70,12 +71,12 @@ class LayoutInfo(Poll, Converter):
 			text = self.getLoadAvg()
 		else:
 			entry = {self.MEMTOTAL: ('Mem', 'Ram'),
-			self.MEMFREE: ('Mem', 'Ram'),
-			self.SWAPTOTAL: ('Swap', 'Swap'),
-			self.SWAPFREE: ('Swap', 'Swap'),
-			self.USBINFO: ('/media/usb', 'USB'),
-			self.HDDINFO: ('/media/hdd', 'HDD'),
-			self.FLASHINFO: ('/', 'Flash')}[self.type]
+					 self.MEMFREE: ('Mem', 'Ram'),
+					 self.SWAPTOTAL: ('Swap', 'Swap'),
+					 self.SWAPFREE: ('Swap', 'Swap'),
+					 self.USBINFO: ('/media/usb', 'USB'),
+					 self.HDDINFO: ('/media/hdd', 'HDD'),
+					 self.FLASHINFO: ('/', 'Flash')}[self.type]
 			if self.type in (self.USBINFO, self.HDDINFO, self.FLASHINFO):
 				list = self.getDiskInfo(entry[0])
 			else:
@@ -86,33 +87,33 @@ class LayoutInfo(Poll, Converter):
 				text = '%s%%' % (list[3])
 			elif self.fullFormat:
 				text = '%s: %s Free:%s Used:%s (%s%%)' % (entry[1],
-				self.getSizeStr(list[0]),
-				self.getSizeStr(list[2]),
-				self.getSizeStr(list[1]),
-				list[3])
+														  self.getSizeStr(list[0]),
+														  self.getSizeStr(list[2]),
+														  self.getSizeStr(list[1]),
+														  list[3])
 			else:
 				text = '%s: %s Used:%s Free:%s' % (entry[1],
-				self.getSizeStr(list[0]),
-				self.getSizeStr(list[1]),
-				self.getSizeStr(list[2]))
+												   self.getSizeStr(list[0]),
+												   self.getSizeStr(list[1]),
+												   self.getSizeStr(list[2]))
 		return text
 
 	@cached
 	def getValue(self):
 		result = 0
 		if self.type in (self.MEMTOTAL,
-			self.MEMFREE,
-			self.SWAPTOTAL,
-			self.SWAPFREE):
+						 self.MEMFREE,
+						 self.SWAPTOTAL,
+						 self.SWAPFREE):
 			entry = {self.MEMTOTAL: 'Mem',
-			self.MEMFREE: 'Mem',
-			self.SWAPTOTAL: 'Swap',
-			self.SWAPFREE: 'Swap'}[self.type]
+					 self.MEMFREE: 'Mem',
+					 self.SWAPTOTAL: 'Swap',
+					 self.SWAPFREE: 'Swap'}[self.type]
 			result = self.getMemInfo(entry)[3]
 		elif self.type in (self.USBINFO, self.HDDINFO, self.FLASHINFO):
 			path = {self.USBINFO: '/media/usb',
-			self.HDDINFO: '/media/hdd',
-			self.FLASHINFO: '/'}[self.type]
+					self.HDDINFO: '/media/hdd',
+					self.FLASHINFO: '/'}[self.type]
 			result = self.getDiskInfo(path)[3]
 		return result
 
@@ -127,7 +128,7 @@ class LayoutInfo(Poll, Converter):
 			out_line = popen('hddtemp -n -q /dev/sda').readline()
 			info = 'Hdd C:' + out_line[:4]
 			textvalue = info
-		except:
+		except BaseException:
 			pass
 
 		return textvalue
@@ -139,16 +140,16 @@ class LayoutInfo(Poll, Converter):
 			out_line = popen('cat /proc/loadavg').readline()
 			info = 'loadavg:' + out_line[:15]
 			textvalue = info
-		except:
+		except BaseException:
 			pass
 
 		return textvalue
 
 	def getMemInfo(self, value):
 		result = [0,
-		0,
-		0,
-		0]
+				  0,
+				  0,
+				  0]
 		try:
 			check = 0
 			fd = open('/proc/meminfo')
@@ -166,7 +167,7 @@ class LayoutInfo(Poll, Converter):
 					break
 
 			fd.close()
-		except:
+		except BaseException:
 			pass
 
 		return result
@@ -182,19 +183,19 @@ class LayoutInfo(Poll, Converter):
 						return True
 
 				fd.close()
-			except:
+			except BaseException:
 				return None
 
 			return False
 
 		result = [0,
-		0,
-		0,
-		0]
+				  0,
+				  0,
+				  0]
 		if isMountPoint():
 			try:
 				st = statvfs(path)
-			except:
+			except BaseException:
 				st = None
 
 			if st is not None and 0 not in (st.f_bsize, st.f_blocks):
@@ -204,7 +205,7 @@ class LayoutInfo(Poll, Converter):
 				result[3] = result[1] * 100 / result[0]
 		return result
 
-	def getSizeStr(self, value, u = 0):
+	def getSizeStr(self, value, u=0):
 		fractal = 0
 		if value >= 1024:
 			fmt = '%(size)u.%(frac)d %(unit)s'
@@ -216,8 +217,8 @@ class LayoutInfo(Poll, Converter):
 		else:
 			fmt = '%(size)u %(unit)s'
 		return fmt % {'size': value,
-		'frac': fractal,
-		'unit': SIZE_UNITS[u]}
+					  'frac': fractal,
+					  'unit': SIZE_UNITS[u]}
 
 	def doSuspend(self, suspended):
 		if suspended:

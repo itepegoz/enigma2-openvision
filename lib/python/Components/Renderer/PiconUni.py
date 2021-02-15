@@ -8,6 +8,7 @@ import os
 
 searchPaths = []
 
+
 def initPiconPaths():
 	global searchPaths
 	if os.path.isfile('/proc/mounts'):
@@ -18,8 +19,10 @@ def initPiconPaths():
 	searchPaths.append('/usr/share/enigma2/%s/')
 	searchPaths.append(resolveFilename(SCOPE_PLUGINS, '%s/'))
 
+
 class PiconUni(Renderer):
 	__module__ = __name__
+
 	def __init__(self):
 		Renderer.__init__(self)
 		self.path = 'piconUni'
@@ -48,7 +51,7 @@ class PiconUni(Renderer):
 				sname = self.source.text
 				sname = sname.upper().replace('.', '').replace('\xc2\xb0', '')
 				print(sname)
-				#if sname.startswith('4097'):
+				# if sname.startswith('4097'):
 				if not sname.startswith('1'):
 					sname = sname.replace('4097', '1', 1).replace('5001', '1', 1).replace('5002', '1', 1)
 				if ':' in sname:
@@ -56,7 +59,7 @@ class PiconUni(Renderer):
 				pngname = self.nameCache.get(sname, '')
 				if pngname is '':
 					pngname = self.findPicon(sname)
-					if not pngname is '':
+					if pngname is not '':
 						self.nameCache[sname] = pngname
 			if pngname is '':
 				pngname = self.nameCache.get('default', '')
@@ -67,7 +70,7 @@ class PiconUni(Renderer):
 						if os.path.isfile(tmp):
 							pngname = tmp
 					self.nameCache['default'] = pngname
-			if not self.pngname is pngname:
+			if self.pngname is not pngname:
 				if self.scale is '0':
 					if pngname:
 						self.instance.setScale(1)
@@ -89,5 +92,6 @@ class PiconUni(Renderer):
 				if os.path.isfile(pngname):
 					return pngname
 		return ''
+
 
 initPiconPaths()

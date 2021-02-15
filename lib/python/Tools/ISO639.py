@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 try:
 	import cPickle as pickle
-except:
+except ImportError:
 	import pickle
 import enigma
 import six

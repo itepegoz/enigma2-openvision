@@ -3,6 +3,7 @@
 from __future__ import print_function
 from enigma import eDVBFrontendParametersSatellite, eDVBFrontendParametersTerrestrial, eDVBFrontendParametersCable, eDVBFrontendParametersATSC, eDVBFrontendParameters, eDVBResourceManager, eTimer
 
+
 class Tuner:
 	def __init__(self, frontend, ignore_rotor=False):
 		self.frontend = frontend
@@ -47,9 +48,9 @@ class Tuner:
 			self.frontend.tune(feparm)
 
 	def tuneTerr(self, frequency,
-		inversion=2, bandwidth = 7000000, fechigh = 6, feclow = 6,
-		modulation = 2, transmission = 2, guard = 4,
-		hierarchy = 4, system = 0, plp_id = 0):
+				 inversion=2, bandwidth=7000000, fechigh=6, feclow=6,
+				 modulation=2, transmission=2, guard=4,
+				 hierarchy=4, system=0, plp_id=0):
 		if self.frontend:
 			print("[TuneTest] tuning to transponder with data", [frequency, inversion, bandwidth, fechigh, feclow, modulation, transmission, guard, hierarchy, system, plp_id])
 			parm = eDVBFrontendParametersTerrestrial()
@@ -82,7 +83,7 @@ class Tuner:
 			parm.modulation = transponder[2]
 			parm.fec_inner = transponder[3]
 			parm.inversion = transponder[4]
-			#parm.system = transponder[5]
+			# parm.system = transponder[5]
 			self.tuneCabObj(parm)
 
 	def tuneCabObj(self, transponderObj):
@@ -114,17 +115,19 @@ class Tuner:
 			self.frontend.tune(self.lastparm)
 
 	def getTransponderData(self):
-		ret = { }
+		ret = {}
 		if self.frontend:
 			self.frontend.getTransponderData(ret, True)
 		return ret
+
 
 # tunes a list of transponders and checks, if they lock and optionally checks the onid/tsid combination
 # 1) add transponders with addTransponder()
 # 2) call run(<checkPIDs = True>)
 # 3) finishedChecking() is called, when the run is finished
+#
 class TuneTest:
-	def __init__(self, feid, stopOnSuccess = -1, stopOnError = -1):
+	def __init__(self, feid, stopOnSuccess=-1, stopOnError=-1):
 		self.stopOnSuccess = stopOnSuccess
 		self.stopOnError = stopOnError
 		self.feid = feid
@@ -133,9 +136,9 @@ class TuneTest:
 		print("[TuneTest] for feid %d" % self.feid)
 		if not self.openFrontend():
 			self.oldref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			self.session.nav.stopService() # try to disable foreground service
+			self.session.nav.stopService()  # try to disable foreground service
 			if not self.openFrontend():
-				if self.session.pipshown: # try to disable pip
+				if self.session.pipshown:  # try to disable pip
 					if hasattr(self.session, 'infobar'):
 						if self.session.infobar.servicelist.dopipzap:
 							self.session.infobar.servicelist.togglePipzap()
@@ -143,7 +146,7 @@ class TuneTest:
 						del self.session.pip
 					self.session.pipshown = False
 					if not self.openFrontend():
-						self.frontend = None # in normal case this should not happen
+						self.frontend = None  # in normal case this should not happen
 		self.tuner = Tuner(self.frontend)
 		self.timer = eTimer()
 		self.timer.callback.append(self.updateStatus)
@@ -199,9 +202,9 @@ class TuneTest:
 							if self.stopOnSuccess != -1 and self.stopOnSuccess <= len(self.successfullyTune):
 								stop = True
 				elif not self.checkPIDs or (self.checkPids and not pidsFailed):
-					self.successfullyTune.append([self.currTuned, self.oldTuned, dict]) # 3rd parameter is the frontend status
+					self.successfullyTune.append([self.currTuned, self.oldTuned, dict])  # 3rd parameter is the frontend status
 					if self.stopOnSuccess != -1 and self.stopOnSuccess <= len(self.successfullyTune):
-								stop = True
+						stop = True
 				self.tuningtransponder = self.nextTransponder()
 			else:
 				print("************* tuner_state:", dict["tuner_state"])
@@ -282,7 +285,7 @@ class TuneTest:
 	INTERNAL_PID_STATUS_SUCCESSFUL = 2
 	INTERNAL_PID_STATUS_FAILED = 3
 
-	def run(self, checkPIDs = False):
+	def run(self, checkPIDs=False):
 		self.checkPIDs = checkPIDs
 		self.pidStatus = self.INTERNAL_PID_STATUS_NOOP
 		self.failedTune = []
@@ -317,7 +320,9 @@ class TuneTest:
 	STATUS_TUNING = 1
 	STATUS_DONE = 2
 	STATUS_NOOP = 3
+
 	# can be overwritten
 	# progress = (range, value, status, transponder)
+	#
 	def progressCallback(self, progress):
 		pass

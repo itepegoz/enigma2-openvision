@@ -14,6 +14,7 @@ from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
 from Tools.LoadPixmap import LoadPixmap
 from boxbranding import getRCType
 
+
 class InputDeviceSelection(Screen, HelpableScreen):
 	skin = """
 	<screen name="InputDeviceSelection" position="center,center" size="560,400">
@@ -29,8 +30,8 @@ class InputDeviceSelection(Screen, HelpableScreen):
 			<convert type="TemplatedMultiContent">
 			<!--  device, description, devicepng, divpng  -->
 							{"template": [
-									MultiContentEntryPixmapAlphaTest(pos = (2, 8), size = (54, 54), png = 2), # index 3 is the interface pixmap
-									MultiContentEntryText(pos = (65, 6), size = (450, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER|RT_WRAP, text = 1), # index 1 is the interfacename
+									MultiContentEntryPixmapAlphaTest(pos = (2, 8), size = (54, 54), png = 2),  # index 3 is the interface pixmap
+									MultiContentEntryText(pos = (65, 6), size = (450, 54), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER|RT_WRAP, text = 1),  # index 1 is the interfacename
 								],
 							"fonts": [gFont("Regular", 28),gFont("Regular", 20)],
 							"itemHeight": 70
@@ -40,7 +41,6 @@ class InputDeviceSelection(Screen, HelpableScreen):
 		<ePixmap pixmap="div-h.png" position="0,340" zPosition="1" size="560,2"/>
 		<widget source="introduction" render="Label" position="0,350" size="560,50" zPosition="10" font="Regular;21" halign="center" valign="center" backgroundColor="#25062748" transparent="1"/>
 	</screen>"""
-
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -59,16 +59,16 @@ class InputDeviceSelection(Screen, HelpableScreen):
 		print("[InputDeviceSetup] found devices :->", len(self.devices), self.devices)
 
 		self["OkCancelActions"] = HelpableActionMap(self, ["OkCancelActions"],
-			{
+													{
 			"cancel": (self.close, _("Exit input device selection.")),
 			"ok": (self.okbuttonClick, _("Select input device.")),
-			}, -2)
+		}, -2)
 
 		self["ColorActions"] = HelpableActionMap(self, ["ColorActions"],
-			{
+												 {
 			"red": (self.close, _("Exit input device selection.")),
 			"green": (self.okbuttonClick, _("Select input device.")),
-			}, -2)
+		}, -2)
 
 		self.currentIndex = 0
 		self.list = []
@@ -83,7 +83,7 @@ class InputDeviceSelection(Screen, HelpableScreen):
 	def cleanup(self):
 		self.currentIndex = 0
 
-	def buildInterfaceList(self, device, description, type, isinputdevice = True):
+	def buildInterfaceList(self, device, description, type, isinputdevice=True):
 		divpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_SKIN, "div-h.png"))
 		activepng = None
 		devicepng = None
@@ -156,7 +156,7 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.setTitle(_("Input device setup"))
 		self.inputDevice = device
 		iInputDevices.currentDevice = self.inputDevice
-		self.onChangedEntry = [ ]
+		self.onChangedEntry = []
 		self.setup_title = _("Input device setup")
 		self.isStepSlider = None
 		self.enableEntry = None
@@ -165,15 +165,15 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.nameEntry = None
 		self.enableConfigEntry = None
 
-		self.list = [ ]
-		ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+		self.list = []
+		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
 
 		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
-			{
-				"cancel": self.keyCancel,
-				"save": self.apply,
-				"menu": self.closeRecursive,
-			}, -2)
+									{
+			"cancel": self.keyCancel,
+			"save": self.apply,
+			"menu": self.closeRecursive,
+		}, -2)
 
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))
@@ -189,13 +189,13 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 		listWidth = self["config"].l.getItemSize().width()
 		# use 20% of list width for sliders
-		self["config"].l.setSeperation(int(listWidth*.8))
+		self["config"].l.setSeperation(int(listWidth * .8))
 
 	def cleanup(self):
 		iInputDevices.currentDevice = ""
 
 	def createSetup(self):
-		self.list = [ ]
+		self.list = []
 		label = _("Change repeat and delay settings?")
 		cmd = "self.enableEntry = getConfigListEntry(label, config.inputDevices." + self.inputDevice + ".enabled)"
 		exec(cmd)
@@ -227,13 +227,13 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if self.selectionChanged not in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
 	def selectionChanged(self):
 		if self["config"].getCurrent() == self.enableEntry:
-			self["introduction"].setText(_("Current device: ") + str(iInputDevices.getDeviceAttribute(self.inputDevice, 'name')) )
+			self["introduction"].setText(_("Current device: ") + str(iInputDevices.getDeviceAttribute(self.inputDevice, 'name')))
 		else:
 			self["introduction"].setText(_("Current value: ") + self.getCurrentValue() + _(" ms"))
 
@@ -276,7 +276,9 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 			self.session.openWithCallback(self.cancelConfirm, MessageBox, _("Really close without saving settings?"), MessageBox.TYPE_YESNO, timeout=20, default=True)
 		else:
 			self.close()
+
 	# for summary:
+	#
 	def changedEntry(self):
 		for x in self.onChangedEntry:
 			x()
@@ -295,47 +297,47 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 
 class RemoteControlType(Screen, ConfigListScreen):
 	rcList = [
-			("0", _("Default")),
-			("3", _("Mara M9")),
-			("4", _("DMM normal")),
-			("5", _("et9000/et9100")),
-			("6", _("DMM advanced")),
-			("7", _("et5000/et6000")),
-			("8", _("VU+")),
-			("9", _("et8000/et10000/et13000")),
-			("11", _("et9200/et9500/et6500")),
-			("13", _("et4000")),
-			("14", _("XP1000")),
-			("16", _("HD11/HD51/HD1100/HD1200/HD1265/HD1500/HD500C/HD530C/VS1000/VS1500")),
-			("17", _("XP3000")),
-			("18", _("F1/F3/F4/F4-TURBO/TRIPLEX")),
-			("19", _("HD2400")),
-			("20", _("Zgemma Star S/2S/H1/H2")),
-			("21", _("Zgemma H.S/H.2S/H.2H/H5/H7")),
-			("22", _("Zgemma i55")),
-			("23", _("WWIO 4K")),
-			("24", _("Axas E4HD Ultra")),
-			("25", _("Zgemma H0/H8/H9/I55Plus old model")),
-			("26", _("Protek 4K UHD/HD61")),
-			("27", _("HD60")),
-			("28", _("I55SE/H7/H9/H9SE/H9COMBO/H9COMBOSE/H10 new Model")),
-			("500", _("WWIO_BRE2ZE_TC")),
-			("501", _("OCTAGON SF4008")),
-			("502", _("GIGABLUE Black")),
-			("503", _("MIRACLEBOX TWINPLUS")),
-			("504", _("E3HD/XPEEDLX/GI")),
-			("505", _("ODIN M7")),
-			("507", _("Beyonwiz U4")),
-			("511", _("OCTAGON SF5008"))
-		]
+		("0", _("Default")),
+		("3", _("Mara M9")),
+		("4", _("DMM normal")),
+		("5", _("et9000/et9100")),
+		("6", _("DMM advanced")),
+		("7", _("et5000/et6000")),
+		("8", _("VU+")),
+		("9", _("et8000/et10000/et13000")),
+		("11", _("et9200/et9500/et6500")),
+		("13", _("et4000")),
+		("14", _("XP1000")),
+		("16", _("HD11/HD51/HD1100/HD1200/HD1265/HD1500/HD500C/HD530C/VS1000/VS1500")),
+		("17", _("XP3000")),
+		("18", _("F1/F3/F4/F4-TURBO/TRIPLEX")),
+		("19", _("HD2400")),
+		("20", _("Zgemma Star S/2S/H1/H2")),
+		("21", _("Zgemma H.S/H.2S/H.2H/H5/H7")),
+		("22", _("Zgemma i55")),
+		("23", _("WWIO 4K")),
+		("24", _("Axas E4HD Ultra")),
+		("25", _("Zgemma H0/H8/H9/I55Plus old model")),
+		("26", _("Protek 4K UHD/HD61")),
+		("27", _("HD60")),
+		("28", _("I55SE/H7/H9/H9SE/H9COMBO/H9COMBOSE/H10 new Model")),
+		("500", _("WWIO_BRE2ZE_TC")),
+		("501", _("OCTAGON SF4008")),
+		("502", _("GIGABLUE Black")),
+		("503", _("MIRACLEBOX TWINPLUS")),
+		("504", _("E3HD/XPEEDLX/GI")),
+		("505", _("ODIN M7")),
+		("507", _("Beyonwiz U4")),
+		("511", _("OCTAGON SF5008"))
+	]
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.skinName = ["RemoteControlType", "Setup" ]
+		self.skinName = ["RemoteControlType", "Setup"]
 		self.setTitle(_("Remote control type setup"))
 
 		self["actions"] = ActionMap(["SetupActions"],
-		{
+									{
 			"cancel": self.keyCancel,
 			"save": self.keySave,
 		}, -1)
@@ -344,10 +346,10 @@ class RemoteControlType(Screen, ConfigListScreen):
 		self["key_red"] = StaticText(_("Cancel"))
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session = self.session)
+		ConfigListScreen.__init__(self, self.list, session=self.session)
 
 		rctype = config.plugins.remotecontroltype.rctype.value
-		self.rctype = ConfigSelection(choices = self.rcList, default = str(rctype))
+		self.rctype = ConfigSelection(choices=self.rcList, default=str(rctype))
 		self.list.append(getConfigListEntry(_("Remote control type"), self.rctype))
 		self["config"].list = self.list
 

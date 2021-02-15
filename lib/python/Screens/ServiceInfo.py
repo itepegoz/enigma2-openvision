@@ -22,8 +22,10 @@ TYPE_VALUE_FREQ = 6
 TYPE_VALUE_FREQ_FLOAT = 7
 TYPE_VALUE_BITRATE = 8
 
+
 def to_unsigned(x):
 	return x & 0xFFFFFFFF
+
 
 def ServiceInfoListEntry(a, b="", valueType=TYPE_TEXT, param=4, altColor=False):
 	print("b:", b)
@@ -48,14 +50,15 @@ def ServiceInfoListEntry(a, b="", valueType=TYPE_TEXT, param=4, altColor=False):
 			b = str(b)
 	xa, ya, wa, ha = skin.parameters.get("ServiceInfoLeft", (0, 0, 300, 25))
 	xb, yb, wb, hb = skin.parameters.get("ServiceInfoRight", (300, 0, 600, 25))
-	color = skin.parameters.get("ServiceInfoAltColor", (0x00FFBF00)) # alternative foreground color
-	res = [ None ]
+	color = skin.parameters.get("ServiceInfoAltColor", (0x00FFBF00))  # alternative foreground color
+	res = [None]
 	if b:
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa, ha, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, a))
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xb, yb, wb, hb, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, b))
+		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa, ha, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, a))
+		res.append((eListboxPythonMultiContent.TYPE_TEXT, xb, yb, wb, hb, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, b))
 	else:
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa + wb, ha, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, a, color if altColor is True else None)) # spread horizontally
+		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa + wb, ha, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, a, color if altColor is True else None))  # spread horizontally
 	return res
+
 
 class ServiceInfoList(GUIComponent):
 	def __init__(self, source):
@@ -72,15 +75,17 @@ class ServiceInfoList(GUIComponent):
 	def postWidgetCreate(self, instance):
 		self.instance.setContent(self.l)
 
+
 TYPE_SERVICE_INFO = 1
 TYPE_TRANSPONDER_INFO = 2
+
 
 class ServiceInfo(Screen):
 	def __init__(self, session, serviceref=None):
 		Screen.__init__(self, session)
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
-		{
+									{
 			"ok": self.close,
 			"cancel": self.close,
 			"red": self.close,
@@ -104,7 +109,7 @@ class ServiceInfo(Screen):
 		play_service = session.nav.getCurrentlyPlayingServiceReference()
 		if serviceref and not (play_service and play_service == serviceref):
 			self.type = TYPE_TRANSPONDER_INFO
-			self.skinName="ServiceInfoSimple"
+			self.skinName = "ServiceInfoSimple"
 			self.transponder_info = eServiceCenter.getInstance().info(serviceref).getInfoObject(serviceref, iServiceInformation.sTransponderData)
 			# info is a iStaticServiceInformation, not a iServiceInformation
 		else:
@@ -122,7 +127,7 @@ class ServiceInfo(Screen):
 			if self.feinfo or self.transponder_info:
 				self["key_blue"] = self["blue"] = Label(_("Tuner setting values"))
 			else:
-				self.skinName="ServiceInfoSimple"
+				self.skinName = "ServiceInfoSimple"
 
 		self.onShown.append(self.ShowServiceInformation)
 
@@ -153,37 +158,37 @@ class ServiceInfo(Screen):
 					resolution += str((self.info.getInfo(iServiceInformation.sFrameRate) + 500) / 1000)
 					resolution += (" i", " p", "")[self.info.getInfo(iServiceInformation.sProgressive)]
 					aspect = self.getServiceInfoValue(iServiceInformation.sAspect)
-					aspect = aspect in ( 1, 2, 5, 6, 9, 0xA, 0xD, 0xE ) and "4:3" or "16:9"
-					resolution += " - ["+aspect+"]"
+					aspect = aspect in (1, 2, 5, 6, 9, 0xA, 0xD, 0xE) and "4:3" or "16:9"
+					resolution += " - [" + aspect + "]"
 				gamma = ("SDR", "HDR", "HDR10", "HLG", "")[self.info.getInfo(iServiceInformation.sGamma)]
 				if gamma:
 					resolution += " - " + gamma
 			self.service = self.session.nav.getCurrentService()
 			if "%3a//" in refstr and reftype not in (1, 257, 4098, 4114):
-			#IPTV 4097 5001, no PIDs shown
+				# IPTV 4097 5001, no PIDs shown
 				fillList = [(_("Service name"), name, TYPE_TEXT),
-					(_("Videocodec, size & format"), resolution, TYPE_TEXT),
-					(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
-					(_("URL"), refstr.split(":")[10].replace("%3a", ":"), TYPE_TEXT)]
+							(_("Videocodec, size & format"), resolution, TYPE_TEXT),
+							(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
+							(_("URL"), refstr.split(":")[10].replace("%3a", ":"), TYPE_TEXT)]
 				subList = self.getSubtitleList()
 			else:
 				if ":/" in refstr:
-				# mp4 videos, dvb-s-t recording
+					# mp4 videos, dvb-s-t recording
 					fillList = [(_("Service name"), name, TYPE_TEXT),
-						(_("Videocodec, size & format"), resolution, TYPE_TEXT),
-						(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
-						(_("Filename"), refstr.split(":")[10], TYPE_TEXT)]
+								(_("Videocodec, size & format"), resolution, TYPE_TEXT),
+								(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
+								(_("Filename"), refstr.split(":")[10], TYPE_TEXT)]
 				else:
-				# fallback, movistartv, live dvb-s-t
+					# fallback, movistartv, live dvb-s-t
 					fillList = [(_("Service name"), name, TYPE_TEXT),
-						(_("Provider"), self.getServiceInfoValue(iServiceInformation.sProvider), TYPE_TEXT),
-						(_("Videocodec, size & format"), resolution, TYPE_TEXT)]
+								(_("Provider"), self.getServiceInfoValue(iServiceInformation.sProvider), TYPE_TEXT),
+								(_("Videocodec, size & format"), resolution, TYPE_TEXT)]
 					if "%3a//" in refstr:
-					#fallback, movistartv
+						# fallback, movistartv
 						fillList = fillList + [(_("Service reference"), ":".join(refstr.split(":")[:9]), TYPE_TEXT),
-							(_("URL"), refstr.split(":")[10].replace("%3a", ":"), TYPE_TEXT)]
+											   (_("URL"), refstr.split(":")[10].replace("%3a", ":"), TYPE_TEXT)]
 					else:
-					#live dvb-s-t
+						# live dvb-s-t
 						fillList = fillList + [(_("Service reference"), refstr, TYPE_TEXT)]
 				self.audio = self.service and self.service.audioTracks()
 				self.numberofTracks = self.audio and self.audio.getNumberOfTracks()
@@ -191,14 +196,14 @@ class ServiceInfo(Screen):
 				self.togglePIDButton()
 				trackList = self.getTrackList()
 				fillList = fillList + ([(_("Namespace & Orbital pos."), self.namespace(self.getServiceInfoValue(iServiceInformation.sNamespace)), TYPE_TEXT),
-					(_("TSID"), self.getServiceInfoValue(iServiceInformation.sTSID), TYPE_VALUE_HEX_DEC, 4),
-					(_("ONID"), self.getServiceInfoValue(iServiceInformation.sONID), TYPE_VALUE_HEX_DEC, 4),
-					(_("Service ID"), self.getServiceInfoValue(iServiceInformation.sSID), TYPE_VALUE_HEX_DEC, 4),
-					(_("Video PID"), self.getServiceInfoValue(iServiceInformation.sVideoPID), TYPE_VALUE_HEX_DEC, 4)]
-					+ trackList + [(_("PCR PID"), self.getServiceInfoValue(iServiceInformation.sPCRPID), TYPE_VALUE_HEX_DEC, 4),
-					(_("PMT PID"), self.getServiceInfoValue(iServiceInformation.sPMTPID), TYPE_VALUE_HEX_DEC, 4),
-					(_("TXT PID"), self.getServiceInfoValue(iServiceInformation.sTXTPID), TYPE_VALUE_HEX_DEC, 4)])
-				if self.showAll == True:
+										(_("TSID"), self.getServiceInfoValue(iServiceInformation.sTSID), TYPE_VALUE_HEX_DEC, 4),
+										(_("ONID"), self.getServiceInfoValue(iServiceInformation.sONID), TYPE_VALUE_HEX_DEC, 4),
+										(_("Service ID"), self.getServiceInfoValue(iServiceInformation.sSID), TYPE_VALUE_HEX_DEC, 4),
+										(_("Video PID"), self.getServiceInfoValue(iServiceInformation.sVideoPID), TYPE_VALUE_HEX_DEC, 4)] +
+									   trackList + [(_("PCR PID"), self.getServiceInfoValue(iServiceInformation.sPCRPID), TYPE_VALUE_HEX_DEC, 4),
+													(_("PMT PID"), self.getServiceInfoValue(iServiceInformation.sPMTPID), TYPE_VALUE_HEX_DEC, 4),
+													(_("TXT PID"), self.getServiceInfoValue(iServiceInformation.sTXTPID), TYPE_VALUE_HEX_DEC, 4)])
+				if self.showAll is True:
 					fillList = fillList + self.subList
 
 			self.fillList(fillList)
@@ -266,16 +271,16 @@ class ServiceInfo(Screen):
 					subNumber = "%04X" % (x[1])
 					subList += [(_("DVB Subtitles PID & lang"), "%04X (%d) - %s" % (to_unsigned(subPID), subPID, subLang), TYPE_TEXT)]
 
-				elif x[0] == 1: # Teletext
-					subNumber = "%x%02x" %(x[3] and x[3] or 8, x[2])
+				elif x[0] == 1:  # Teletext
+					subNumber = "%x%02x" % (x[3] and x[3] or 8, x[2])
 					subList += [(_("TXT Subtitles page & lang"), "%s - %s" % (subNumber, subLang), TYPE_TEXT)]
 
-				elif x[0] == 2: # File
+				elif x[0] == 2:  # File
 					types = (_("unknown"), _("Embedded"), _("SSA File"), _("ASS File"),
-							_("SRT File"), _("VOB File"), _("PGS File"))
+							 _("SRT File"), _("VOB File"), _("PGS File"))
 					try:
 						description = types[x[2]]
-					except:
+					except KeyError:
 						description = _("unknown") + ": %s" % x[2]
 					subNumber = str(int(subNumber) + 1)
 					subList += [(_("Other Subtitles & lang"), "%s - %s - %s" % (subNumber, description, subLang), TYPE_TEXT)]
@@ -307,37 +312,42 @@ class ServiceInfo(Screen):
 			else:
 				tuner = (_("NIM & Type"), chr(ord('A') + frontendData["tuner_number"]) + " - " + frontendData["tuner_type"], TYPE_TEXT)
 			if frontendDataOrg["tuner_type"] == "DVB-S":
-				issy = lambda x: 0 if x == -1 else x
-				t2mi = lambda x: None if x == -1 else str(x)
+
+				def issy(x):
+					return 0 if x == -1 else x
+
+				def t2mi(x):
+					return None if x == -1 else str(x)
+
 				return (tuner,
-					(_("System & Modulation"), frontendData["system"] + " " + frontendData["modulation"], TYPE_TEXT),
-					(_("Orbital position"), frontendData["orbital_position"], TYPE_VALUE_DEC),
-					(_("Frequency & Polarization"), "%s MHz" % (frontendData.get("frequency", 0) / 1000) + " - " + frontendData["polarization"], TYPE_TEXT),
-					(_("Symbol rate & FEC"), "%s KSymb/s" % (frontendData.get("symbol_rate", 0) / 1000) + " - " + frontendData["fec_inner"], TYPE_TEXT),
-					(_("Inversion, Pilot & Roll-off"), frontendData["inversion"] + " - " + str(frontendData.get("pilot", None)) + " - " + str(frontendData.get("rolloff", None)), TYPE_TEXT),
-					(_("Input Stream ID"), issy(frontendData.get("is_id", 0)), TYPE_VALUE_DEC),
-					(_("PLS Mode"), frontendData.get("pls_mode", None), TYPE_TEXT),
-					(_("PLS Code"), frontendData.get("pls_code", 0), TYPE_VALUE_DEC),
-					(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT),
-					(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT))
+						(_("System & Modulation"), frontendData["system"] + " " + frontendData["modulation"], TYPE_TEXT),
+						(_("Orbital position"), frontendData["orbital_position"], TYPE_VALUE_DEC),
+						(_("Frequency & Polarization"), "%s MHz" % (frontendData.get("frequency", 0) / 1000) + " - " + frontendData["polarization"], TYPE_TEXT),
+						(_("Symbol rate & FEC"), "%s KSymb/s" % (frontendData.get("symbol_rate", 0) / 1000) + " - " + frontendData["fec_inner"], TYPE_TEXT),
+						(_("Inversion, Pilot & Roll-off"), frontendData["inversion"] + " - " + str(frontendData.get("pilot", None)) + " - " + str(frontendData.get("rolloff", None)), TYPE_TEXT),
+						(_("Input Stream ID"), issy(frontendData.get("is_id", 0)), TYPE_VALUE_DEC),
+						(_("PLS Mode"), frontendData.get("pls_mode", None), TYPE_TEXT),
+						(_("PLS Code"), frontendData.get("pls_code", 0), TYPE_VALUE_DEC),
+						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT),
+						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT))
 			elif frontendDataOrg["tuner_type"] == "DVB-C":
 				return (tuner,
-					(_("Modulation"), frontendData["modulation"], TYPE_TEXT),
-					(_("Frequency"), frontendData.get("frequency", 0), TYPE_VALUE_FREQ_FLOAT),
-					(_("Symbol rate & FEC"), "%s KSymb/s" % (frontendData.get("symbol_rate", 0) / 1000) + " - " + frontendData["fec_inner"], TYPE_TEXT),
-					(_("Inversion"), frontendData["inversion"], TYPE_TEXT))
+						(_("Modulation"), frontendData["modulation"], TYPE_TEXT),
+						(_("Frequency"), frontendData.get("frequency", 0), TYPE_VALUE_FREQ_FLOAT),
+						(_("Symbol rate & FEC"), "%s KSymb/s" % (frontendData.get("symbol_rate", 0) / 1000) + " - " + frontendData["fec_inner"], TYPE_TEXT),
+						(_("Inversion"), frontendData["inversion"], TYPE_TEXT))
 			elif frontendDataOrg["tuner_type"] == "DVB-T":
 				return (tuner,
-					(_("Frequency & Channel"), "%.3f MHz" % ((frontendData.get("frequency", 0) / 1000) / 1000.0) + " - " + frontendData["channel"], TYPE_TEXT),
-					(_("Inversion & Bandwidth"), frontendData["inversion"] + " - " + str(frontendData["bandwidth"]), TYPE_TEXT),
-					(_("Code R. LP-HP & Guard Int."), frontendData["code_rate_lp"] + " - " + frontendData["code_rate_hp"] + " - " + frontendData["guard_interval"], TYPE_TEXT),
-					(_("Constellation & FFT mode"), frontendData["constellation"] + " - " + frontendData["transmission_mode"], TYPE_TEXT),
-					(_("Hierarchy info"), frontendData["hierarchy_information"], TYPE_TEXT))
+						(_("Frequency & Channel"), "%.3f MHz" % ((frontendData.get("frequency", 0) / 1000) / 1000.0) + " - " + frontendData["channel"], TYPE_TEXT),
+						(_("Inversion & Bandwidth"), frontendData["inversion"] + " - " + str(frontendData["bandwidth"]), TYPE_TEXT),
+						(_("Code R. LP-HP & Guard Int."), frontendData["code_rate_lp"] + " - " + frontendData["code_rate_hp"] + " - " + frontendData["guard_interval"], TYPE_TEXT),
+						(_("Constellation & FFT mode"), frontendData["constellation"] + " - " + frontendData["transmission_mode"], TYPE_TEXT),
+						(_("Hierarchy info"), frontendData["hierarchy_information"], TYPE_TEXT))
 			elif frontendDataOrg["tuner_type"] == "ATSC":
 				return (tuner,
-					(_("System & Modulation"), frontendData["system"] + " " + frontendData["modulation"], TYPE_TEXT),
-					(_("Frequency"), frontendData.get("frequency", 0) / 1000, TYPE_VALUE_FREQ_FLOAT),
-					(_("Inversion"), frontendData["inversion"], TYPE_TEXT))
+						(_("System & Modulation"), frontendData["system"] + " " + frontendData["modulation"], TYPE_TEXT),
+						(_("Frequency"), frontendData.get("frequency", 0) / 1000, TYPE_VALUE_FREQ_FLOAT),
+						(_("Inversion"), frontendData["inversion"], TYPE_TEXT))
 		return []
 
 	def fillList(self, Labels):
@@ -346,9 +356,9 @@ class ServiceInfo(Screen):
 			if item[1]:
 				value = item[1]
 				if len(item) < 4:
-					tlist.append(ServiceInfoListEntry(item[0]+":", value, item[2]))
+					tlist.append(ServiceInfoListEntry(item[0] + ":", value, item[2]))
 				else:
-					tlist.append(ServiceInfoListEntry(item[0]+":", value, item[2], item[3]))
+					tlist.append(ServiceInfoListEntry(item[0] + ":", value, item[2], item[3]))
 		self["infolist"].l.setList(tlist)
 
 	def getServiceInfoValue(self, what):
@@ -377,7 +387,7 @@ class ServiceInfo(Screen):
 						break
 				if caid[2]:
 					if CaIdDescription == "Seca":
-						provid = ",".join([caid[2][i:i+4] for i in range(0, len(caid[2]), 30)])
+						provid = ",".join([caid[2][i:i + 4] for i in range(0, len(caid[2]), 30)])
 					if CaIdDescription == "Nagra":
 						provid = caid[2][-4:]
 					if CaIdDescription == "Via":

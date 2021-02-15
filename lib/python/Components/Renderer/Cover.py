@@ -9,6 +9,7 @@ from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.CurrentService import CurrentService
 from os import path as os_path
 
+
 class Cover(Renderer):
 	exts = ('.jpg', '.png', '.jpeg')
 
@@ -62,22 +63,22 @@ class Cover(Renderer):
 					self.picload.PictureData.get().append(self.showCoverCallback)
 					if self.picload:
 						self.picload.setPara((size.width(),
-						size.height(),
-						sc[0],
-						sc[1],
-						False,
-						1,
-						'#00000000'))
+											  size.height(),
+											  sc[0],
+											  sc[1],
+											  False,
+											  1,
+											  '  #00000000'))
 						if self.picload.startDecode(picname) != 0:
 							del self.picload
 				else:
 					self.instance.hide()
 		return
 
-	def showCoverCallback(self, picInfo = None):
+	def showCoverCallback(self, picInfo=None):
 		if self.picload:
 			ptr = self.picload.getData()
-			if ptr != None:
+			if ptr is not None:
 				self.instance.setPixmap(ptr)
 				self.instance.show()
 			del self.picload

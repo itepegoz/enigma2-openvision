@@ -8,11 +8,12 @@ from __future__ import print_function
 # It will read the servicenames from the lamedb and create symlinks
 # for the servicereference names.
 
-import os, sys
+import os
+import sys
 
 f = open(sys.argv[1]).readlines()
 
-f = f[f.index("services\n")+1:-3]
+f = f[f.index("services\n") + 1:-3]
 
 while len(f):
 	ref = [int(x, 0x10) for x in f[0][:-1].split(':')]
@@ -20,11 +21,11 @@ while len(f):
 
 	name = name.replace('\xc2\x87', '').replace('\xc2\x86', '')
 
-#	SID:NS:TSID:ONID:STYPE:UNUSED(channelnumber in enigma1)
-#	X   X  X    X    D     D
+	# SID:NS:TSID:ONID:STYPE:UNUSED(channelnumber in enigma1)
+	# X   X  X    X    D     D
 
-#	REFTYPE:FLAGS:STYPE:SID:TSID:ONID:NS:PARENT_SID:PARENT_TSID:UNUSED
-#	D       D     X     X   X    X    X  X          X           X
+	# REFTYPE:FLAGS:STYPE:SID:TSID:ONID:NS:PARENT_SID:PARENT_TSID:UNUSED
+	# D       D     X     X   X    X    X  X          X           X
 
 	refstr = "1:0:%X:%X:%X:%X:%X:0:0:0" % (ref[4], ref[0], ref[2], ref[3], ref[1])
 	refstr = refstr.replace(':', '_')
@@ -43,4 +44,4 @@ while len(f):
 		os.symlink(filename, linkname)
 	else:
 		print("[create_picon_links] could not find %s (%s)" % (filename, name))
-	f =f[3:]
+	f = f[3:]

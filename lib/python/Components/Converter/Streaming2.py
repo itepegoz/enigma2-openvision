@@ -4,13 +4,14 @@ from __future__ import print_function
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
-# the protocol works as the following:
 
+# the protocol works as the following:
+#
 # lines starting with '-' are fatal errors (no recovery possible),
 # lines starting with '=' are progress notices,
 # lines starting with '+' are PIDs to record:
 # 	"+d:[p:t[,p:t...]]" with d=demux nr, p: pid, t: type
-
+#
 class Streaming2(Converter):
 	@cached
 	def getText(self):
@@ -35,6 +36,6 @@ class Streaming2(Converter):
 
 		retval += "\n"
 
-		return(retval);
+		return(retval)
 
 	text = property(getText)

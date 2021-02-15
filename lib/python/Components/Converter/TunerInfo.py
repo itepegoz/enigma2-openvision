@@ -4,12 +4,13 @@ from Components.Sources.TunerInfo import TunerInfo as TunerInfoSource
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
+
 class TunerInfo(Converter, object):
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		self.type = {
-				"TunerUseMask": TunerInfoSource.FE_USE_MASK
-			}[type]
+			"TunerUseMask": TunerInfoSource.FE_USE_MASK
+		}[type]
 
 	@cached
 	def getBoolean(self):

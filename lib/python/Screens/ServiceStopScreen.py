@@ -3,11 +3,12 @@
 from __future__ import print_function
 from Screens.MessageBox import MessageBox
 
+
 class ServiceStopScreen:
 	def __init__(self):
 		try:
 			self.session
-		except:
+		except Exception:
 			print("[ServiceStopScreen] ERROR: no self.session set")
 		self.oldref = None
 		self.onClose.append(self.__onClose)
@@ -17,7 +18,7 @@ class ServiceStopScreen:
 		try:
 			self.session.pipshown
 			pipavailable = True
-		except:
+		except Exception:
 			pipavailable = False
 		return pipavailable
 
@@ -29,7 +30,7 @@ class ServiceStopScreen:
 				self.oldref = ref
 				self.session.nav.stopService()
 			if self.pipAvailable():
-				if self.session.pipshown: # try to disable pip
+				if self.session.pipshown:  # try to disable pip
 					if hasattr(self.session, 'infobar'):
 						if self.session.infobar.servicelist and self.session.infobar.servicelist.dopipzap:
 							self.session.infobar.servicelist.togglePipzap()
@@ -41,7 +42,7 @@ class ServiceStopScreen:
 		if self.oldref:
 			self.session.nav.playService(self.oldref)
 
-	def restoreService(self, msg = _("Zap back to previously tuned service?")):
+	def restoreService(self, msg=_("Zap back to previously tuned service?")):
 		if self.oldref:
 			self.session.openWithCallback(self.restartPrevService, MessageBox, msg, MessageBox.TYPE_YESNO)
 		else:

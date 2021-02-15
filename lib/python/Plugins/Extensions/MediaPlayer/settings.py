@@ -18,6 +18,7 @@ config.mediaplayer.sortPlaylists = ConfigYesNo(default=False)
 config.mediaplayer.alwaysHideInfoBar = ConfigYesNo(default=True)
 config.mediaplayer.onMainMenu = ConfigYesNo(default=True)
 
+
 class DirectoryBrowser(Screen, HelpableScreen):
 
 	def __init__(self, session, currDir):
@@ -35,12 +36,12 @@ class DirectoryBrowser(Screen, HelpableScreen):
 		self["filelist"] = self.filelist
 
 		self["FilelistActions"] = ActionMap(["SetupActions", "ColorActions"],
-			{
-				"green": self.use,
-				"red": self.exit,
-				"ok": self.ok,
-				"cancel": self.exit
-			})
+											{
+			"green": self.use,
+			"red": self.exit,
+			"ok": self.ok,
+			"cancel": self.exit
+		})
 
 	def ok(self):
 		if self.filelist.canDescent():
@@ -52,10 +53,11 @@ class DirectoryBrowser(Screen, HelpableScreen):
 				self.filelist.descent()
 				self.close(self["filelist"].getCurrentDirectory())
 		else:
-				self.close(self["filelist"].getFilename())
+			self.close(self["filelist"].getFilename())
 
 	def exit(self):
 		self.close(False)
+
 
 class MediaPlayerSettings(Screen, ConfigListScreen):
 
@@ -74,7 +76,7 @@ class MediaPlayerSettings(Screen, ConfigListScreen):
 		config.mediaplayer.saveDirOnExit.addNotifier(self.initConfigList)
 
 		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
-		{
+										 {
 			"green": self.keySave,
 			"red": self.keyCancel,
 			"cancel": self.keyCancel,
@@ -107,5 +109,5 @@ class MediaPlayerSettings(Screen, ConfigListScreen):
 
 	def DirectoryBrowserClosed(self, path):
 		print("[MediaPlayer] PathBrowserClosed:" + str(path))
-		if path != False:
+		if path:
 			config.mediaplayer.defaultDir.setValue(path)

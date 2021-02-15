@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 from enigma import Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getBoxType, getBoxBrand
 from Tools.Directories import SCOPE_PLUGINS, fileCheck, fileExists, fileHas, pathExists, resolveFilename
-import os, re
+import os
+import re
 from os import access, R_OK
 from boxbranding import getDisplayType, getImageArch, getHaveHDMIinFHD, getHaveHDMIinHD, getHaveSCART, getHaveYUV, getHaveRCA, getHaveTranscoding, getHaveMultiTranscoding, getSoCFamily, getHaveHDMI, getMachineBuild, getHaveVFDSymbol, getHaveSVIDEO, getFHDSkin
 
@@ -16,11 +17,13 @@ with open("/proc/cmdline", "r") as fd:
 	cmdline = fd.read()
 cmdline = {k: v.strip('"') for k, v in re.findall(r'(\S+)=(".*?"|\S+)', cmdline)}
 
+
 def getNumVideoDecoders():
 	numVideoDecoders = 0
 	while fileExists("/dev/dvb/adapter0/video%d" % numVideoDecoders, "f"):
 		numVideoDecoders += 1
 	return numVideoDecoders
+
 
 def countFrontpanelLEDs():
 	numLeds = fileExists("/proc/stb/fp/led_set_pattern") and 1 or 0
@@ -28,15 +31,18 @@ def countFrontpanelLEDs():
 		numLeds += 1
 	return numLeds
 
+
 def hassoftcaminstalled():
 	from Tools.camcontrol import CamControl
 	return len(CamControl("softcam").getList()) > 1
+
 
 def getBootdevice():
 	dev = ("root" in cmdline and cmdline["root"].startswith("/dev/")) and cmdline["root"][5:]
 	while dev and not fileExists("/sys/block/%s" % dev):
 		dev = dev[:-1]
 	return dev
+
 
 model = getBoxType()
 brand = getBoxBrand()
@@ -157,7 +163,7 @@ SystemInfo["DefineSat"] = platform in ("octagonhisil", "gbmv200") or model in ("
 SystemInfo["AmlogicFamily"] = socfamily.startswith("aml") or socfamily.startswith("meson") or fileExists("/proc/device-tree/amlogic-dt-id") or fileExists("/usr/bin/amlhalt") or pathExists("/sys/module/amports")
 SystemInfo["OSDAnimation"] = fileCheck("/proc/stb/fb/animation_mode")
 SystemInfo["RecoveryMode"] = fileCheck("/proc/stb/fp/boot_mode") and model not in ("hd51", "h7")
-SystemInfo["AndroidMode"] =  SystemInfo["RecoveryMode"] and model == "multibox" or brand in ("hypercube", "linkdroid", "mecool", "wetek") or platform == "dmamlogic"
+SystemInfo["AndroidMode"] = SystemInfo["RecoveryMode"] and model == "multibox" or brand in ("hypercube", "linkdroid", "mecool", "wetek") or platform == "dmamlogic"
 SystemInfo["grautec"] = fileExists("/tmp/usbtft")
 SystemInfo["CanAC3plusTranscode"] = fileExists("/proc/stb/audio/ac3plus_choices")
 SystemInfo["CanDTSHD"] = fileExists("/proc/stb/audio/dtshd_choices")

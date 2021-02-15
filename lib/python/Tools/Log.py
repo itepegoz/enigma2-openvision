@@ -4,10 +4,11 @@ from __future__ import print_function
 from sys import _getframe
 from Tools.LogConfig import LogConfig, LOG_TYPE_DEBUG, LOG_TYPE_INFO, LOG_TYPE_WARNING, LOG_TYPE_ERROR, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING, LOG_LEVEL_INFO, LOG_LEVEL_DEBUG
 
+
 class Log(object):
 	@staticmethod
 	def e(text=""):
-		#ERROR
+		# ERROR
 		LogConfig.init()
 		if LogConfig.level() >= LOG_LEVEL_ERROR:
 			callframe = _getframe(1)
@@ -15,7 +16,7 @@ class Log(object):
 
 	@staticmethod
 	def w(text=""):
-		#WARNING
+		# WARNING
 		LogConfig.init()
 		if LogConfig.level() >= LOG_LEVEL_WARNING:
 			callframe = _getframe(1)
@@ -23,7 +24,7 @@ class Log(object):
 
 	@staticmethod
 	def i(text=""):
-		#INFO
+		# INFO
 		LogConfig.init()
 		if LogConfig.level() >= LOG_LEVEL_INFO:
 			callframe = _getframe(1)
@@ -31,7 +32,7 @@ class Log(object):
 
 	@staticmethod
 	def d(text=""):
-		#DEBUG
+		# DEBUG
 		LogConfig.init()
 		if LogConfig.level() >= LOG_LEVEL_DEBUG:
 			callframe = _getframe(1)
@@ -49,7 +50,7 @@ class Log(object):
 		msg = ""
 		if not text:
 			text = "<no detail>"
-		if cls != None:
+		if cls is not None:
 			cls = cls.__class__.__name__
 			msg = "%s [%s.%s] :: %s" % (type, cls, func, text)
 		else:

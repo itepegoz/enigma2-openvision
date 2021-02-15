@@ -5,11 +5,12 @@ from Components.Element import cached, ElementError
 from enigma import iServiceInformation, eServiceReference
 from ServiceReference import ServiceReference
 
+
 class MovieInfo(Converter):
-	MOVIE_SHORT_DESCRIPTION = 0 # meta description when available.. when not .eit short description
-	MOVIE_META_DESCRIPTION = 1 # just meta description when available
-	MOVIE_REC_SERVICE_NAME = 2 # name of recording service
-	MOVIE_REC_FILESIZE = 3 # filesize of recording
+	MOVIE_SHORT_DESCRIPTION = 0  # meta description when available.. when not .eit short description
+	MOVIE_META_DESCRIPTION = 1  # just meta description when available
+	MOVIE_REC_SERVICE_NAME = 2  # name of recording service
+	MOVIE_REC_FILESIZE = 3  # filesize of recording
 
 	def __init__(self, type):
 		if type == "ShortDescription":
@@ -35,12 +36,12 @@ class MovieInfo(Converter):
 					# Short description for Directory is the full path
 					return service.getPath()
 				return (info.getInfoString(service, iServiceInformation.sDescription)
-					or (event and event.getShortDescription())
-					or service.getPath())
+						or (event and event.getShortDescription())
+						or service.getPath())
 			elif self.type == self.MOVIE_META_DESCRIPTION:
 				return ((event and (event.getExtendedDescription() or event.getShortDescription()))
-					or info.getInfoString(service, iServiceInformation.sDescription)
-					or service.getPath())
+						or info.getInfoString(service, iServiceInformation.sDescription)
+						or service.getPath())
 			elif self.type == self.MOVIE_REC_SERVICE_NAME:
 				rec_ref_str = info.getInfoString(service, iServiceInformation.sServiceref)
 				return ServiceReference(rec_ref_str).getServiceName()
@@ -49,9 +50,9 @@ class MovieInfo(Converter):
 					return _("Directory")
 				filesize = info.getFileSize(service)
 				if filesize is not None:
-					if filesize >= 104857600000: #100000*1024*1024
+					if filesize >= 104857600000:  # 100000*1024*1024
 						return _("%.0f GB") % (filesize / 1073741824.0)
-					elif filesize >= 1073741824: #1024*1024*1024
+					elif filesize >= 1073741824:  # 1024*1024*1024
 						return _("%.2f GB") % (filesize / 1073741824.0)
 					elif filesize >= 1048576:
 						return _("%.0f MB") % (filesize / 1048576.0)

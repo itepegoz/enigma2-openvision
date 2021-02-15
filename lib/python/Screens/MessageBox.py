@@ -8,6 +8,7 @@ from Components.Sources.StaticText import StaticText
 from Components.MenuList import MenuList
 from enigma import eTimer
 
+
 class MessageBox(Screen):
 	TYPE_YESNO = 0
 	TYPE_INFO = 1
@@ -19,11 +20,11 @@ class MessageBox(Screen):
 		self.type = type
 		Screen.__init__(self, session)
 		if simple:
-			self.skinName="MessageBoxSimple"
+			self.skinName = "MessageBoxSimple"
 
 		self.msgBoxID = msgBoxID
 
-		self["autoresize"] = Label("") #do not remove, used for autoResize()
+		self["autoresize"] = Label("")  # do not remove, used for autoResize()
 		self["text"] = Label(text)
 		self["Text"] = StaticText(text)
 		self["selectedChoice"] = StaticText()
@@ -53,9 +54,9 @@ class MessageBox(Screen):
 			if list:
 				self.list = list
 			elif default:
-				self.list = [ (_("yes"), True), (_("no"), False) ]
+				self.list = [(_("yes"), True), (_("no"), False)]
 			else:
-				self.list = [ (_("no"), False), (_("yes"), True) ]
+				self.list = [(_("no"), False), (_("yes"), True)]
 		else:
 			self.list = []
 
@@ -67,19 +68,19 @@ class MessageBox(Screen):
 
 		if enable_input:
 			self["actions"] = ActionMap(["MsgBoxActions", "DirectionActions"],
-				{
-					"cancel": self.cancel,
-					"ok": self.ok,
-					"alwaysOK": self.alwaysOK,
-					"up": self.up,
-					"down": self.down,
-					"left": self.left,
-					"right": self.right,
-					"upRepeated": self.up,
-					"downRepeated": self.down,
-					"leftRepeated": self.left,
-					"rightRepeated": self.right
-				}, -1)
+										{
+				"cancel": self.cancel,
+				"ok": self.ok,
+				"alwaysOK": self.alwaysOK,
+				"up": self.up,
+				"down": self.down,
+				"left": self.left,
+				"right": self.right,
+				"upRepeated": self.up,
+				"downRepeated": self.down,
+				"leftRepeated": self.left,
+				"rightRepeated": self.right
+			}, -1)
 		self.setTitle(self.title, showPath=False)
 
 	def initTimeout(self, timeout):

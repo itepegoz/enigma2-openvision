@@ -5,6 +5,7 @@ from Components.Element import cached
 from enigma import eEPGCache
 from time import localtime
 
+
 class EventName2(Converter, object):
 	NAME = 0
 	SHORT_DESCRIPTION = 1
@@ -67,7 +68,7 @@ class EventName2(Converter, object):
 			return event.getShortDescription()
 		elif self.type is self.EXTENDED_DESCRIPTION:
 			text = event.getShortDescription()
-			if text and not text[-1] is'\n' and not text[-1] is ' ':
+			if text and not text[-1] is '\n' and not text[-1] is ' ':
 				text += ' '
 			return text + event.getExtendedDescription() or event.getEventName()
 		elif self.type is self.FULL_DESCRIPTION:
@@ -93,24 +94,24 @@ class EventName2(Converter, object):
 							elif self.type is self.NEXT_TIME_DURATION:
 								return "%02d:%02d  (%s)" % (t[3], t[4], duration)
 							else:
-								return "%s" %  eventNext[0][4]
+								return "%s" % eventNext[0][4]
 						else:
 							return ''
 					elif self.type is self.NEXT_DESCRIPTION:
 						for i in (6, 5, 4):
 							if len(eventNext[0]) > i and eventNext[0][i]:
-								return "%s" %  eventNext[0][i]
+								return "%s" % eventNext[0][i]
 				else:
 					return ''
 			else:
 				return ''
 		elif self.type is self.NEXT_EVENT_LIST or self.type is self.NEXT_EVENT_LISTWT or\
-			self.type is self.NEXT_EVENT_LIST2 or self.type is self.NEXT_EVENT_LISTWT2 or self.type is self.NEXT_NAME_NEXT or self.type is self.NEXT_NAME_NEXTWT:
+				self.type is self.NEXT_EVENT_LIST2 or self.type is self.NEXT_EVENT_LISTWT2 or self.type is self.NEXT_NAME_NEXT or self.type is self.NEXT_NAME_NEXTWT:
 			reference = self.source.service
 			info = reference and self.source.info
 			countitem = 10
 			if info is not None:
-				eventNext =  self.epgcache.lookupEvent(["IBDCT", (reference.toString(), 0, -1, -1)])
+				eventNext = self.epgcache.lookupEvent(["IBDCT", (reference.toString(), 0, -1, -1)])
 				if self.type is self.NEXT_NAME_NEXT or self.type is self.NEXT_NAME_NEXTWT:
 					countitem = 4
 				if eventNext:
@@ -127,7 +128,7 @@ class EventName2(Converter, object):
 									listEpg.append("%02d:%02d %s" % (t[3], t[4], x[4]))
 						i += 1
 					if self.type is self.NEXT_EVENT_LIST2 or self.type is self.NEXT_EVENT_LISTWT2 or self.type is self.NEXT_NAME_NEXT or\
-						self.type is self.NEXT_NAME_NEXTWT:
+							self.type is self.NEXT_NAME_NEXTWT:
 						if len(listEpg) > 1:
 							listEpg.pop(0)
 						else:
